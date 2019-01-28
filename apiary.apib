@@ -1,0 +1,191 @@
+FORMAT: 1A
+
+# NMFTA Fleet Resiliency - Open Telematics API DRAFT
+
+![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
+
+This document is written using [api-blueprint](https://apiblueprint.org/) and available online at both [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io/#) (for browsable document) and https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
+
+If a telematics system provider (TSP) suddenly goes out of business
+(have had two examples of this in 2018) any commercial fleet relying on
+their service will need to find a new provider. Due to the lack of a
+standardized telematics data format, a commercial fleet manager will
+have to reintegrate an alternate telematics provider's data format into
+their existing system reporting.
+
+This is a standardized API for retrieving telematics logs & data. 
+Each participating TSP would be individually responsible for the necessary
+translations from their existing formats to this Open Telematics
+API. Each TSP would continue to be responsible for managing their
+own cloud infrastructure housing customer data. The Open Telematics API, as an additional interface, 
+will be made available by TSPs to allow their customers ready
+access to pull data in the standardized format, especially in examples
+of mixed TSP fleets.
+
+## Authentication
+
+**All requests** to Open Telematics API endpoints **require authentication**.
+
+HTTP header `Authorization: Bearer <id_token>` where `<id_token>` is a JSON Web Token (JWT) with verification
+performed using signatures (and not MACs). e.g.
+
+```http
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.EkN-DOsnsuRjRO6BxXemmJDm3HbxrbRzXglbN2S4sOkopdU4IsDxTI8jO19W_A4K8ZPJijNLis4EZsHeY559a4DFOd50_OqgHGuERTqYZyuhtF39yxJPAjUESwxk2J5k_4zM3O-vtd1Ghyo4IbqKKSy6J9mTniYJPenn5-HIirE
+```
+
+TSPs implementing the Open Telematics API must provide a means create JWTs for use as client keys; these means
+must allow for assigning roles to the JWTs (see section *Authorization* below) as well as expiry of the JWT
+and domain for the JWT.
+
+TSPs implementing the Open Telematics API must ensure that the
+signature of the provided JWT will be verified prior to any further
+inspection or validation of the JWT. After signature validation, the
+method implementation will also verify that the domain, and expiry of
+the JWT are valid. Then the implementation may proceed to verify that
+the JWT represents a user whose role has sufficient capability for
+access to the resource in the context of the method (see section *Authorization* below).
+
+The private secret used for JWT signatures will be unique to each TSP
+customer (i.e. carrier) instance and cannot be any of: a default value, a value derived
+from any TSP or customer public information or a value which has ever
+been published anywhere on the internet (e.g. ever committed to a github
+repo).
+
+## Authorization
+
+TSPs implementing the Open Telematics API must include access controls for requests against the following roles.
+
+* *Vehicle Sink*
+* *Vehicle Return Sink*
+* *Sink*
+* *Return Sink* 
+* *Admin*
+
+It must be possible for clients to create JWTs which are assigned to **one role and no more than one role**.
+
+TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
+in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` |
+
+The intent of these access controls is so that carriers can limit which clients they deploy have access to:
+* any resources at all
+* any Personally Identifiable Information (PII)
+* streaming feeds of new events as they are added to the TSP
+
+As can be seen in the **Access Controls** tables in the requests subsections of *References* that follow, the roles
+are assigned `DENY/ALLOW` such that:
+* the *X Return Sink* roles have access to streaming feeds, whereas the *X Sink* roles have access only to collections
+queries and
+* the *Vehicle X* roles are intended to be safe from PII.
+
+## Working With Dates
+
+When exchanging dates as parameters to API methods or in responses from the API, you must ensure that
+they are formatted properly as an ISO 8601 string (format
+`yyyy-MM-ddTHH:mm:ss.fffZ`). In addition, all dates will have to first be
+converted to UTC in order to ensure time zone information and daylight
+savings times are accounted for correctly.
+
+## Working With Locations
+
+When exchanging locations as parameters to API methods or in responses from the API, you must ensure
+that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]ooo.ooooooo`).
+
+## Error States
+
+The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
+
+# Group Duty Status Log
+
+## Duty Status Log            [/api{version}/dutystatuslog/byid/{dutystatuslog_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + dutystatuslog_id: `C4CA4238A0B923820DCC509A6F75849B` (string) - ID of the Duty Status Log of interest
+
++ Attributes (object)
+    + id                : `C4CA4238A0B923820DCC509A6F75849B` (string) - The unique identifier for the specific Entity object in the system.
+    + annotations       : `C81E728D9D4C2F636F067F89CC14862C`, `ECCBC87E4B5CE2FE28308FD9F2A7BAF3` (array[string]) - The list of AnnotationLog(s) which are associated with this log.
+    + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
+    + eldDateTime       :          `2019-01-0100:00:00.000Z` (string) - Date and time from the ELD device
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (string) - The vehicle id associated with this log.
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (string) - The id of the driver who created this log.
+    + distanceLastValid :                                117 (number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
+    + editDateTime      :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
+    + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (string) - An event record that meets the reporting criteria set for the Log
+    + location          :         ` 37.4224764 -122.0842499` (string) - An object with the location information for the log data.
+    + malfunction       :                                `0` (string) - The DutyStatusMalfunctionType of the DutyStatusLog record. As a flag it can be both a diagnostic and malfunction state which is used to mark status based records (e.g. \"D\", \"SB\") as having a diagnostic or malfunction present at time of recording. (TODO as a list in enumerated constants)
+    + origin            :                                `0` (string) - The DutyStatusOrigin from where this log originated. (TODO as a list in enumerated constants)
+    + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
+    + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
+    + state             :                                `0` (string) - The DutyStatusState of the DutyStatusLog record. (TODO as a list in enumerated constants)
+    + status            :                                `0` (string) - The DutyStatusLogType representing the driver's duty status. TODO as a list in enumerated constants)
+    + verifyDateTime    :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
+    + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (string) - A hexadecimal "check" value
+    + lineDataCheck     : `9F7D0EE82B6A6CA7DDEAE841F3253059` (string) - A hexadecimal "check" value
+    + multidayBasis     :                                  0 (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
+    + outputFileComment : `fake Duty Status Log for testing` (string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
+
+### Get a Duty Status Log by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Response 200 (application/json)
+    + Attributes (Duty Status Log)
+
+## Duty Status Log Collection [/api{version}/dutystatuslog/bydate{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (string) - the stop-date of the search
+
++ Attributes (object)
+    + data (array[Duty Status Log], fixed-type)
+
+### Search for all Duty Status Logs in a Time Range [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Response 200 (application/json)
+    + Attributes (Duty Status Log Collection)
+
+## Duty Status Log Feed       [/api{version}/dutystatuslog/feed{?token}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs; pass in a `null` to start with a new token set to 'now'.
+
++ Attributes (object)
+    + token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs
+    + feed (array[Duty Status Log], fixed-type)
+
+### Follow a Feed of Duty Status Logs as they are Added to the System [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
+|:-------------|---------------------|------|-------------|-------|
+| DENY         | DENY                | DENY | ALLOW       | ALLOW |
+
++ Response 200 (application/json)
+    + Attributes (Duty Status Log Feed)
+    
+# Group More To Come
