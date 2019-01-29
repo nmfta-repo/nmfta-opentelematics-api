@@ -11,7 +11,7 @@ This document is written using [api-blueprint](https://apiblueprint.org/) and av
 
 **All requests** to Open Telematics API endpoints **require authentication**.
 
-HTTP header `Authorization: Bearer <id_token>` where `id_token` is a JSON Web Token (JWT) with verification
+HTTP header `Authorization: Bearer <id_token>` where `<id_token>` is a JSON Web Token (JWT) with verification
 performed using signatures (and not MACs).
 
 TSPs implmenting the Open Telematics API must provide a means create JWTs for use as client keys; these means
@@ -52,8 +52,14 @@ in the **Access Controls** tables throughout this API specification. The tables 
 | DENY         | DENY                | ALLOW | DENY        | ALLOW |
 
 The intent of these access controls is so that carriers can limit which clients they deploy have access to:
+* any resources at all
 * any Personally Identifiable Information (PII)
 * streaming feeds of new events as they are added to the TSP
+
+As can be seen in the **Access Controls** tables below:
+* the *X Return Sink* roles have access to streaming feeds, whereas the *X Sink* roles have access only to collections
+queries and
+* the *Vehicle X* roles are intended to be safe from PII.
 
 ## Working With Dates
 
