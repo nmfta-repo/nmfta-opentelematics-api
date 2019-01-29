@@ -1,0 +1,136 @@
+FORMAT: 1A
+
+# NMFTA Fleet Resiliency - Open Telematics API DRAFT
+
+This document is written using [api-blueprint]
+
+[api-blueprint]: https://apiblueprint.org/
+
+## Authentication & Authorization
+
+Authorization of every API method will be determined by verification of
+a bearer token. Specifically, a JSON Web Token (JWT) with verification
+performed using signatures (and not MACs). For each API method, the
+signature of the provided JWT will be verified prior to any further
+inspection or validation of the JWT. After signature validation, the
+method implementation will also verify that the domain, and expiry of
+the JWT are valid. Then the implementation may proceed to verify that
+the JWT represents a user whose role has sufficient capability for
+access to the resource in the context of the method.
+
+The private secret used for JWT signatures will be unique to each TSP
+customer instance and cannot be any of: a default value, a value derived
+from any TSP or customer public information or a value which has ever
+been published anywhere on the internet (e.g. ever committed to a github
+repo).
+
+Authentication can be implemented in one of two ways; either HTTP Basic
+Auth [over HTTPS]{.underline} or OAUTH (OAUTH can be either OAUTH 1.0a
+or OAUTH 2.0). In either implementation the result of authentication
+will be a returned JWT **credentials object**. This object contains the
+username, database, expiry, scope, signature and session ID. The
+credentials object is a bearer token to the TSP's Open Telematics APIs.
+This object will be used in all subsequent calls to add, modify, and get
+data from the Open Telematics system. Credentials objects are necessary
+to authorize access to Open Telematics APIs.
+
+## Working With Dates
+
+When exchanging dates as parameters to API methods, you must ensure that
+they are formatted properly as an ISO 8601 string (format
+yyyy-MM-ddTHH:mm:ss.fffZ). In addition, all dates will have to first be
+converted to UTC in order to ensure time zone information and daylight
+savings times are accounted for correctly.
+
+## Error States
+
+The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
+
+# Group Duty Status Log
+
+## Duty Status Log            [/api{version}/dutystatuslog/byid/{dutystatuslog_id}]
+
++ Parameters
+	+ version: `v1` (enum[string]) - API version
+		+ Members
+			+ `v1`
+	+ dutystatuslog_id (string) - ID of the Duty Status Log of interest
+
++ Attributes (object)
+	+ id                  (string) - The unique identifier for the specific Entity object in the system. See Id.
+	+ annotations         (array[string]) - The list of AnnotationLog(s) which are associated with this log.
+	+ coDrivers           (string) - The list of the co-driver User(s) for this log.
+	+ eldDateTime         (string) - Date and time from the ELD device
+	+ vehicleId           (string) - The vehicle id associated with this log.
+	+ driverId            (string) - The id of the driver who created this log.
+	+ distanceLastValid   (number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
+	+ editDateTime        (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
+	+ eventRecord         (string) - An event record that meets the reporting criteria set for the Log
+	+ location            (string) - An object with the location information for the log data.
+	+ malfunction         (string) - The DutyStatusMalfunctionType of the DutyStatusLog record. As a flag it can be both a diagnostic and malfunction state which is used to mark status based records (e.g. \"D\", \"SB\") as having a diagnostic or malfunction present at time of recording. (To be defined later as a list in enumerated constants)
+	+ origin              (string) - The DutyStatusOrigin from where this log originated. (To be defined later as a list in enumerated constants)
+	+ parentId            (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
+	+ sequence            (string) - The sequence number, which is used to generate the sequence ID.
+	+ state               (string) - The DutyStatusState of the DutyStatusLog record. (To be defined later as a list in enumerated constants)
+	+ status              (string) - The DutyStatusLogType representing the driver\'s duty status. (To be defined later as a list in enumerated constants)
+	+ verifyDateTime      (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
+	+ fileDataCheck       (string) - A hexadecimal "check" value calculated in accordance with the procedure outlined in section 4.4.5.3 of the Appendix and attached to each ELD output file
+	+ lineDataCheck       (string) - A hexadecimal "check" value calculated in accordance with procedure outlined in section 4.4.5.2 of the Appendix and attached to each line of output featuring data at the time of output file being generated
+	+ multidayBasis       (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
+	+ outputFileComment   (string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
+
+### Get a Duty Status Log by its ID [GET]
+
+**Access Controls**
+
+            Vehicle Sink   Vehicle Return Sink   Sink    Return Sink   Admin
+  --------- -------------- --------------------- ------- ------------- -------
+  GET       Deny           Deny                  Allow   Deny          Allow
+
++ Response 200 (application/json)
+	+ Attributes (Duty Status Log)
+
+## Duty Status Log Collection [/api{version}/dutystatuslog/bydate{?start,stop}]
+
++ Parameters
+	+ version: `v1` (enum[string]) - API version
+		+ Members
+			+ `v1`
+	+ start: `2019-01-01` (string) - the start-date of the search
+	+ stop:  `2019-01-01` (string) - the stop-date of the search
+
++ Attributes (array[Duty Status Log])
+
+### Search for all Duty Status Logs in a Time Range [GET]
+
+**Access Controls**
+
+            Vehicle Sink   Vehicle Return Sink   Sink    Return Sink   Admin
+  --------- -------------- --------------------- ------- ------------- -------
+  GET       Deny           Deny                  Allow   Deny          Allow
+
++ Response 200 (application/json)
+	+ Attributes (Duty Status Log Collection)
+
+## Duty Status Log Feed       [/api{version}/dutystatuslog/feed{?token}]
+
++ Parameters
+	+ version: `v1` (enum[string]) - API version
+		+ Members
+			+ `v1`
+	+ token (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs; pass in a `null` to start with a new token set to 'now'.
+
++ Attributes (object)
+	+ token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs
+	+ feed (Duty Status Log Collection)
+
+### Follow a Feed of Duty Status Logs as they are Added to the System [GET]
+
+**Access Controls**
+
+            Vehicle Sink   Vehicle Return Sink   Sink    Return Sink   Admin
+  --------- -------------- --------------------- ------- ------------- -------
+  GET       Deny           Deny                  Deny    Allow         Allow
+
++ Response 200 (application/json)
+	+ Attributes (Duty Status Log Feed)
