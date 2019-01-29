@@ -38,7 +38,7 @@ to authorize access to Open Telematics APIs.
 
 When exchanging dates as parameters to API methods, you must ensure that
 they are formatted properly as an ISO 8601 string (format
-yyyy-MM-ddTHH:mm:ss.fffZ). In addition, all dates will have to first be
+`yyyy-MM-ddTHH:mm:ss.fffZ`). In addition, all dates will have to first be
 converted to UTC in order to ensure time zone information and daylight
 savings times are accounted for correctly.
 
@@ -99,7 +99,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + start: `2019-01-01` (string) - the start-date of the search
     + stop:  `2019-01-01` (string) - the stop-date of the search
 
-+ Attributes (array[Duty Status Log])
++ Attributes (array[Duty Status Log], fixed)
 
 ### Search for all Duty Status Logs in a Time Range [GET]
 
