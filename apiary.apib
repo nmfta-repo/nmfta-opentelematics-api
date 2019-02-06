@@ -66,6 +66,39 @@ are assigned `DENY/ALLOW` such that:
 queries and
 * the *Vehicle X* roles are intended to be safe from PII.
 
+## Security Requirements for Implementors
+
+All TSPs that participate by providing Open Telematics are expected to
+provide a secure service by default. In what follows we outline some
+aspects that are expected in such a secure service.
+
+### General Security Requirements
+
+In addition to the access controls detailed in the sections
+above, service providers seeking to utilize the Open Telematics APIs are
+expected to satisfy cybersecurity requirements for both the backend and
+in-vehicle devices to ensure: confidentiality of sensitive information,
+integrity of data and availability of services.
+
+Vendors must maintain a vulnerability response and disclosure program in
+accordance with established standards such as International Organization
+of Standards (ISO)/International Electrotechnical Commission (IEC)
+29147:2014 (Information technology \-- Security techniques \--
+Vulnerability Disclosure) and ISO/IEC 30111:2013 (Information technology
+\-- Security techniques \-- Vulnerability Handling Processes).
+
+Vendors should ensure their vulnerability response and disclosure
+program conforms with the ['Legal bug bounty' safe-harbor requirements](https://github.com/EdOverflow/legal-bug-bounty)
+to protect researchers and encourage the highest-quality participation.
+
+### Open Telematics API Server Security Requirements
+
+Open Telematics API clients must be configured such that substitution of
+any TLS certificates results in a failure to establish any connections
+to the Open Telematics API. i.e. deny all HTTPS MiTM attacks. The
+rationale is that these systems connect into high-value targets in
+integrations; HTTPS MiTM attacks could poison these high-value targets.
+
 ## Working With Dates
 
 When exchanging dates as parameters to API methods or in responses from the API, you must ensure that
