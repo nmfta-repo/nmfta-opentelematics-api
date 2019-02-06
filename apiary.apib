@@ -43,7 +43,7 @@ TSPs implementing the Open Telematics API must include access controls for reque
 * *Vehicle Sink*
 * *Vehicle Return Sink*
 * *Sink*
-* *Return Sink* 
+* *Return Sink*
 * *Admin*
 
 It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more than one role**.
@@ -70,7 +70,7 @@ queries and
 
 All TSPs that implement an Open Telematics API instance are expected to
 provide a secure service by default. In what follows we outline some
-security requirements that are expected in addition to the authentication 
+security requirements that are expected in addition to the authentication
 and access control that is detailed in the sections above.
 
 ### General Security Requirements
@@ -97,7 +97,7 @@ by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.co
 
 ### Open Telematics API Client Security Requirements
 
-Because the confidentiality of credentials is only protected by TLS in this version, it is 
+Because the confidentiality of credentials is only protected by TLS in this version, it is
 very important that all Open Telematics API clients must be configured such that substitution of
 any TLS certificates results in a failure to establish any connections
 to the Open Telematics API server. i.e. clients must implement certificate pinning.
@@ -233,7 +233,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
 + Response 200 (application/json)
     + Attributes (Duty Status Log Feed)
-    
+
 + Response 401
     + Headers
 
