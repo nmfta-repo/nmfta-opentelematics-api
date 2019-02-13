@@ -134,7 +134,15 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `UserDiagnosticClear` - User has cleared the diagnostic.
             + `UserMalfunctionClear` - User has cleared the malfunction.
 
-    + origin            :                                `0` (string) - The DutyStatusOrigin from where this log originated. (TODO as a list in enumerated constants)
+    + origin            :                        `Automatic` (enum[string]) - The DutyStatusOrigin from where this log originated.
+
+        + Default: `Automatic`
+        + Members
+            + `Automatic` - Automatic recorded by device
+            + `Manual` - Manual entry by driver.
+            + `OtherUser` - Other authenticated user.
+            + `Unassigned` - Unassigned driver.
+
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
     + state             :                                `0` (string) - The DutyStatusState of the DutyStatusLog record. (TODO as a list in enumerated constants)
