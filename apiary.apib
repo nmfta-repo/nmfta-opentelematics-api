@@ -96,6 +96,10 @@ are of the highest quality. Following the [Qualys SSL Labs Guide](https://github
 by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/) will report a
 'letter grade'; it is expected that TSPs will have letter grades of 'A' or higher according to that tool.
 
+**Whitelist HTTP Methods**
+This API specification (in *APIBlueprint*) has a complete list of all allowable *HTTP methods* for each resource/'end point'
+of the Open Telematics API. Open Telematics server implementations should use the list of methods as a whitelist to filter incoming requests before any additional processing.
+
 ### Open Telematics API Client Security Requirements
 
 **Certificate Pinning**
