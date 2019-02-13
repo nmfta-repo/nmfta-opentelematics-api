@@ -88,6 +88,7 @@ to protect researchers and encourage the highest-quality participation.
 
 ### Open Telematics API Server Security Requirements
 
+**TLS Configuration**
 The TLS security for Open Telematics API servers is of paramount importance. All
 of the confidentiality and integrity protections are relying on this layer. For this
 reason, Open Telematics API servers must ensure that their HTTPS / TLS configurations
@@ -97,6 +98,7 @@ by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.co
 
 ### Open Telematics API Client Security Requirements
 
+**Certificate Pinning**
 Because the confidentiality of credentials is only protected by TLS in this version, it is
 very important that all Open Telematics API clients must be configured such that substitution of
 any TLS certificates results in a failure to establish any connections
