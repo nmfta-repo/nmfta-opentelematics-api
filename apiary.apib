@@ -119,7 +119,21 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + editDateTime      :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
     + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (string) - An event record that meets the reporting criteria set for the Log
     + location          :         ` 37.4224764 -122.0842499` (string) - An object with the location information for the log data.
-    + malfunction       :                                `0` (string) - The DutyStatusMalfunctionType of the DutyStatusLog record. As a flag it can be both a diagnostic and malfunction state which is used to mark status based records (e.g. \"D\", \"SB\") as having a diagnostic or malfunction present at time of recording. (TODO as a list in enumerated constants)
+    + malfunction       :                             `None` (enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
+
+        + Default: `None`
+        + Members
+            + `Diagnostic` - In a diagnostic state.
+            + `DiagnosticManualPosition` - Combination of ManualPosition and Diagnostic
+            + `Malfunction` - In a malfunction state.
+            + `MalfunctionManualPosition` - Combination of ManualPosition and Malfunction
+            + `ManualPosition` - User has inputted a manual address for the log during a position compliance diagnostic event
+            + `None` - No malfunction or diagnostic present or cleared.
+            + `SystemDiagnosticClear` - System has determined that the diagnostic is cleared. Not exported to FMCSA.
+            + `SystemDiagnosticClearDriving` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
+            + `UserDiagnosticClear` - User has cleared the diagnostic.
+            + `UserMalfunctionClear` - User has cleared the malfunction.
+
     + origin            :                                `0` (string) - The DutyStatusOrigin from where this log originated. (TODO as a list in enumerated constants)
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
