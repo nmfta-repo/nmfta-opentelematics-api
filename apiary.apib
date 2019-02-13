@@ -100,6 +100,9 @@ by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.co
 This API specification (in *APIBlueprint*) has a complete list of all allowable *HTTP methods* for each resource/'end point'
 of the Open Telematics API. Open Telematics server implementations should use the list of methods as a whitelist to filter incoming requests before any additional processing.
 
+**Rate-limit API Requests**
+Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user, e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics API implementations to rates below what is offered through their other API services for telematics data.
+
 ### Open Telematics API Client Security Requirements
 
 **Certificate Pinning**
