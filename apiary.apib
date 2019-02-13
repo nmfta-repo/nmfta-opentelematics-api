@@ -154,7 +154,43 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `Rejected` - The log is a rejected edit request from another user.
             + `Requested` - The log is a pending edit request from another user.
 
-    + status            :                                `0` (string) - The DutyStatusLogType representing the driver's duty status. TODO as a list in enumerated constants)
+    + status            :                                `D` (string) - The DutyStatusLogType representing the driver's duty status.
+
+        + Default: `D`
+        + Members
+            + `AdverseWeather` - Adverse weather and driving conditions exemption.
+            + `Authority` - Authority status.
+            + `Certify` - Daily certify record.
+            + `Connected` - System log for device power connection.
+            + `D` - Drive status.
+            + `DataRecordingCompliance` - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
+            + `DataTransferCompliance` - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
+            + `Disconnected` - System log for device power disconnection.
+            + `EnginePowerup` - Engine power up record.
+            + `EnginePowerupPC` - Engine power up in PC record.
+            + `EngineShutdown` - Engine shutdown record.
+            + `EngineShutdownPC` - Engine shutdown in PC record.
+            + `EngineSyncCompliance` - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
+            + `Exemption16H` - Exemption 16 hour.
+            + `ExemptionOffDutyDeferral` - Exemption off duty deferral.
+            + `INT_D` - Intermediate Drive Event.
+            + `INT_PC` - Intermediate Personal Conveyance Event.
+            + `Login` - User login record.
+            + `Logoff` - User logout record.
+            + `MissingElementCompliance` - Missing data elements. Applies to Malfunction or Diagnostic.
+            + `OFF` - Off-duty status.
+            + `ON` - On-duty status.
+            + `OtherCompliance` - Other instances of Malfunction or Diagnostic.
+            + `PC` - Personal conveyance driver status.
+            + `PositioningCompliance` - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
+            + `PowerCompliance` - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
+            + `SB` - Sleeper berth status.
+            + `SituationalDrivingClear` - YM, PC, or WT clearing event.
+            + `TimingCompliance` - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
+            + `UnidentifiedDrivingCompliance` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
+            + `WT` - Wait time oil well driver status.
+            + `YM` - Yard move driver status.
+
     + verifyDateTime    :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
     + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (string) - A hexadecimal "check" value
     + lineDataCheck     : `9F7D0EE82B6A6CA7DDEAE841F3253059` (string) - A hexadecimal "check" value
