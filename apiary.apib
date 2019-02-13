@@ -145,7 +145,15 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
-    + state             :                                `0` (string) - The DutyStatusState of the DutyStatusLog record. (TODO as a list in enumerated constants)
+    + state             :                           `Active` (enum[string]) - The DutyStatusState of the DutyStatusLog record.
+
+        + Default: `Active'
+        + Members
+            + `Active` - The log is active and has been accepted by the driver.
+            + `Inactive` - The log is inactive. It has been removed or it is the modification history of a log.
+            + `Rejected` - The log is a rejected edit request from another user.
+            + `Requested` - The log is a pending edit request from another user.
+
     + status            :                                `0` (string) - The DutyStatusLogType representing the driver's duty status. TODO as a list in enumerated constants)
     + verifyDateTime    :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
     + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (string) - A hexadecimal "check" value
