@@ -417,6 +417,44 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
             WWW-Authenticate: Basic realm="protected"
 
+# Group Vehicle
+
+## Vehicle [/api{version}/vehicle/byid/{vehicle_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicle_id: `21232F297A57A5A743894A0E4A801FC3` (string) - ID of a Vehicle object
+
++ Attributes (object)
+    + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
+    + name                                                   (string) - Vehicle name
+    + cmvVIN                                                 (required, string) - the CMV VIN
+    + licensePlate                                           (required, string) - the vehicle license plate
+
+### Get a Vehicle Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+
 # Group Driver
 
 ## Driver [/api{version}/driver/byid/{driver_id}]
