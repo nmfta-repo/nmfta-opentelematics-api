@@ -417,4 +417,42 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
             WWW-Authenticate: Basic realm="protected"
 
+# Group Driver
+
+## Driver [/api{version}/driver/byid/{driver_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + driver_id: `A87FF679A2F3E71D9181A67B7542122C` (string) - ID of a Driver object
+
++ Attributes (object)
+    + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
+    + username                                               (string) - a username of this driver
+    + driverLicenseNumber                                    (required, string) - the driver's license number
+    + driverState                                            (string) - the home state of the driver
+    + driverHomeTerminal                                     (string) - the home terminal of the driver
+
+### Get a Driver Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Driver)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 # Group More To Come
