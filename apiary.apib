@@ -13,11 +13,11 @@ standardized telematics data format, a commercial fleet manager will
 have to reintegrate an alternate telematics provider's data format into
 their existing system reporting.
 
-This is a standardized API for retrieving telematics logs & data. 
+This is a standardized API for retrieving telematics logs & data.
 Each participating TSP would be individually responsible for the necessary
 translations from their existing formats to this Open Telematics
 API. Each TSP would continue to be responsible for managing their
-own cloud infrastructure housing customer data. The Open Telematics API, as an additional interface, 
+own cloud infrastructure housing customer data. The Open Telematics API, as an additional interface,
 will be made available by TSPs to allow their customers ready
 access to pull data in the standardized format, especially in examples
 of mixed TSP fleets.
@@ -26,30 +26,15 @@ of mixed TSP fleets.
 
 **All requests** to Open Telematics API endpoints **require authentication**.
 
-HTTP header `Authorization: Bearer <id_token>` where `<id_token>` is a JSON Web Token (JWT) with verification
-performed using signatures (and not MACs). e.g.
+For this version of the API, `v1`, all authentication must be performed using HTTP Basic. e.g.
 
 ```http
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.EkN-DOsnsuRjRO6BxXemmJDm3HbxrbRzXglbN2S4sOkopdU4IsDxTI8jO19W_A4K8ZPJijNLis4EZsHeY559a4DFOd50_OqgHGuERTqYZyuhtF39yxJPAjUESwxk2J5k_4zM3O-vtd1Ghyo4IbqKKSy6J9mTniYJPenn5-HIirE
+Authorization: Basic YWRtaW46YWRtaW4=
 ```
 
-TSPs implementing the Open Telematics API must provide a means create JWTs for use as client keys; these means
-must allow for assigning roles to the JWTs (see section *Authorization* below) as well as expiry of the JWT
-and domain for the JWT.
+This authentication method relies entirely on the security protections provided by the TLS layer; therefore HTTPS is mandatory on all connections and implementors must follow adhere to the security requirements detailed in the *Security Requirements for Implementors* section below.
 
-TSPs implementing the Open Telematics API must ensure that the
-signature of the provided JWT will be verified prior to any further
-inspection or validation of the JWT. After signature validation, the
-method implementation will also verify that the domain, and expiry of
-the JWT are valid. Then the implementation may proceed to verify that
-the JWT represents a user whose role has sufficient capability for
-access to the resource in the context of the method (see section *Authorization* below).
-
-The private secret used for JWT signatures will be unique to each TSP
-customer (i.e. carrier) instance and cannot be any of: a default value, a value derived
-from any TSP or customer public information or a value which has ever
-been published anywhere on the internet (e.g. ever committed to a github
-repo).
+TSPs implementing the Open Telematics API must provide a means to create username-password pair credentials and these must be associated with roles (see section *Authorization* below).
 
 ## Authorization
 
@@ -58,10 +43,10 @@ TSPs implementing the Open Telematics API must include access controls for reque
 * *Vehicle Sink*
 * *Vehicle Return Sink*
 * *Sink*
-* *Return Sink* 
+* *Return Sink*
 * *Admin*
 
-It must be possible for clients to create JWTs which are assigned to **one role and no more than one role**.
+It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more than one role**.
 
 TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
@@ -80,6 +65,51 @@ are assigned `DENY/ALLOW` such that:
 * the *X Return Sink* roles have access to streaming feeds, whereas the *X Sink* roles have access only to collections
 queries and
 * the *Vehicle X* roles are intended to be safe from PII.
+
+## Security Requirements for Implementors
+
+All TSPs that implement an Open Telematics API instance are expected to
+provide a secure service by default. In what follows we outline some
+security requirements that are expected in addition to the authentication
+and access control that is detailed in the sections above.
+
+### General Security Requirements
+
+Vendors must maintain a vulnerability response and disclosure program in
+accordance with established standards such as International Organization
+of Standards (ISO)/International Electrotechnical Commission (IEC)
+29147:2014 (Information technology \-- Security techniques \--
+Vulnerability Disclosure) and ISO/IEC 30111:2013 (Information technology
+\-- Security techniques \-- Vulnerability Handling Processes).
+
+Vendors should ensure their vulnerability response and disclosure
+program conforms with the ['Legal bug bounty' safe-harbor requirements](https://github.com/EdOverflow/legal-bug-bounty)
+to protect researchers and encourage the highest-quality participation.
+
+### Open Telematics API Server Security Requirements
+
+**TLS Configuration**
+The TLS security for Open Telematics API servers is of paramount importance. All
+of the confidentiality and integrity protections are relying on this layer. For this
+reason, Open Telematics API servers must ensure that their HTTPS / TLS configurations
+are of the highest quality. Following the [Qualys SSL Labs Guide](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) is reccomended.  The automated tool, also
+by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/) will report a
+'letter grade'; it is expected that TSPs will have letter grades of 'A' or higher according to that tool.
+
+**Whitelist HTTP Methods**
+This API specification (in *APIBlueprint*) has a complete list of all allowable *HTTP methods* for each resource/'end point'
+of the Open Telematics API. Open Telematics server implementations should use the list of methods as a whitelist to filter incoming requests before any additional processing.
+
+**Rate-limit API Requests**
+Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user, e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics API implementations to rates below what is offered through their other API services for telematics data.
+
+### Open Telematics API Client Security Requirements
+
+**Certificate Pinning**
+Because the confidentiality of credentials is only protected by TLS in this version, it is
+very important that all Open Telematics API clients must be configured such that substitution of
+any TLS certificates results in a failure to establish any connections
+to the Open Telematics API server. i.e. clients must implement certificate pinning.
 
 ## Working With Dates
 
@@ -139,8 +169,18 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 |:-------------|---------------------|-------|-------------|-------|
 | DENY         | DENY                | ALLOW | DENY        | ALLOW |
 
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
 + Response 200 (application/json)
     + Attributes (Duty Status Log)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 ## Duty Status Log Collection [/api{version}/dutystatuslog/bydate{?start,stop}]
 
@@ -162,8 +202,18 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 |:-------------|---------------------|-------|-------------|-------|
 | DENY         | DENY                | ALLOW | DENY        | ALLOW |
 
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
 + Response 200 (application/json)
     + Attributes (Duty Status Log Collection)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 ## Duty Status Log Feed       [/api{version}/dutystatuslog/feed{?token}]
 
@@ -185,7 +235,17 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 |:-------------|---------------------|------|-------------|-------|
 | DENY         | DENY                | DENY | ALLOW       | ALLOW |
 
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
 + Response 200 (application/json)
     + Attributes (Duty Status Log Feed)
-    
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 # Group More To Come
