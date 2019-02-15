@@ -149,12 +149,78 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + editDateTime      :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
     + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (string) - An event record that meets the reporting criteria set for the Log
     + location          :         ` 37.4224764 -122.0842499` (string) - An object with the location information for the log data.
-    + malfunction       :                                `0` (string) - The DutyStatusMalfunctionType of the DutyStatusLog record. As a flag it can be both a diagnostic and malfunction state which is used to mark status based records (e.g. \"D\", \"SB\") as having a diagnostic or malfunction present at time of recording. (TODO as a list in enumerated constants)
-    + origin            :                                `0` (string) - The DutyStatusOrigin from where this log originated. (TODO as a list in enumerated constants)
+    + malfunction       :                             `None` (enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
+
+        + Default: `None`
+        + Members
+            + `Diagnostic` - In a diagnostic state.
+            + `DiagnosticManualPosition` - Combination of ManualPosition and Diagnostic
+            + `Malfunction` - In a malfunction state.
+            + `MalfunctionManualPosition` - Combination of ManualPosition and Malfunction
+            + `ManualPosition` - User has inputted a manual address for the log during a position compliance diagnostic event
+            + `None` - No malfunction or diagnostic present or cleared.
+            + `SystemDiagnosticClear` - System has determined that the diagnostic is cleared. Not exported to FMCSA.
+            + `SystemDiagnosticClearDriving` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
+            + `UserDiagnosticClear` - User has cleared the diagnostic.
+            + `UserMalfunctionClear` - User has cleared the malfunction.
+
+    + origin            :                        `Automatic` (enum[string]) - The DutyStatusOrigin from where this log originated.
+
+        + Default: `Automatic`
+        + Members
+            + `Automatic` - Automatic recorded by device
+            + `Manual` - Manual entry by driver.
+            + `OtherUser` - Other authenticated user.
+            + `Unassigned` - Unassigned driver.
+
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
-    + state             :                                `0` (string) - The DutyStatusState of the DutyStatusLog record. (TODO as a list in enumerated constants)
-    + status            :                                `0` (string) - The DutyStatusLogType representing the driver's duty status. TODO as a list in enumerated constants)
+    + state             :                           `Active` (enum[string]) - The DutyStatusState of the DutyStatusLog record.
+
+        + Default: `Active'
+        + Members
+            + `Active` - The log is active and has been accepted by the driver.
+            + `Inactive` - The log is inactive. It has been removed or it is the modification history of a log.
+            + `Rejected` - The log is a rejected edit request from another user.
+            + `Requested` - The log is a pending edit request from another user.
+
+    + status            :                                `D` (string) - The DutyStatusLogType representing the driver's duty status.
+
+        + Default: `D`
+        + Members
+            + `AdverseWeather` - Adverse weather and driving conditions exemption.
+            + `Authority` - Authority status.
+            + `Certify` - Daily certify record.
+            + `Connected` - System log for device power connection.
+            + `D` - Drive status.
+            + `DataRecordingCompliance` - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
+            + `DataTransferCompliance` - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
+            + `Disconnected` - System log for device power disconnection.
+            + `EnginePowerup` - Engine power up record.
+            + `EnginePowerupPC` - Engine power up in PC record.
+            + `EngineShutdown` - Engine shutdown record.
+            + `EngineShutdownPC` - Engine shutdown in PC record.
+            + `EngineSyncCompliance` - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
+            + `Exemption16H` - Exemption 16 hour.
+            + `ExemptionOffDutyDeferral` - Exemption off duty deferral.
+            + `INT_D` - Intermediate Drive Event.
+            + `INT_PC` - Intermediate Personal Conveyance Event.
+            + `Login` - User login record.
+            + `Logoff` - User logout record.
+            + `MissingElementCompliance` - Missing data elements. Applies to Malfunction or Diagnostic.
+            + `OFF` - Off-duty status.
+            + `ON` - On-duty status.
+            + `OtherCompliance` - Other instances of Malfunction or Diagnostic.
+            + `PC` - Personal conveyance driver status.
+            + `PositioningCompliance` - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
+            + `PowerCompliance` - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
+            + `SB` - Sleeper berth status.
+            + `SituationalDrivingClear` - YM, PC, or WT clearing event.
+            + `TimingCompliance` - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
+            + `UnidentifiedDrivingCompliance` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
+            + `WT` - Wait time oil well driver status.
+            + `YM` - Yard move driver status.
+
     + verifyDateTime    :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
     + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (string) - A hexadecimal "check" value
     + lineDataCheck     : `9F7D0EE82B6A6CA7DDEAE841F3253059` (string) - A hexadecimal "check" value
