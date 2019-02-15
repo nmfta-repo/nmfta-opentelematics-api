@@ -177,14 +177,14 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
     + state             :                           `Active` (enum[string]) - The DutyStatusState of the DutyStatusLog record.
 
-        + Default: `Active'
+        + Default: `Active`
         + Members
             + `Active` - The log is active and has been accepted by the driver.
             + `Inactive` - The log is inactive. It has been removed or it is the modification history of a log.
             + `Rejected` - The log is a rejected edit request from another user.
             + `Requested` - The log is a pending edit request from another user.
 
-    + status            :                                `D` (string) - The DutyStatusLogType representing the driver's duty status.
+    + status            :                                `D` (enum[string]) - The DutyStatusLogType representing the driver's duty status.
 
         + Default: `D`
         + Members
