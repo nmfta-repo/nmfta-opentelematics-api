@@ -109,7 +109,9 @@ Since every request to the Open Telematics API must be authenticated it is possi
 Because the confidentiality of credentials is only protected by TLS in this version, it is
 very important that all Open Telematics API clients must be configured such that substitution of
 any TLS certificates results in a failure to establish any connections
-to the Open Telematics API server. i.e. clients must implement certificate pinning.
+to the Open Telematics API server.
+
+All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
 
 ## Working With Dates
 
