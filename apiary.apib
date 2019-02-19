@@ -139,17 +139,17 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + dutystatuslog_id: `C4CA4238A0B923820DCC509A6F75849B` (string) - ID of the Duty Status Log of interest
 
 + Attributes (object)
-    + id                : `C4CA4238A0B923820DCC509A6F75849B` (string) - The unique identifier for the specific Entity object in the system.
+    + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
     + annotations       : `C81E728D9D4C2F636F067F89CC14862C`, `ECCBC87E4B5CE2FE28308FD9F2A7BAF3` (array[string]) - The list of AnnotationLog(s) which are associated with this log.
     + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
-    + eldDateTime       :          `2019-01-0100:00:00.000Z` (string) - Date and time from the ELD device
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (string) - The vehicle id associated with this log.
-    + driverId          : `63A9F0EA7BB98050796B649E85481845` (string) - The id of the driver who created this log.
-    + distanceLastValid :                                117 (number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
-    + editDateTime      :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
-    + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (string) - An event record that meets the reporting criteria set for the Log
-    + location          :         ` 37.4224764 -122.0842499` (string) - An object with the location information for the log data.
-    + malfunction       :                             `None` (enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
+    + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
+    + distanceLastValid :                                117 (required, number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
+    + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
+    + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (required, string) - An event record that meets the reporting criteria set for the Log
+    + location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for the log data.
+    + malfunction       :                             `None` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
 
         + Default: `None`
         + Members
@@ -164,7 +164,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `UserDiagnosticClear` - User has cleared the diagnostic.
             + `UserMalfunctionClear` - User has cleared the malfunction.
 
-    + origin            :                        `Automatic` (enum[string]) - The DutyStatusOrigin from where this log originated.
+    + origin            :                        `Automatic` (required, enum[string]) - The DutyStatusOrigin from where this log originated.
 
         + Default: `Automatic`
         + Members
@@ -173,9 +173,9 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `OtherUser` - Other authenticated user.
             + `Unassigned` - Unassigned driver.
 
-    + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
-    + sequence          :                                 23 (number) - The sequence number, which is used to generate the sequence ID.
-    + state             :                           `Active` (enum[string]) - The DutyStatusState of the DutyStatusLog record.
+    + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (required, string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
+    + sequence          :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
+    + state             :                           `Active` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
 
         + Default: `Active`
         + Members
@@ -184,7 +184,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `Rejected` - The log is a rejected edit request from another user.
             + `Requested` - The log is a pending edit request from another user.
 
-    + status            :                                `D` (enum[string]) - The DutyStatusLogType representing the driver's duty status.
+    + status            :                                `D` (required, enum[string]) - The DutyStatusLogType representing the driver's duty status.
 
         + Default: `D`
         + Members
@@ -221,11 +221,11 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `WT` - Wait time oil well driver status.
             + `YM` - Yard move driver status.
 
-    + verifyDateTime    :          `2019-01-0100:00:00.000Z` (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
-    + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (string) - A hexadecimal "check" value
-    + lineDataCheck     : `9F7D0EE82B6A6CA7DDEAE841F3253059` (string) - A hexadecimal "check" value
-    + multidayBasis     :                                  0 (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
-    + outputFileComment : `fake Duty Status Log for testing` (string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
+    + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
+    + fileDataCheck     : `164731747FC7236D799E588F60EFBBE7` (required, string) - A hexadecimal "check" value
+    + lineDataCheck     : `9F7D0EE82B6A6CA7DDEAE841F3253059` (required, string) - A hexadecimal "check" value
+    + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
+    + outputFileComment : `fake Duty Status Log for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
 
 ### Get a Duty Status Log by its ID [GET]
 
@@ -308,6 +308,185 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
 + Response 200 (application/json)
     + Attributes (Duty Status Log Feed)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+# Group Annotation Log
+
+## Annotation Log [/api{version}/annotationlog/byid/{annotation_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + annotation_id: `C81E728D9D4C2F636F067F89CC14862C` (string) - ID of an annotation log object
+
++ Attributes (object)
+    + id                : `C81E728D9D4C2F636F067F89CC14862C` (required, string) - The id of this Annotation Log object
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
+    + comment           : `note: something noteworthy`       (required, string) - The annotation test associated with the log.
+    + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
+
+### Get an Annotation Log by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Annotation Log)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Annotation Log Collection [/api{version}/annotationlog/bydate{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (string) - the stop-date of the search
+
++ Attributes (object)
+    + data (array[Annotation Log], fixed-type)
+
+### Search for all Annotation Logs in a Time Range [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Annotation Log Collection)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Annotation Log Feed       [/api{version}/annotationlog/feed{?token}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs; pass in a `null` to start with a new token set to 'now'.
+
++ Attributes (object)
+    + token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Duty Status Logs
+    + feed (array[Annotation Log], fixed-type)
+
+### Follow a Feed of Annotation Logs as they are Added to the System [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
+|:-------------|---------------------|------|-------------|-------|
+| DENY         | DENY                | DENY | ALLOW       | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Annotation Log Feed)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+# Group Vehicle
+
+## Vehicle [/api{version}/vehicle/byid/{vehicle_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicle_id: `21232F297A57A5A743894A0E4A801FC3` (string) - ID of a Vehicle object
+
++ Attributes (object)
+    + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
+    + name                                                   (string) - Vehicle name
+    + cmvVIN                                                 (required, string) - the CMV VIN
+    + licensePlate                                           (required, string) - the vehicle license plate
+
+### Get a Vehicle Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+
+# Group Driver
+
+## Driver [/api{version}/driver/byid/{driver_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + driver_id: `A87FF679A2F3E71D9181A67B7542122C` (string) - ID of a Driver object
+
++ Attributes (object)
+    + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
+    + username                                               (string) - a username of this driver
+    + driverLicenseNumber                                    (required, string) - the driver's license number
+    + driverState                                            (string) - the home state of the driver
+    + driverHomeTerminal                                     (string) - the home terminal of the driver
+
+### Get a Driver Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Driver)
 
 + Response 401
     + Headers
