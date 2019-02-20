@@ -495,4 +495,256 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
             WWW-Authenticate: Basic realm="protected"
 
+# Group Trailer
+
+## Trailer [/api{version}/trailer/byid/{trailer_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + trailer_id: `93707f725009f066ecf17dd8f6409a66` (string) - ID of a Trailer object
+
++ Attributes (object)
+    + id                : `93707f725009f066ecf17dd8f6409a66` (required, string) - The id of this Trailer object
+    + comment           : `Chris' second Wabco trailer`      (string) - Free text field where any user information can be stored and referenced for this entity.
+    + name              : `chrisWabco2`                      (string) -  The name of the trailer.
+    + trailerNum        : `5428`                             (required, string) -  Identifier(s) the motor carrier uses for the trailers in their normal course of business.
+    + make              : `WABCO`                            (string) -  Manufacturer of the trailer
+    + serialNumber      : `3020881703`                       (string) -  Serial number of the trailer
+
+### Get a Driver Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Trailer)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+# Group Trailer Attachment
+
+## Trailer Attachment [/api{version}/trailerattachment/byid/{trailerattachment_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + trailerattachment_id: `915e375d95d78bf040a2e054caadfb56` (string) - ID of a Trailer object
+
++ Attributes (object)
+    + id                : `915e375d95d78bf040a2e054caadfb56` (required, string) - The id of this Trailer Attachment object
+    + activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was attached.
+    + activeTo          :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was detached.
+    + vehicleIdDevice   : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id with which the Trailer is associated with.
+    + trailerIdTrailer  : `93707f725009f066ecf17dd8f6409a66` (required, string) - The attached Trailer id.
+
+### Get a Trailer Attachment Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Trailer Attachment)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Trailer Attachment Collection [/api{version}/trailerattachment/bydate{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (string) - the stop-date of the search
+
++ Attributes (object)
+    + data (array[Trailer Attachment], fixed-type)
+
+### Search for all Trailer Attachments in a Time Range [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Trailer Attachment Collection)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Trailer Attachment Feed       [/api{version}/trailerattachment/feed{?token}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Trailer Attachments; pass in a `null` to start with a new token set to 'now'.
+
++ Attributes (object)
+    + token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Trailer Attachment
+    + feed (array[Trailer Attachment], fixed-type)
+
+### Follow a Feed of Trailer Attachments as they are Added to the System [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
+|:-------------|---------------------|------|-------------|-------|
+| DENY         | DENY                | DENY | ALLOW       | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Trailer Attachment Feed)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+# Group Shipment Log
+
+## Shipment Log [/api{version}/shipmentlog/byid/{shipmentlog_id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + shipmentlog_id: `d498b81587f625b06571e7818a06befc` (string) - ID of a Shipment Log object
+
++ Attributes (object)
+    + id                : `d498b81587f625b06571e7818a06befc` (required, string) - The id of this Shipment Log object
+    + activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date the shipment was started
+    + activeTo          :          `2019-01-0100:00:00.000Z` (required, string) - The date the shipment was ended
+    + commodity         :                            `water` (string) - The commodity shipped.
+    + dateTime          :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the log was created.
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (string) - The vehicle id associated with this log.
+    + documentNumber    :                            `00001` (string) - The identifier of the shipment document. Default [""]
+    + driver            : `A87FF679A2F3E71D9181A67B7542122C` (string) - The User who created this log.
+    + shipperName       :                      `Yellow Flag` (string) - The name of the shipper
+
+### Get a Shipment Log Object by its ID [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Shipment Log)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Shipment Log Collection [/api{version}/shipmentlog/bydate{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (string) - the stop-date of the search
+
++ Attributes (object)
+    + data (array[Shipment Log], fixed-type)
+
+### Search for all Shipment Logs in a Time Range [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
+|:-------------|---------------------|-------|-------------|-------|
+| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Shipment Log Collection)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Shipment Log Feed       [/api{version}/shipmentlog/feed{?token}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Shipment Logs; pass in a `null` to start with a new token set to 'now'.
+
++ Attributes (object)
+    + token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Shipment Log
+    + feed (array[Shipment Log], fixed-type)
+
+### Follow a Feed of Shipment Logs as they are Added to the System [GET]
+
+**Access Controls**
+
+| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
+|:-------------|---------------------|------|-------------|-------|
+| DENY         | DENY                | DENY | ALLOW       | ALLOW |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Shipment Log Feed)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+
 # Group More To Come
