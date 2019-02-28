@@ -103,6 +103,9 @@ of the Open Telematics API. Open Telematics server implementations should use th
 **Rate-limit API Requests**
 Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user, e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics API implementations to rates below what is offered through their other API services for telematics data.
 
+**Prevent Brute-Forcing***
+Authentication (for this version of the API) is tied exclusively to HTTP Basic in each request. This means that each and every API endpoint is an opportunity to brute force any of the user credentials. Open Telematics server implementors must enforce a global rate-limit on authentication attempts for each user. Implementors may also want to consider other mitigations against brute-force attacks on credentials; c.f. [the OWA page on Blocking Brute Force Attacks](https://www.owasp.org/index.php/Blocking_Brute_Force_Attacks).
+
 ***Prevent Server-Error Stacktraces***
 Open Telematics server implementors must ensure that their software is deployed such that it does not include stack traces in any response; e.g. no stacktraces in a 500 server error response.
 
