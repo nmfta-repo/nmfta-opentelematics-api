@@ -106,6 +106,10 @@ Since every request to the Open Telematics API must be authenticated it is possi
 ***Prevent Server-Error Stacktraces***
 Open Telematics server implementors must ensure that their software is deployed such that it does not include stack traces in any response; e.g. no stacktraces in a 500 server error response.
 
+***Prevent Resource Exhaustion by Slow-posting***
+Open Telematics server implementors must ensure that, when receiving data from clients, the server implements short-enough timeouts such that exhaustion of the server resources through malicious client 'slow-posting' is not possible. For more details, consult this [Qualys blog post](https://blog.qualys.com/securitylabs/2011/11/02/how-to-protect-against-slow-http-attacks).
+
+
 ### Open Telematics API Client Security Requirements
 
 **Certificate Pinning**
