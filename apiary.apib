@@ -148,7 +148,7 @@ The localization does not apply to units of measure. In all cases the Open Telem
 
 Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-Language: `. If no request header is present then `Accept-Language: en` will be assumed.
 
-Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is provided below for convenience.
+Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is provided below for convenience in the sample response to `GET /api{version}/i18n`.
 
 ### Retrieve a Translation Table [GET /api{version}/i18n]
 
@@ -169,6 +169,263 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
     + Attributes (object)
         + data (array[Token Translation], fixed-type)
 
+    + Body
+
+            {
+              "data": [
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_DIAGNOSTIC",
+                    "msgstr": "In a diagnostic state"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_DIAGNOSTICMANUALPOSITION",
+                    "msgstr": "Combination of ManualPosition and Diagnostic"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_MALFUNCTION",
+                    "msgstr": "In a malfunction state"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_MALFUNCTIONMANUALPOSITION",
+                    "msgstr": "Combination of ManualPosition and Malfunction"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_MANUALPOSITION",
+                    "msgstr": "User has inputted a manual address for the log during a position compliance diagnostic even"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_NONE",
+                    "msgstr": "No malfunction or diagnostic present or cleared"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEAR",
+                    "msgstr": "System has determined that the diagnostic is cleared. Not exported to FMCSA"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING",
+                    "msgstr": "System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_USERDIAGNOSTICCLEAR",
+                    "msgstr": "User has cleared the diagnostic"
+                },
+                {
+                    "origin": "Duty Status Log, malfunction",
+                    "msgid":  "MALFUNCTION_USERMALFUNCTIONCLEAR",
+                    "msgstr": "User has cleared the malfunction"
+                },
+                {
+                    "origin": "Duty Status Log, origin",
+                    "msgid":  "ORIGIN_AUTOMATIC",
+                    "msgstr": "Automatic recorded by device"
+                },
+                {
+                    "origin": "Duty Status Log, origin",
+                    "msgid":  "ORIGIN_MANUAL",
+                    "msgstr": "Manual entry by driver"
+                },
+                {
+                    "origin": "Duty Status Log, origin",
+                    "msgid":  "ORIGIN_OTHERUSER",
+                    "msgstr": "Other authenticated user"
+                },
+                {
+                    "origin": "Duty Status Log, origin",
+                    "msgid":  "ORIGIN_UNASSIGNED",
+                    "msgstr": "Unassigned driver"
+                },
+                {
+                    "origin": "Duty Status Log, state",
+                    "msgid":  "STATE_ACTIVE",
+                    "msgstr": "The log is active and has been accepted by the driver."
+                },
+                {
+                    "origin": "Duty Status Log, state",
+                    "msgid":  "STATE_INACTIVE",
+                    "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
+                },
+                {
+                    "origin": "Duty Status Log, state",
+                    "msgid":  "STATE_REJECTED",
+                    "msgstr": "The log is a rejected edit request from another user."
+                },
+                {
+                    "origin": "Duty Status Log, state",
+                    "msgid":  "STATE_REQUESTED",
+                    "msgstr": "The log is a pending edit request from another user."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ADVERSEWEATHER",
+                    "msgstr": "Adverse weather and driving conditions exemption."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_AUTHORITY",
+                    "msgstr": "Authority status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_CERTIFY",
+                    "msgstr": "Daily certify record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_CONNECTED",
+                    "msgstr": "System log for device power connection."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_D",
+                    "msgstr": "Drive status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_DATARECORDINGCOMPLIANCE",
+                    "msgstr": "Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_DATATRANSFERCOMPLIANCE",
+                    "msgstr": "Transfer of data fails to complete. Applies to Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_DISCONNECTED",
+                    "msgstr": "System log for device power disconnection."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ENGINEPOWERUP",
+                    "msgstr": "Engine power up record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ENGINEPOWERUPPC",
+                    "msgstr": "Engine power up in PC record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ENGINESHUTDOWN",
+                    "msgstr": "Engine shutdown record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ENGINESHUTDOWNPC",
+                    "msgstr": "Engine shutdown in PC record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ENGINESYNCCOMPLIANCE",
+                    "msgstr": "Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_EXEMPTION16H",
+                    "msgstr": "Exemption 16 hour."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_EXEMPTIONOFFDUTYDEFERRAL",
+                    "msgstr": "Exemption off duty deferral."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_INT_D",
+                    "msgstr": "Intermediate Drive Event."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_INT_PC",
+                    "msgstr": "Intermediate Personal Conveyance Event."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_LOGIN",
+                    "msgstr": "User login record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_LOGOFF",
+                    "msgstr": "User logout record."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_MISSINGELEMENTCOMPLIANCE",
+                    "msgstr": "Missing data elements. Applies to Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_OFF",
+                    "msgstr": "Off-duty status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_ON",
+                    "msgstr": "On-duty status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_OTHERCOMPLIANCE",
+                    "msgstr": "Other instances of Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_PC",
+                    "msgstr": "Personal conveyance driver status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_POSITIONINGCOMPLIANCE",
+                    "msgstr": "ELD continually fails to acquire valid position measurement. Applies to Malfunction."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_POWERCOMPLIANCE",
+                    "msgstr": "Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_SB",
+                    "msgstr": "Sleeper berth status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_SITUATIONALDRIVINGCLEAR",
+                    "msgstr": "YM, PC, or WT clearing event."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_TIMINGCOMPLIANCE",
+                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE",
+                    "msgstr": "More than 30 minutes of driving with unidentified driving. Applies to Diagnostic."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_WT",
+                    "msgstr": "Wait time oil well driver status."
+                },
+                {
+                    "origin": "Duty Status Log, status",
+                    "msgid":  "STATUS_YM",
+                    "msgstr": "Yard move driver status."
+                }
+              ]
+            }
+
 + Response 406
 
 + Response 401
@@ -183,7 +440,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 + origin :        `Duty Status Log, malfunction` (string) - optional note of origin of token to be translated
 + comment :      `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
 + msgid :           `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
-+ msgstring :             `Diagnostic` (required, string) - The locale's representation (translation) of the token
++ msgstr :                `Diagnostic` (required, string) - The locale's representation (translation) of the token
 
 # Group Duty Status Log
 
@@ -226,77 +483,73 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
             + 7 - A malfunction or data diagnostic detection
 
     + location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for the log data.
-    + malfunction       :                             `None` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
+    + malfunction       :                 `MALFUNCTION_NONE` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
 
-        + Default: `None`
         + Members
-            + `Diagnostic` - In a diagnostic state.
-            + `DiagnosticManualPosition` - Combination of ManualPosition and Diagnostic
-            + `Malfunction` - In a malfunction state.
-            + `MalfunctionManualPosition` - Combination of ManualPosition and Malfunction
-            + `ManualPosition` - User has inputted a manual address for the log during a position compliance diagnostic event
-            + `None` - No malfunction or diagnostic present or cleared.
-            + `SystemDiagnosticClear` - System has determined that the diagnostic is cleared. Not exported to FMCSA.
-            + `SystemDiagnosticClearDriving` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
-            + `UserDiagnosticClear` - User has cleared the diagnostic.
-            + `UserMalfunctionClear` - User has cleared the malfunction.
+            + `MALFUNCTION_DIAGNOSTIC` - In a diagnostic state.
+            + `MALFUNCTION_DIAGNOSTICMANUALPOSITION` - Combination of ManualPosition and Diagnostic
+            + `MALFUNCTION_MALFUNCTION` - In a malfunction state.
+            + `MALFUNCTION_MALFUNCTIONMANUALPOSITION` - Combination of ManualPosition and Malfunction
+            + `MALFUNCTION_MANUALPOSITION` - User has inputted a manual address for the log during a position compliance diagnostic event
+            + `MALFUNCTION_NONE` - No malfunction or diagnostic present or cleared.
+            + `MALFUNCTION_SYSTEMDIAGNOSTICCLEAR` - System has determined that the diagnostic is cleared. Not exported to FMCSA.
+            + `MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
+            + `MALFUNCTION_USERDIAGNOSTICCLEAR` - User has cleared the diagnostic.
+            + `MALFUNCTION_USERMALFUNCTIONCLEAR` - User has cleared the malfunction.
 
-    + origin            :                        `Automatic` (required, enum[string]) - The DutyStatusOrigin from where this log originated.
+    + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The DutyStatusOrigin from where this log originated.
 
-        + Default: `Automatic`
         + Members
-            + `Automatic` - Automatic recorded by device
-            + `Manual` - Manual entry by driver.
-            + `OtherUser` - Other authenticated user.
-            + `Unassigned` - Unassigned driver.
+            + `ORIGIN_AUTOMATIC` - Automatic recorded by device
+            + `ORIGIN_MANUAL` - Manual entry by driver.
+            + `ORIGIN_OTHERUSER` - Other authenticated user.
+            + `ORIGIN_UNASSIGNED` - Unassigned driver.
 
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
-    + state             :                           `Active` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
+    + state             :                     `STATE_ACTIVE` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
 
-        + Default: `Active`
         + Members
-            + `Active` - The log is active and has been accepted by the driver.
-            + `Inactive` - The log is inactive. It has been removed or it is the modification history of a log.
-            + `Rejected` - The log is a rejected edit request from another user.
-            + `Requested` - The log is a pending edit request from another user.
+            + `STATE_ACTIVE` - The log is active and has been accepted by the driver.
+            + `STATE_INACTIVE` - The log is inactive. It has been removed or it is the modification history of a log.
+            + `STATE_REJECTED` - The log is a rejected edit request from another user.
+            + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
-    + status            :                                `D` (required, enum[string]) - The DutyStatusLogType representing the driver's duty status.
+    + status            :                         `STATUS_D` (required, enum[string]) - The DutyStatusLogType representing the driver's duty status.
 
-        + Default: `D`
         + Members
-            + `AdverseWeather` - Adverse weather and driving conditions exemption.
-            + `Authority` - Authority status.
-            + `Certify` - Daily certify record.
-            + `Connected` - System log for device power connection.
-            + `D` - Drive status.
-            + `DataRecordingCompliance` - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
-            + `DataTransferCompliance` - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
-            + `Disconnected` - System log for device power disconnection.
-            + `EnginePowerup` - Engine power up record.
-            + `EnginePowerupPC` - Engine power up in PC record.
-            + `EngineShutdown` - Engine shutdown record.
-            + `EngineShutdownPC` - Engine shutdown in PC record.
-            + `EngineSyncCompliance` - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
-            + `Exemption16H` - Exemption 16 hour.
-            + `ExemptionOffDutyDeferral` - Exemption off duty deferral.
-            + `INT_D` - Intermediate Drive Event.
-            + `INT_PC` - Intermediate Personal Conveyance Event.
-            + `Login` - User login record.
-            + `Logoff` - User logout record.
-            + `MissingElementCompliance` - Missing data elements. Applies to Malfunction or Diagnostic.
-            + `OFF` - Off-duty status.
-            + `ON` - On-duty status.
-            + `OtherCompliance` - Other instances of Malfunction or Diagnostic.
-            + `PC` - Personal conveyance driver status.
-            + `PositioningCompliance` - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
-            + `PowerCompliance` - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
-            + `SB` - Sleeper berth status.
-            + `SituationalDrivingClear` - YM, PC, or WT clearing event.
-            + `TimingCompliance` - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
-            + `UnidentifiedDrivingCompliance` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
-            + `WT` - Wait time oil well driver status.
-            + `YM` - Yard move driver status.
+            + `STATUS_ADVERSEWEATHER` - Adverse weather and driving conditions exemption.
+            + `STATUS_AUTHORITY` - Authority status.
+            + `STATUS_CERTIFY` - Daily certify record.
+            + `STATUS_CONNECTED` - System log for device power connection.
+            + `STATUS_D` - Drive status.
+            + `STATUS_DATARECORDINGCOMPLIANCE` - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
+            + `STATUS_DATATRANSFERCOMPLIANCE` - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
+            + `STATUS_DISCONNECTED` - System log for device power disconnection.
+            + `STATUS_ENGINEPOWERUP` - Engine power up record.
+            + `STATUS_ENGINEPOWERUPPC` - Engine power up in PC record.
+            + `STATUS_ENGINESHUTDOWN` - Engine shutdown record.
+            + `STATUS_ENGINESHUTDOWNPC` - Engine shutdown in PC record.
+            + `STATUS_ENGINESYNCCOMPLIANCE` - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
+            + `STATUS_EXEMPTION16H` - Exemption 16 hour.
+            + `STATUS_EXEMPTIONOFFDUTYDEFERRAL` - Exemption off duty deferral.
+            + `STATUS_INT_D` - Intermediate Drive Event.
+            + `STATUS_INT_PC` - Intermediate Personal Conveyance Event.
+            + `STATUS_LOGIN` - User login record.
+            + `STATUS_LOGOFF` - User logout record.
+            + `STATUS_MISSINGELEMENTCOMPLIANCE` - Missing data elements. Applies to Malfunction or Diagnostic.
+            + `STATUS_OFF` - Off-duty status.
+            + `STATUS_ON` - On-duty status.
+            + `STATUS_OTHERCOMPLIANCE` - Other instances of Malfunction or Diagnostic.
+            + `STATUS_PC` - Personal conveyance driver status.
+            + `STATUS_POSITIONINGCOMPLIANCE` - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
+            + `STATUS_POWERCOMPLIANCE` - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
+            + `STATUS_SB` - Sleeper berth status.
+            + `STATUS_SITUATIONALDRIVINGCLEAR` - YM, PC, or WT clearing event.
+            + `STATUS_TIMINGCOMPLIANCE` - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
+            + `STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
+            + `STATUS_WT` - Wait time oil well driver status.
+            + `STATUS_YM` - Yard move driver status.
 
     + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
     + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
