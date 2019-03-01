@@ -1,6 +1,6 @@
 FORMAT: 1A
 
-# NMFTA Fleet Resiliency - Open Telematics API DRAFT
+# Introduction
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
@@ -21,6 +21,8 @@ own cloud infrastructure housing customer data. The Open Telematics API, as an a
 will be made available by TSPs to allow their customers ready
 access to pull data in the standardized format, especially in examples
 of mixed TSP fleets.
+
+# Security Requirements
 
 ## Authentication
 
@@ -122,6 +124,8 @@ any TLS certificates results in a failure to establish any connections
 to the Open Telematics API server.
 
 All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
+
+# General Requirements
 
 ## Working With Dates
 
