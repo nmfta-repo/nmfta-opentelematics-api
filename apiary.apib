@@ -140,6 +140,51 @@ that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
 
+## Localization
+
+The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the descriptions of the enumerated constants in the API.
+
+The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or comment fields.
+
+Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-Language: `. If no request header is present then `Accept-Language: en` will be assumed.
+
+Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is provided below for convenience.
+
+### Retrieve a Translation Table [GET /api{version}/i18n]
+
+Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented in API Blueprint's formal spec language.
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+
++ Request
+    + Headers
+
+            Accept-Language: en
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + data (array[Token Translation], fixed-type)
+
++ Response 406
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Data Structures
+
+### Token Translation (object)
+
++ origin :        `Duty Status Log, malfunction` (string) - optional note of origin of token to be translated
++ comment :      `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
++ msgid :           `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
++ msgstring :             `Diagnostic` (required, string) - The locale's representation (translation) of the token
+
 # Group Duty Status Log
 
 ## Duty Status Log            [/api{version}/dutystatuslog/byid/{dutystatuslog_id}]
