@@ -511,6 +511,18 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 The Open Telematics API is envisioned to be complete enough that motor freight carriers can use these APIs instead of the proprietary TSP APIs -- while still connecting-to TSP-hosted servers and hence still using the same provider. In the interest of ensuring that the APIs are _useful_ to their intended users (motor freight carriers) we will capture a summary of use cases here:
 
+## Use Case Data Export
+
+Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of this specification is all the data specified here and does not include any other proprietary data structures designed and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case we aim to support here please see below on 'data import.'
+
+The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above) for a given time-period. They do this by querying
+
+* Complete Telematics Record
+
+for a given period of time.
+
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
 ## Use Case Check Provider's State of Health
 
 Users of telematics that is highly integrated into their operations need assurances of the state of health of the Provider's services.
