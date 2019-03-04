@@ -149,7 +149,27 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
     + distanceLastValid :                                117 (required, number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
     + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
-    + eventRecord       : `5F4DCC3B5AA765D61D8327DEB882CF99` (required, string) - An event record that meets the reporting criteria set for the Log
+    + eventRecordStatus :                                 1  (required, enum[number]) - The record status number of this log
+
+        + Default: 1
+        + Members
+            + 1 - Active
+            + 2 - Inactive -> Changed
+            + 3 - Inactive -> Change Requested
+            + 4 - Inactive -> Change Rejected
+
+    + eventType         :                                  5 (required, enum[string]) - The event type number of this log. (Table 6; 7.25 of the ELD Final Rule)
+
+        + Default: 5
+        + Members
+            + 1 - A change in driver's duty-status
+            + 2 - An intermediate log
+            + 3 - A change in driver's indication of authorized personal use of CMV or yard moves
+            + 4 - A driver's certification/re-certification of records
+            + 5 - A driver's login/logout activity
+            + 6 - CMV's engine power up / shut down activity
+            + 7 - A malfunction or data diagnostic detection
+
     + location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for the log data.
     + malfunction       :                             `None` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
 
@@ -175,7 +195,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             + `OtherUser` - Other authenticated user.
             + `Unassigned` - Unassigned driver.
 
-    + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (required, string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
+    + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
     + sequence          :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
     + state             :                           `Active` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
 
@@ -534,24 +554,24 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
             WWW-Authenticate: Basic realm="protected"
 
-# Group Trailer Attachment
+# Group Trailer Attachment Log
 
-## Trailer Attachment [/api{version}/trailerattachment/byid/{trailerattachment_id}]
+## Trailer Attachment Log [/api{version}/trailerattachmentlog/byid/{trailerattachmentlog_id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + trailerattachment_id: `915e375d95d78bf040a2e054caadfb56` (string) - ID of a Trailer object
+    + trailerattachmentlog_id: `915e375d95d78bf040a2e054caadfb56` (string) - ID of a Trailer object
 
 + Attributes (object)
-    + id                : `915e375d95d78bf040a2e054caadfb56` (required, string) - The id of this Trailer Attachment object
+    + id                : `915e375d95d78bf040a2e054caadfb56` (required, string) - The id of this Trailer Attachment Log object
     + activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was attached.
     + activeTo          :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was detached.
     + vehicleIdDevice   : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id with which the Trailer is associated with.
     + trailerIdTrailer  : `93707f725009f066ecf17dd8f6409a66` (required, string) - The attached Trailer id.
 
-### Get a Trailer Attachment Object by its ID [GET]
+### Get a Trailer Attachment Log Object by its ID [GET]
 
 **Access Controls**
 
@@ -565,14 +585,14 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Trailer Attachment)
+    + Attributes (Trailer Attachment Log)
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
-## Trailer Attachment Collection [/api{version}/trailerattachment/bydate{?start,stop}]
+## Trailer Attachment Log Collection [/api{version}/trailerattachmentlog/bydate{?start,stop}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -582,9 +602,9 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
     + stop:  `2019-01-0100:00:00.000Z` (string) - the stop-date of the search
 
 + Attributes (object)
-    + data (array[Trailer Attachment], fixed-type)
+    + data (array[Trailer Attachment Log], fixed-type)
 
-### Search for all Trailer Attachments in a Time Range [GET]
+### Search for all Trailer Attachment Logs in a Time Range [GET]
 
 **Access Controls**
 
@@ -598,26 +618,26 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Trailer Attachment Collection)
+    + Attributes (Trailer Attachment Log Collection)
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
-## Trailer Attachment Feed       [/api{version}/trailerattachment/feed{?token}]
+## Trailer Attachment Log Feed       [/api{version}/trailerattachmentlog/feed{?token}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Trailer Attachments; pass in a `null` to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Trailer Attachment Logs; pass in a `null` to start with a new token set to 'now'.
 
 + Attributes (object)
     + token (string) - a since-token, pass-in the token previously returned by `feed` to 'follow' new Trailer Attachment
-    + feed (array[Trailer Attachment], fixed-type)
+    + feed (array[Trailer Attachment Log], fixed-type)
 
-### Follow a Feed of Trailer Attachments as they are Added to the System [GET]
+### Follow a Feed of Trailer Attachment Logs as they are Added to the System [GET]
 
 **Access Controls**
 
@@ -631,7 +651,7 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Trailer Attachment Feed)
+    + Attributes (Trailer Attachment Log Feed)
 
 + Response 401
     + Headers
