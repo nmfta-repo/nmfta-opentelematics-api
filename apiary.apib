@@ -519,43 +519,43 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
     + eventRecordStatus :              `RECORDSTATUS_ACTIVE` (required, enum[string]) - The record status number of this log
 
         + Members
-            + `RECORDSTATUS_ACTIVE` - Active
-            + `RECORDSTATUS_INACTIVE_TO_CHANGED` - Inactive -> Changed
+            + `RECORDSTATUS_ACTIVE`                       - Active
+            + `RECORDSTATUS_INACTIVE_TO_CHANGED`          - Inactive -> Changed
             + `RECORDSTATUS_INACTIVE_TO_CHANGE_REQUESTED` - Inactive -> Change Requested
-            + `RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED` - Inactive -> Change Rejected
+            + `RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED`  - Inactive -> Change Rejected
 
     + eventType         :      `EVENTTYPE_LOGINOUT_ACTIVITY` (required, enum[string]) - The event type number of this log. (Table 6; 7.25 of the ELD Final Rule)
 
         + Members
-            + `EVENTTYPE_CHANGE_DUTYSTATUS` - A change in driver's duty-status
-            + `EVENTTYPE_INTERMEDIATE_LOG` - An intermediate log
-            + `EVENTTYPE_CHANGE_PERSONAL_OR_YM` - A change in driver's indication of authorized personal use of CMV or yard moves
-            + `EVENTTYPE_CERT_RECORDS` - A driver's certification/re-certification of records
-            + `EVENTTYPE_LOGINOUT_ACTIVITY` - A driver's login/logout activity
-            + `EVENTTYPE_CMV_POWERUPDOWN` - CMV's engine power up / shut down activity
+            + `EVENTTYPE_CHANGE_DUTYSTATUS`         - A change in driver's duty-status
+            + `EVENTTYPE_INTERMEDIATE_LOG`          - An intermediate log
+            + `EVENTTYPE_CHANGE_PERSONAL_OR_YM`     - A change in driver's indication of authorized personal use of CMV or yard moves
+            + `EVENTTYPE_CERT_RECORDS`              - A driver's certification/re-certification of records
+            + `EVENTTYPE_LOGINOUT_ACTIVITY`         - A driver's login/logout activity
+            + `EVENTTYPE_CMV_POWERUPDOWN`           - CMV's engine power up / shut down activity
             + `EVENTTYPE_MALFUNCTION_OR_DIAGNOSTIC` - A malfunction or data diagnostic detection
 
     + location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for the log data.
     + malfunction       :                 `MALFUNCTION_NONE` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
 
         + Members
-            + `MALFUNCTION_DIAGNOSTIC` - In a diagnostic state.
-            + `MALFUNCTION_DIAGNOSTICMANUALPOSITION` - Combination of ManualPosition and Diagnostic
-            + `MALFUNCTION_MALFUNCTION` - In a malfunction state.
-            + `MALFUNCTION_MALFUNCTIONMANUALPOSITION` - Combination of ManualPosition and Malfunction
-            + `MALFUNCTION_MANUALPOSITION` - User has inputted a manual address for the log during a position compliance diagnostic event
-            + `MALFUNCTION_NONE` - No malfunction or diagnostic present or cleared.
-            + `MALFUNCTION_SYSTEMDIAGNOSTICCLEAR` - System has determined that the diagnostic is cleared. Not exported to FMCSA.
+            + `MALFUNCTION_DIAGNOSTIC`                   - In a diagnostic state.
+            + `MALFUNCTION_DIAGNOSTICMANUALPOSITION`     - Combination of ManualPosition and Diagnostic
+            + `MALFUNCTION_MALFUNCTION`                  - In a malfunction state.
+            + `MALFUNCTION_MALFUNCTIONMANUALPOSITION`    - Combination of ManualPosition and Malfunction
+            + `MALFUNCTION_MANUALPOSITION`               - User has inputted a manual address for the log during a position compliance diagnostic event
+            + `MALFUNCTION_NONE`                         - No malfunction or diagnostic present or cleared.
+            + `MALFUNCTION_SYSTEMDIAGNOSTICCLEAR`        - System has determined that the diagnostic is cleared. Not exported to FMCSA.
             + `MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
-            + `MALFUNCTION_USERDIAGNOSTICCLEAR` - User has cleared the diagnostic.
-            + `MALFUNCTION_USERMALFUNCTIONCLEAR` - User has cleared the malfunction.
+            + `MALFUNCTION_USERDIAGNOSTICCLEAR`          - User has cleared the diagnostic.
+            + `MALFUNCTION_USERMALFUNCTIONCLEAR`         - User has cleared the malfunction.
 
     + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The DutyStatusOrigin from where this log originated.
 
         + Members
-            + `ORIGIN_AUTOMATIC` - Automatic recorded by device
-            + `ORIGIN_MANUAL` - Manual entry by driver.
-            + `ORIGIN_OTHERUSER` - Other authenticated user.
+            + `ORIGIN_AUTOMATIC`  - Automatic recorded by device
+            + `ORIGIN_MANUAL`     - Manual entry by driver.
+            + `ORIGIN_OTHERUSER`  - Other authenticated user.
             + `ORIGIN_UNASSIGNED` - Unassigned driver.
 
     + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
@@ -563,46 +563,46 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
     + state             :                     `STATE_ACTIVE` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
 
         + Members
-            + `STATE_ACTIVE` - The log is active and has been accepted by the driver.
-            + `STATE_INACTIVE` - The log is inactive. It has been removed or it is the modification history of a log.
-            + `STATE_REJECTED` - The log is a rejected edit request from another user.
+            + `STATE_ACTIVE`    - The log is active and has been accepted by the driver.
+            + `STATE_INACTIVE`  - The log is inactive. It has been removed or it is the modification history of a log.
+            + `STATE_REJECTED`  - The log is a rejected edit request from another user.
             + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
     + status            :                         `STATUS_D` (required, enum[string]) - The DutyStatusLogType representing the driver's duty status.
 
         + Members
-            + `STATUS_ADVERSEWEATHER` - Adverse weather and driving conditions exemption.
-            + `STATUS_AUTHORITY` - Authority status.
-            + `STATUS_CERTIFY` - Daily certify record.
-            + `STATUS_CONNECTED` - System log for device power connection.
-            + `STATUS_D` - Drive status.
-            + `STATUS_DATARECORDINGCOMPLIANCE` - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
-            + `STATUS_DATATRANSFERCOMPLIANCE` - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
-            + `STATUS_DISCONNECTED` - System log for device power disconnection.
-            + `STATUS_ENGINEPOWERUP` - Engine power up record.
-            + `STATUS_ENGINEPOWERUPPC` - Engine power up in PC record.
-            + `STATUS_ENGINESHUTDOWN` - Engine shutdown record.
-            + `STATUS_ENGINESHUTDOWNPC` - Engine shutdown in PC record.
-            + `STATUS_ENGINESYNCCOMPLIANCE` - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
-            + `STATUS_EXEMPTION16H` - Exemption 16 hour.
-            + `STATUS_EXEMPTIONOFFDUTYDEFERRAL` - Exemption off duty deferral.
-            + `STATUS_INT_D` - Intermediate Drive Event.
-            + `STATUS_INT_PC` - Intermediate Personal Conveyance Event.
-            + `STATUS_LOGIN` - User login record.
-            + `STATUS_LOGOFF` - User logout record.
-            + `STATUS_MISSINGELEMENTCOMPLIANCE` - Missing data elements. Applies to Malfunction or Diagnostic.
-            + `STATUS_OFF` - Off-duty status.
-            + `STATUS_ON` - On-duty status.
-            + `STATUS_OTHERCOMPLIANCE` - Other instances of Malfunction or Diagnostic.
-            + `STATUS_PC` - Personal conveyance driver status.
-            + `STATUS_POSITIONINGCOMPLIANCE` - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
-            + `STATUS_POWERCOMPLIANCE` - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
-            + `STATUS_SB` - Sleeper berth status.
-            + `STATUS_SITUATIONALDRIVINGCLEAR` - YM, PC, or WT clearing event.
-            + `STATUS_TIMINGCOMPLIANCE` - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
+            + `STATUS_ADVERSEWEATHER`                - Adverse weather and driving conditions exemption.
+            + `STATUS_AUTHORITY`                     - Authority status.
+            + `STATUS_CERTIFY`                       - Daily certify record.
+            + `STATUS_CONNECTED`                     - System log for device power connection.
+            + `STATUS_D`                             - Drive status.
+            + `STATUS_DATARECORDINGCOMPLIANCE`       - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
+            + `STATUS_DATATRANSFERCOMPLIANCE`        - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
+            + `STATUS_DISCONNECTED`                  - System log for device power disconnection.
+            + `STATUS_ENGINEPOWERUP`                 - Engine power up record.
+            + `STATUS_ENGINEPOWERUPPC`               - Engine power up in PC record.
+            + `STATUS_ENGINESHUTDOWN`                - Engine shutdown record.
+            + `STATUS_ENGINESHUTDOWNPC`              - Engine shutdown in PC record.
+            + `STATUS_ENGINESYNCCOMPLIANCE`          - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
+            + `STATUS_EXEMPTION16H`                  - Exemption 16 hour.
+            + `STATUS_EXEMPTIONOFFDUTYDEFERRAL`      - Exemption off duty deferral.
+            + `STATUS_INT_D`                         - Intermediate Drive Event.
+            + `STATUS_INT_PC`                        - Intermediate Personal Conveyance Event.
+            + `STATUS_LOGIN`                         - User login record.
+            + `STATUS_LOGOFF`                        - User logout record.
+            + `STATUS_MISSINGELEMENTCOMPLIANCE`      - Missing data elements. Applies to Malfunction or Diagnostic.
+            + `STATUS_OFF`                           - Off-duty status.
+            + `STATUS_ON`                            - On-duty status.
+            + `STATUS_OTHERCOMPLIANCE`               - Other instances of Malfunction or Diagnostic.
+            + `STATUS_PC`                            - Personal conveyance driver status.
+            + `STATUS_POSITIONINGCOMPLIANCE`         - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
+            + `STATUS_POWERCOMPLIANCE`               - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
+            + `STATUS_SB`                            - Sleeper berth status.
+            + `STATUS_SITUATIONALDRIVINGCLEAR`       - YM, PC, or WT clearing event.
+            + `STATUS_TIMINGCOMPLIANCE`              - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
             + `STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
-            + `STATUS_WT` - Wait time oil well driver status.
-            + `STATUS_YM` - Yard move driver status.
+            + `STATUS_WT`                            - Wait time oil well driver status.
+            + `STATUS_YM`                            - Yard move driver status.
 
     + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
     + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
