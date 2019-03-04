@@ -144,6 +144,12 @@ that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
 
+## Provider Identifiers
+
+An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data or conflicts.
+
+To prepare a solution to these problems, this specification includes provisions to identify the source of all data by a 'Provider ID'. Implementors are required to choose a unique identifier and assign it to all 'Provider ID' fields in all data structures where it is included in this specification. We reccommend that TSPs use their domain (e.g. `api.provider.com`) which should be sufficiently unique; however, TSPs can elect to use whatever identifier they like but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's service.
+
 ## Localization
 
 The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the descriptions of the enumerated constants in the API.
@@ -695,6 +701,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + annotations       : `C81E728D9D4C2F636F067F89CC14862C`, `ECCBC87E4B5CE2FE28308FD9F2A7BAF3` (array[string]) - The list of AnnotationLog(s) which are associated with this log.
     + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
     + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
@@ -893,6 +900,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `C81E728D9D4C2F636F067F89CC14862C` (required, string) - The id of this Annotation Log object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
     + comment           : `note: something noteworthy`       (required, string) - The annotation test associated with the log.
     + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
@@ -996,6 +1004,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + name                                                   (string) - Vehicle name
     + cmvVIN                                                 (required, string) - the CMV VIN
     + licensePlate                                           (required, string) - the vehicle license plate
@@ -1034,6 +1043,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + username                                               (string) - a username of this driver
     + driverLicenseNumber                                    (required, string) - the driver's license number
     + driverState                                            (string) - the home state of the driver
@@ -1072,6 +1082,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `93707f725009f066ecf17dd8f6409a66` (required, string) - The id of this Trailer object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + comment           : `Chris' second Wabco trailer`      (string) - Free text field where any user information can be stored and referenced for this entity.
     + name              : `chrisWabco2`                      (string) -  The name of the trailer.
     + trailerNum        : `5428`                             (required, string) -  Identifier(s) the motor carrier uses for the trailers in their normal course of business.
@@ -1111,6 +1122,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `915e375d95d78bf040a2e054caadfb56` (required, string) - The id of this Trailer Attachment Log object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was attached.
     + activeTo          :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was detached.
     + vehicleIdDevice   : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id with which the Trailer is associated with.
@@ -1215,6 +1227,7 @@ In the event that an issue requiring maintenance must be resolved in the field, 
 
 + Attributes (object)
     + id                : `4119639092e62c55ea8be348e4d9260d` (required, string) - The id of this Vehicle Event object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + cmvVIN                                                 (string)  - Vehicle ID [J1939 SPN 237]
     + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
     + odometer                                               (number) object Odometer reading at time of event [J1939 SPN 245]
