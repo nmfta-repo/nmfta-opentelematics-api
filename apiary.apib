@@ -40,10 +40,13 @@ TSPs implementing the Open Telematics API must provide a means to create usernam
 
 TSPs implementing the Open Telematics API must include access controls for requests against the following roles.
 
-* *Vehicle Sink*
-* *Vehicle Return Sink*
-* *Sink*
-* *Return Sink*
+* *Vehicle Query*
+* *Vehicle Follow*
+* *Driver Query*
+* *Driver Follow*
+* *Driver Dispatch*
+* *Driver Duty*
+* *HR*
 * *Admin*
 
 It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more than one role**.
@@ -51,9 +54,9 @@ It must be possible for clients to usernames for Authentication (see above) whic
 TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` | `DENY/ALLOW` |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
 The intent of these access controls is so that carriers can limit which clients they deploy have access to:
 * any resources at all
@@ -62,9 +65,12 @@ The intent of these access controls is so that carriers can limit which clients 
 
 As can be seen in the **Access Controls** tables in the requests subsections of *References* that follow, the roles
 are assigned `DENY/ALLOW` such that:
-* the *X Return Sink* roles have access to streaming feeds, whereas the *X Sink* roles have access only to collections
+* the *X Follow* roles have access to streaming feeds and queries, whereas the *X Query* roles have access only to collections
 queries and
-* the *Vehicle X* roles are intended to be safe from PII.
+* the *Vehicle X* roles are intended to be safe from PII
+* the *Driver Dispatch* role is allowed to update route info and send messages to drivers
+* the *Driver Duty* role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)
+* the *HR* role is allowed to update Driver information and TSP portal user accounts
 
 # Security Requirements for Implementors
 
@@ -576,9 +582,9 @@ The method to query for state of health is detailed below. Clients must treat an
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
-|:-------------|---------------------|------|-------------|-------|
-| ALLOW        | ALLOW               | ALLOW | ALLOW      | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -608,9 +614,9 @@ The method to query for state of health history is detailed below. Clients must 
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
-|:-------------|---------------------|------|-------------|-------|
-| ALLOW        | ALLOW               | ALLOW | ALLOW      | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -658,9 +664,9 @@ Both personnel and semi-automated systems responsible for planning and assigning
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -697,9 +703,9 @@ The same personnel and semi-automated systems will need to for breaks and exempt
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -732,9 +738,9 @@ In some cases, facilities systems want to set the driver status in cases where t
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | ALLOW      | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -937,9 +943,9 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink | Return Sink | Admin |
-|:-------------|---------------------|------|-------------|-------|
-| ALLOW        | ALLOW               | ALLOW | ALLOW      | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1406,9 +1412,9 @@ For the purposes of clearly detailing the data object types used by the API endp
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1437,9 +1443,9 @@ For the purposes of clearly detailing the data object types used by the API endp
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1469,9 +1475,9 @@ For the purposes of clearly detailing the data object types used by the API endp
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1502,9 +1508,9 @@ Rules governing driver brakes for the specific region of governance of the drive
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1535,9 +1541,9 @@ Waivers and exceptions for the specific region of governance of the driver in qu
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1566,9 +1572,9 @@ Waivers and exceptions for the specific region of governance of the driver in qu
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1599,9 +1605,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1630,9 +1636,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1661,9 +1667,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1692,9 +1698,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -1725,9 +1731,9 @@ Summary statistics on performance of drivers.
 
 **Access Controls**
 
-| Vehicle Sink | Vehicle Return Sink | Sink  | Return Sink | Admin |
-|:-------------|---------------------|-------|-------------|-------|
-| DENY         | DENY                | ALLOW | DENY        | ALLOW |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
