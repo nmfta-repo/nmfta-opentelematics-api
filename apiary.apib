@@ -176,15 +176,15 @@ The Open Telematics API is envisioned to be complete enough that motor freight c
 
 ## Data Structures
 
-### Dummy Object (object)
+### Open Telematics Data Model Objects (object)
 
 All the objects that follow are forward definitions of the data object types used in the API.
 
-Note: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
+Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
 
-And this object definition exists just to tell you about that limitation.
+Note 2: And this object definition exists just to tell you about that limitation.
 
-Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
+Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
 
 ### Annotation Log (object)
 
@@ -506,6 +506,36 @@ Also, any descriptions put on these data structures will not get rendered proper
 + cmvVIN                                                 (required, string) - the CMV VIN
 + licensePlate                                           (required, string) - the vehicle license plate
 
+### Token Translation (object)
+
++ origin :                `Duty Status Log, malfunction` (string) - optional note of origin of token to be translated
++ comment : `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
++ msgid :                             `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
++ msgstr :                                  `Diagnostic` (required, string) - The locale's representation (translation) of the token
+
+### State of Health (object)
+
++ serviceStatus:        `operational` (required, enum[string]) - the current status of the service
+    + Members
+        + `SERVICESTATUS_OPERATIONAL` - the service is operational
+        + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
+        + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
+        + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
++ dateTime: `2019-01-0100:00:00.000Z` (required, string) - Date and time of this service status
++ factors: `upstream server operational`, `authentication service operational` (array[string]) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
+
+## Data Structures
+
+### Open Telematics TSP Inbound Objects (object)
+
+The objects below are forward definitions of the data object types used in sending data to the TSP in the API
+
+Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
+
+Note 2: And this object definition exists just to tell you about that limitation.
+
+Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
+
 ### Stop Details (object)
 
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
@@ -547,28 +577,6 @@ Geofence polygons with gates marked, representing primarily regions associated w
 + username          :                             `joe2` (required, string) - TSP portal username
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - the driverId to associate with the TSP portal username
 + password                                               (string) - optional, set when changing user password
-
-### Token Translation (object)
-
-+ origin :                `Duty Status Log, malfunction` (string) - optional note of origin of token to be translated
-+ comment : `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
-+ msgid :                             `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
-+ msgstr :                                  `Diagnostic` (required, string) - The locale's representation (translation) of the token
-
-### State of Health (object)
-
-+ serviceStatus:        `operational` (required, enum[string]) - the current status of the service
-    + Members
-        + `SERVICESTATUS_OPERATIONAL` - the service is operational
-        + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
-        + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
-        + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime: `2019-01-0100:00:00.000Z` (required, string) - Date and time of this service status
-+ factors: `upstream server operational`, `authentication service operational` (array[string]) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
-
-### State of Health History (object)
-
-+ data (array[State of Health], fixed-type)
 
 # Group Use Case Check Provider's State of Health
 
@@ -629,7 +637,8 @@ The method to query for state of health history is detailed below. Clients must 
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (State of Health History)
+    + Attributes (object)
+        + data (array[State of Health], fixed-type)
 
 + Response 401
     + Headers
