@@ -308,8 +308,17 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 ### Vehicle Location Time History (object)
 
 + data                                                   (required, array[Vehicle Location Time History], fixed-type) - array of Location Times representing the vehicle's location over time.
++ timeResolution    :            `TIMERESOLUTION_NOTMAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
+    + Members
+        + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
+        + `TIMERESOLUTION_NOT_MAX` - This is not
 
 ### Coarse Vehicle Location Time History (Vehicle Location Time History)
+
++ timeResolution    :               `TIMERESOLUTION_MAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
+    + Members
+        + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
+        + `TIMERESOLUTION_NOT_MAX` - This is not at the highest available time resolution
 
 ### GPS Quality (enum[string])
 
@@ -1392,6 +1401,14 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
                     "origin":   "Vehicle Fault Code Event, parameterOrSubsystemIdType",
                     "msgid":    "PIDORSID_SID",
                     "msgstr":   "This is a SID"
+                },
+                {   "origin":   "Vehicle Locatoin Time History",
+                    "msgid":    "TIMERESOLUTION_MAX",
+                    "msgstr":   "This is at the highest available time resolution"
+                },
+                {   "origin":   "Vehicle Locatoin Time History",
+                    "msgid":    "TIMERESOLUTION_NOT_MAX",
+                    "msgstr":   "This is not at the highest available time resolution"
                 }
               ]
             }
