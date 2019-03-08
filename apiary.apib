@@ -1,6 +1,6 @@
 FORMAT: 1A
 
-# NMFTA Fleet Resiliency - Open Telematics API DRAFT
+# Introduction
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
@@ -21,6 +21,8 @@ own cloud infrastructure housing customer data. The Open Telematics API, as an a
 will be made available by TSPs to allow their customers ready
 access to pull data in the standardized format, especially in examples
 of mixed TSP fleets.
+
+# Security Requirements
 
 ## Authentication
 
@@ -123,6 +125,8 @@ to the Open Telematics API server.
 
 All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
 
+# General Requirements
+
 ## Working With Dates
 
 When exchanging dates as parameters to API methods or in responses from the API, you must ensure that
@@ -139,6 +143,12 @@ that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]
 ## Error States
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
+
+## Provider Identifiers
+
+An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data or conflicts.
+
+To prepare a solution to these problems, this specification includes provisions to identify the source of all data by a 'Provider ID'. Implementors are required to choose a unique identifier and assign it to all 'Provider ID' fields in all data structures where it is included in this specification. We reccommend that TSPs use their domain (e.g. `api.provider.com`) which should be sufficiently unique; however, TSPs can elect to use whatever identifier they like but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's service.
 
 ## Localization
 
@@ -497,6 +507,200 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 + msgid :           `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
 + msgstr :                `Diagnostic` (required, string) - The locale's representation (translation) of the token
 
+# Telematics API Use Cases (by Motor Freight Carriers)
+
+The Open Telematics API is envisioned to be complete enough that motor freight carriers can use these APIs instead of the proprietary TSP APIs -- while still connecting-to TSP-hosted servers and hence still using the same provider. In the interest of ensuring that the APIs are _useful_ to their intended users (motor freight carriers) we will capture a summary of use cases here:
+
+## Use Case Data Export
+
+Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of this specification is all the data specified here and does not include any other proprietary data structures designed and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case we aim to support here please see below on 'data import.'
+
+The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above) for a given time-period. They do this by querying
+
+* Complete Telematics Record
+
+for a given period of time.
+
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
+## Use Case Check Provider's State of Health
+
+Users of telematics that is highly integrated into their operations need assurances of the state of health of the Provider's services.
+
+The IT and operations staff responsible for system uptime want to query the Open Telematics API provider (TSP)
+
+* Provider State of Health
+
+they expect to receive either
+
+* an 'all-clear' response indicating that the provider is not aware of any issues with its services at the moment of query OR
+* a response indicating a list of current known issues and possible contributing factors
+
+## Use Case Driver Availability
+
+Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
+
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to model the current availability of a Driver; they retrieve all of the following from that time up until the current moment, from which the current driver availability can be calculated.
+
+* Coarse Vehicle Location-Time History
+* Vehicle Flagged Event
+* Duty Status Log
+
+and they query for breaks and exemption rules for drivers in those logs:
+
+* Region-Specific Breaks Rules
+* Region-Specific Waivers
+
+In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do this their systems send data _to_ the TSPs:
+
+* Externally Triggered Duty Status Change
+
+## Use Case Driver Route & Directions Communication
+
+Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to changing conditions in weather, the needs of regulatory restrictions on hours, optimizing follow-on activities after a trip, etc.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to update the Driver's destination and route during a trip. They do this by querying
+
+* Stop Geographic Details
+* Duty Status Log
+* Vehicle Flagged Event
+
+In the process of updating the Driver's destination and route, the motor freight carrier sends the following _to_ the TSP
+
+* Stop Geographic Details
+* Stop Details
+
+## Use Case Driver Route & Directions Start
+
+Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab components of a telematics system.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to inform their drivers about their planned route before the driver starts the trip. They first check the vehicle for any faults or alarms by querying
+
+* Vehicle Flagged Event
+
+Then the trip destination is sent to the driver by sending the following _to_ the TSP
+
+* Stop Details
+
+## Use Case Driver Route & Directions Done
+
+Motor freight carriers receive notifications when Drivers have completed their trip.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to be notified of a completed trip, along with the driver information about duty on the trip. They follow the feed of:
+
+* Duty Status Log
+
+And mark trips completed based on the Duty Status Log context; at the end of a trip they also query
+
+* Stop Geographic Details
+
+to receive updates on changes to gates, access, repairs etc at the destination.
+
+## Use Case Driver Messaging by Geo-Location
+
+Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to notify the drivers of dangerous weather conditions in their area.
+
+Personnel responsible for planning and assigning driver routes want to send messages to drivers in a particular geographic region. They query the API for
+
+* Vehicle Location-Time History
+
+of all vehicles over the present time period; then filtering-out all vehicles outside the particular geographic region, then send messages to each vehicle by sending data _to_ the TSP:
+
+* Vehicle Display Messages
+
+## Use Case Driver Messaging by Vehicle
+
+Motor freight carriers also message their drivers by sending messages directly to a vehicle.
+
+Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They send data _to_ the TSP for a given vehicle:
+
+* Vehicle Display Messages
+
+## Use Case Vehicle Location-Time History Tracking
+
+Motor freight carriers use telematics fleet Location-Time History for multiple 'fleet dynamics modeling' use cases such as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
+
+Autonomous analysis and reporting systems want to get the Location-Time History of the fleet over a particular time period. They query the API for
+
+* Vehicle Location-Time History
+
+of all vehicles over a given time period.
+
+## Use Case Human Resources Process: Payroll
+
+Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that are important to modern motor freight carrier operations.
+
+Automated payroll/HR systems want to receive duty status logs and convert these into payroll tracking entries. To do this they follow a feed of:
+
+* Duty Status Log
+
+and they query for breaks and exemption rules for drivers in those logs:
+
+* Region-Specific Breaks Rules
+* Region-Specific Waivers
+
+In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do this their systems send data _to_ the TSPs:
+
+* Externally Triggered Duty Status Change
+
+HR staff want to associate their Driver's with metadata for use by the TSP. e.g. the region of governance for duty breaks and exemptions. To do this their systems send data _to_ the TSPs:
+
+* Driver
+
+## Use Case Human Resources Process: Accident Report
+
+Motor freight carriers use telematics systems to monitor their fleets for accidents.
+
+Semi-automated systems want to receive notification of any accidents in their fleet and handle accident reports internally according to their own processes. To do this they follow a feed of:
+
+* Duty Status Log
+
+## Use Case Carrier Custom Business Intelligence
+
+Motor freight carriers use telematics systems for multiple, custom, business intelligence purposes where the overall health of their fleet is considered and fed into their own proprietary models.
+
+Automated and semi-automated analysis and reporting systems want to get the overall fleet health status for a particular time period. They query the API for
+
+* Coarse Vehicle Location-Time History
+* Vehicle Location-Time History
+* Flagged Vehicle Performance Event
+* Vehicle Performance Event
+* Vehicle Fault Code Event
+
+of all vehicles over a given time period.
+
+## Use Case Compliance and Safety Monitoring
+
+Motor freight carriers use telematics systems to monitor compliance and safety for their operations.
+
+Personnel responsible for safety and compliance want to review the safety and compliance of their drivers. For a given driver they retrieve from the TSP:
+
+* Driver Performance Summary
+
+Driver Performance Summary is a data object which is created by the TSP by summarizing vehicle behaviors across the same driver. Drivers must log-in to their in-vehicle telematics systems so that the data can be summarized per-driver.
+
+Motor freight carriers want to create, delete and modify driver login credentials that the drivers will use in the field. They send data _to_ the TSP:
+
+* TSP Portal User Management
+
+## Use Case In-Field Maintenance & Repair
+
+Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
+
+Automated back-end systems at the motor freight carrier want to be notified of any vehicle issues requiring maintenance. The systems determine which events require maintenance by reading raw information from the TSP:
+
+* Vehicle Fault Code Event
+
+In the event that an issue requiring maintenance must be resolved in the field, the system will query
+
+* Coarse Vehicle Location-Time History
+
 # Group Duty Status Log
 
 ## Duty Status Log            [/api{version}/dutystatuslog/byid/{dutystatuslog_id}]
@@ -509,6 +713,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + annotations       : `C81E728D9D4C2F636F067F89CC14862C`, `ECCBC87E4B5CE2FE28308FD9F2A7BAF3` (array[string]) - The list of AnnotationLog(s) which are associated with this log.
     + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
     + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
@@ -707,6 +912,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `C81E728D9D4C2F636F067F89CC14862C` (required, string) - The id of this Annotation Log object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
     + comment           : `note: something noteworthy`       (required, string) - The annotation test associated with the log.
     + eldDateTime       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time from the ELD device
@@ -810,6 +1016,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + name                                                   (string) - Vehicle name
     + cmvVIN                                                 (required, string) - the CMV VIN
     + licensePlate                                           (required, string) - the vehicle license plate
@@ -848,6 +1055,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + username                                               (string) - a username of this driver
     + driverLicenseNumber                                    (required, string) - the driver's license number
     + driverState                                            (string) - the home state of the driver
@@ -886,6 +1094,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `93707f725009f066ecf17dd8f6409a66` (required, string) - The id of this Trailer object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + comment           : `Chris' second Wabco trailer`      (string) - Free text field where any user information can be stored and referenced for this entity.
     + name              : `chrisWabco2`                      (string) -  The name of the trailer.
     + trailerNum        : `5428`                             (required, string) -  Identifier(s) the motor carrier uses for the trailers in their normal course of business.
@@ -925,6 +1134,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `915e375d95d78bf040a2e054caadfb56` (required, string) - The id of this Trailer Attachment Log object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was attached.
     + activeTo          :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the Trailer was detached.
     + vehicleIdDevice   : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id with which the Trailer is associated with.
@@ -1029,6 +1239,7 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 + Attributes (object)
     + id                : `4119639092e62c55ea8be348e4d9260d` (required, string) - The id of this Vehicle Event object
+    + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
     + cmvVIN                                                 (string)  - Vehicle ID [J1939 SPN 237]
     + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
     + odometer                                               (number) object Odometer reading at time of event [J1939 SPN 245]
