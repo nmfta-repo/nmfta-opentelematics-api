@@ -297,6 +297,16 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
 + outputFileComment : `fake Duty Status Log for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
 
+### Stop Geographic Details (object)
+
++ id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ stopName          :                 `pickup place 101` (required, string) - a name for this location
++ address           :                  `13 Sycamore Ave` (string) - an optional street address
++ comment                                                (string) - an optional comment
++ location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
++ entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
+
 ### Vehicle Location Time (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
@@ -492,6 +502,16 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Flagged Vehicle Performance Event (Vehicle Fault Code Event)
 
+### Driver (object)
+
++ id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ username                                               (required, string) - a username of this driver
++ driverLicenseNumber                                    (required, string) - the driver's license number
++ country           :                               `CA` (required, string) - short code for the country of the region dictating the specific break rules
++ region            :                               `ON` (required, string) - short code for the country's region/state/province/territory dictating the specific break rules
++ driverHomeTerminal                                     (string) - the home terminal of the driver
+
 ### Driver Performance Summary (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
@@ -537,7 +557,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Open Telematics TSP Inbound Objects (object)
 
-The objects below are forward definitions of the data object types used in sending data to the TSP in the API
+The objects below are forward definitions of the data object types used in sending data to the TSP in the API. These objects do not need to have unique identification because they are processed by the server into changes to existing objects or creating new objects. Because these are inbound objects, extra attention should be paid to restricting the allowable space of values in these objects to enable robust input sanitization by implementors.
 
 Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
 
@@ -545,19 +565,17 @@ Note 2: And this object definition exists just to tell you about that limitation
 
 Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
 
-### Stop Details (object)
+### Externally Sourced Stop Details (object)
 
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
 + deadline          :          `2019-01-0100:00:00.000Z` (string) - optional time and date when the stop must be arrived at
 
-### Vehicle Display Messages (object)
+### Externally Sourced Vehicle Display Messages (object)
 
 + subject                                                (string) - a brief 'subject-line' for this message
 + message                                                (required, string) - the message to be displayed to the driver
 
-### Stop Geographic Details (object)
-
-Geofence polygons with gates marked, representing primarily regions associated with MF Carrier's service terminals.
+### Externally Sourced Stop Geographic Details (object)
 
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
 + entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
@@ -571,21 +589,18 @@ Geofence polygons with gates marked, representing primarily regions associated w
         + `EXTTRIG_STATUS_ON`  - The driver has changed status to on-duty
         + `EXTTRIG_STATUS_OFF` - The driver has changed status to off-duty
 
-### Driver (object)
+### Externally Sourced Driver Info (object)
 
-+ id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ username                                               (required, string) - a username of this driver
-+ driverLicenseNumber                                    (required, string) - the driver's license number
-+ country           :                               `CA` (required, string) - short code for the country of the region dictating the specific break rules
-+ region            :                               `ON` (required, string) - short code for the country's region/state/province/territory dictating the specific break rules
++ username                                               (string) - a username of this driver
++ driverLicenseNumber                                    (string) - the driver's license number
++ country           :                               `CA` (string) - short code for the country of the region dictating the specific break rules
++ region            :                               `ON` (string) - short code for the country's region/state/province/territory home region
 + driverHomeTerminal                                     (string) - the home terminal of the driver
 
-### TSP Portal User Management (object)
+### External TSP Portal User Management (object)
 
-+ username          :                             `joe2` (required, string) - TSP portal username
-+ driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - the driverId to associate with the TSP portal username
-+ password                                               (string) - optional, set when changing user password
++ username          :                             `joe2` (string) - TSP portal username
++ password                                               (string) - user password
 
 # Group Use Case Check Provider's State of Health
 
@@ -796,8 +811,8 @@ Both personnel and semi-automated systems responsible for planning and assigning
 
 In the process of updating the Driver's destination and route, the motor freight carrier sends the following _to_ the TSP
 
-* Stop Geographic Details
-* Stop Details
+* Externally Sourced Stop Geographic Details
+* Externally Sourced Stop Details
 
 # Group Use Case Driver Route & Directions Start
 
@@ -813,7 +828,7 @@ Both personnel and semi-automated systems responsible for planning and assigning
 
 Then the trip destination is sent to the driver by sending the following _to_ the TSP
 
-* Stop Details
+* Externally Sourced Stop Details
 
 # Group Use Case Driver Route & Directions Done
 
@@ -845,7 +860,7 @@ Personnel responsible for planning and assigning driver routes want to send mess
 
 of all vehicles over the present time period; then filtering-out all vehicles outside the particular geographic region, then send messages to each vehicle by sending data _to_ the TSP:
 
-* Vehicle Display Messages
+* Externally Sourced Vehicle Display Messages
 
 # Group Use Case Driver Messaging by Vehicle
 
@@ -855,7 +870,7 @@ TODO: define API endpoints for this use case
 
 Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They send data _to_ the TSP for a given vehicle:
 
-* Vehicle Display Messages
+* Externally Sourced Vehicle Display Messages
 
 # Group Use Case Vehicle Location Time History Tracking
 
@@ -890,7 +905,7 @@ In some cases, facilities systems want to set the driver status in cases where t
 
 HR staff want to associate their Driver's with metadata for use by the TSP. e.g. the region of governance for duty breaks and exemptions. To do this their systems send data _to_ the TSPs:
 
-* Driver
+* Externally Sourced Driver Info
 
 # Group Use Case Human Resources Process: Accident Report
 
@@ -932,7 +947,7 @@ Driver Performance Summary is a data object which is created by the TSP by summa
 
 Motor freight carriers want to create, delete and modify driver login credentials that the drivers will use in the field. They send data _to_ the TSP:
 
-* TSP Portal User Management
+* External TSP Portal User Management
 
 # Group Use Case In-Field Maintenance & Repair
 
@@ -1578,6 +1593,37 @@ Waivers and exceptions for the specific region of governance of the driver in qu
 
 + Response 200 (application/json)
     + Attributes (Region Specific Waivers)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Stop Geographic Details Object [/api{version}/byid/stopgeographicdetails/{id}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + id            (string) - ID of the Stop Geographic Details of interest
+
++ Attributes (Stop Geographic Details)
+
+### Get a Stop Geographic Details by its ID [GET]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Stop Geographic Details)
 
 + Response 401
     + Headers
