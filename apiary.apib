@@ -142,6 +142,12 @@ that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
 
+# Server Performance
+
+This API is intended to be integrated into motor freight carriers back end operations systems; therefore, there are performance requirements to be considered also. The API has been modeled in terms of use cases by the motor freight carriers (see below). Each of these use cases can be considered to be executing concurrently in the motor freight carrier. For large motor freight carriers, each use case interacts with TSP servers at up to 10,000 requests per minute.
+
+Therefore, server implementations of this API are expected to be able to serve 10,000 requests per minute per use case.
+
 # Provider Identifiers
 
 An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data or conflicts.
