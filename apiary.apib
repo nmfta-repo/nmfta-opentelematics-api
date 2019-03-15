@@ -168,6 +168,16 @@ they are formatted properly as an ISO 8601 string (format
 converted to UTC in order to ensure time zone information and daylight
 savings times are accounted for correctly.
 
+## Working with Time-Based Queries
+
+There are many API endpoints which support searches of data based on a time range. In all cases, the time rage specified
+by a pair of `start` and `stop` parameters represents an inclusive-exclusive time range. i.e. a time period which
+includes the moment in time given by `start` and all times up-to but not including the moment in time given by `stop.`
+
+The matching performed in all of these searches will be a time-intersection. i.e. the objects will be returned in search
+results if their associated time periods (however defined) have any intersection with the inclusive-exclusive time range
+given by the pair of `start` and `stop` parameters.
+
 # Working With Locations
 
 When exchanging locations as parameters to API methods or in responses from the API, you must ensure
