@@ -843,6 +843,10 @@ Clients can request all the factors contributing to driver availability for a gi
         + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event], fixed-type) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
         + coarseVehicleLocationTimeHistory                   (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History associated with the requested `driverId` for the requested time period [`start`, `stop`)
 
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
 + Response 404 (text/plain)
 
         Error: driverId Not Found
@@ -879,6 +883,10 @@ Clients can request any region-specific waivers and break-rules for a given driv
     + Attributes (object)
         + breakRules                                             (required, array[Region Specific Breaks Rules], fixed-type) - the Region Specific Breaks Rules for this driver for the requested time period
         + waivers                                                (required, array[Region Specific Waivers], fixed-type) - the Region Specific Waivers for this driver for the requested time period
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
 
 + Response 404 (text/plain)
 
@@ -1101,6 +1109,10 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 + Response 200 (application/json)
     + Attributes (Vehicle Flagged Event)
 
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
 + Response 404 (text/plain)
 
         Error: vehicleId Not Found
@@ -1133,7 +1145,7 @@ Clients can request the creation of a new route for a given vehicle, providing s
 
     + Attributes (Externally Sourced Route Start Stop Details)
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
@@ -1191,6 +1203,10 @@ Clients can follow a feed of Duty Status Log entries as they are added to the TS
     + Attributes (object)
         + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
         + feed                                  (array[Duty Status Log], fixed-type) - the 'feed' of Duty Status Logs
+
++ Response 400 (text/plain)
+
+        Error: token parameter invalid
 
 + Response 401
     + Headers
@@ -1495,6 +1511,10 @@ Clients can request all driver performance summaries for a specific driver withi
 + Response 200 (application/json)
     + Attributes (object)
         + performanceSummaries                                   (required, array[Driver Performance Summary], fixed-type) - all the Driver Performance Summary objects for this driver for the requested time period
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
 
 + Response 404 (text/plain)
 
