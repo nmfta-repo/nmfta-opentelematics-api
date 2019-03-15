@@ -198,8 +198,8 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ annotations                                            (array[Annotation Log]) - The list of AnnotationLog(s) which are associated with this log.
-+ coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
++ annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
++ coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log.
 + dateTime       :             `2019-01-0100:00:00.000Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
@@ -305,7 +305,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 + address           :                  `13 Sycamore Ave` (string) - an optional street address
 + comment                                                (string) - an optional comment
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
-+ entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
++ entryArea                                              (array[string], fixed-type) - optional geographic location polygon detailing the entryway area for this stop
 
 ### Vehicle Location Time (object)
 
@@ -317,7 +317,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Vehicle Location Time History (object)
 
-+ data                                                   (required, array[Vehicle Location Time History], fixed-type) - array of Location Times representing the vehicle's location over time.
++ data                                                   (required, array[Vehicle Location Time], fixed-type) - array of Location Times representing the vehicle's location over time.
 + timeResolution    :            `TIMERESOLUTION_NOTMAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
     + Members
         + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
@@ -550,13 +550,8 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-<<<<<<< HEAD
-+ dateTime: `2019-01-0100:00:00.000Z` (required, string) - Date and time of this service status
-+ factors: `upstream server operational`, `authentication service operational` (array[string]) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
-=======
 + dateTime: `2019-01-0100:00:00.000Z`                    (required, string) - Date and time of this service status
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
->>>>>>> 8aecb29... complete use cases -- issue #45
 
 ### Vehicle Only Complete Telematics Records (object)
 
@@ -614,7 +609,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 + comment                                                (string) - an optional comment
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
-+ entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
++ entryArea                                              (array[string], fixed-type) - optional geographic location polygon detailing the entryway area for this stop
 
 ### Externally Triggered Duty Status Change (object)
 
@@ -844,8 +839,8 @@ Clients can request all the factors contributing to driver availability for a gi
 
 + Response 200 (application/json)
     + Attributes (object)
-        + dutyStatusLogs                                     (required, array[Duty Status Log]) - The Duty Status Logs of the requested `driverId` for the requested time period [`start`, `stop`)
-        + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event]) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
+        + dutyStatusLogs                                     (required, array[Duty Status Log], fixed-type) - The Duty Status Logs of the requested `driverId` for the requested time period [`start`, `stop`)
+        + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event], fixed-type) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
         + coarseVehicleLocationTimeHistory                   (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History associated with the requested `driverId` for the requested time period [`start`, `stop`)
 
 + Response 404 (text/plain)
@@ -882,8 +877,8 @@ Clients can request any region-specific waivers and break-rules for a given driv
 
 + Response 200 (application/json)
     + Attributes (object)
-        + breakRules                                             (required, array[Region Specific Breaks Rules]) - the Region Specific Breaks Rules for this driver for the requested time period
-        + waivers                                                (required, array[Region Specific Waivers]) - the Region Specific Waivers for this driver for the requested time period
+        + breakRules                                             (required, array[Region Specific Breaks Rules], fixed-type) - the Region Specific Breaks Rules for this driver for the requested time period
+        + waivers                                                (required, array[Region Specific Waivers], fixed-type) - the Region Specific Waivers for this driver for the requested time period
 
 + Response 404 (text/plain)
 
