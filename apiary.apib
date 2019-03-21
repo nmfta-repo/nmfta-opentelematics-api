@@ -13,6 +13,10 @@ standardized telematics data format, a commercial fleet manager will
 have to reintegrate an alternate telematics provider's data format into
 their existing system reporting.
 
+The Open Telematics API is intended to make the TSP-Carrier interface the same across multiple TSPs. It is not intended to specify any aspects of the TSP's connections to their telematics devices. Neither does it imply any changes to the location where data is stored or access controls on the data -- the data will still live at the Motor Freight Carrier as-sourced from their accounts at the TSP.
+
+![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/overview.png)
+
 This is a standardized API for retrieving telematics logs & data.
 Each participating TSP would be individually responsible for the necessary
 translations from their existing formats to this Open Telematics
@@ -32,9 +36,12 @@ For this version of the API, `v1`, all authentication must be performed using HT
 Authorization: Basic YWRtaW46YWRtaW4=
 ```
 
-This authentication method relies entirely on the security protections provided by the TLS layer; therefore HTTPS is mandatory on all connections and implementors must follow adhere to the security requirements detailed in the *Security Requirements for Implementors* section below.
+This authentication method relies entirely on the security protections provided by the TLS layer; therefore HTTPS is
+mandatory on all connections and implementors must follow adhere to the security requirements detailed in the *Security
+Requirements for Implementors* section below.
 
-TSPs implementing the Open Telematics API must provide a means to create username-password pair credentials and these must be associated with roles (see section *Authorization* below).
+TSPs implementing the Open Telematics API must provide a means to create username-password pair credentials and these
+must be associated with roles (see section *Authorization* below).
 
 # Authorization
 
@@ -49,7 +56,8 @@ TSPs implementing the Open Telematics API must include access controls for reque
 * *HR*
 * *Admin*
 
-It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more than one role**.
+It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more
+than one role**.
 
 TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
@@ -95,41 +103,66 @@ to protect researchers and encourage the highest-quality participation.
 ## Open Telematics API Server Security Requirements
 
 **TLS Configuration**
-The TLS security for Open Telematics API servers is of paramount importance. All
-of the confidentiality and integrity protections are relying on this layer. For this
-reason, Open Telematics API servers must ensure that their HTTPS / TLS configurations
-are of the highest quality. Following the [Qualys SSL Labs Guide](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) is reccomended.  The automated tool, also
-by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/) will report a
+
+The TLS security for Open Telematics API servers is of paramount importance. All of the confidentiality and integrity
+protections are relying on this layer. For this reason, Open Telematics API servers must ensure that their HTTPS / TLS
+configurations are of the highest quality. Following the [Qualys SSL Labs
+Guide](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) is reccomended.  The automated
+tool, also by Qualys SSL Labs, at [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/) will report a
 'letter grade'; it is expected that TSPs will have letter grades of 'A' or higher according to that tool.
 
 **Whitelist HTTP Methods**
-This API specification (in *APIBlueprint*) has a complete list of all allowable *HTTP methods* for each resource/'end point'
-of the Open Telematics API. Open Telematics server implementations should use the list of methods as a whitelist to filter incoming requests before any additional processing.
+
+This API specification (in *APIBlueprint*) has a complete list of all allowable *HTTP methods* for each resource/'end
+point' of the Open Telematics API. Open Telematics server implementations should use the list of methods as a whitelist
+to filter incoming requests before any additional processing.
 
 **Rate-limit API Requests**
-Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user, e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics API implementations to rates below what is offered through their other API services for telematics data.
+
+Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API
+requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user,
+e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics
+API implementations to rates below what is offered through their other API services for telematics data.
 
 **Prevent Brute-Forcing**
-Authentication (for this version of the API) is tied exclusively to HTTP Basic in each request. This means that each and every API endpoint is an opportunity to brute force any of the user credentials. Open Telematics server implementors must enforce a global rate-limit on authentication attempts for each user. Implementors may also want to consider other mitigations against brute-force attacks on credentials; c.f. [the OWA page on Blocking Brute Force Attacks](https://www.owasp.org/index.php/Blocking_Brute_Force_Attacks).
+
+Authentication (for this version of the API) is tied exclusively to HTTP Basic in each request. This means that each and
+every API endpoint is an opportunity to brute force any of the user credentials. Open Telematics server implementors
+must enforce a global rate-limit on authentication attempts for each user. Implementors may also want to consider other
+mitigations against brute-force attacks on credentials; c.f. [the OWA page on Blocking Brute Force
+Attacks](https://www.owasp.org/index.php/Blocking_Brute_Force_Attacks).
 
 **Prevent Server-Error Stacktraces**
-Open Telematics server implementors must ensure that their software is deployed such that it does not include stack traces in any response; e.g. no stacktraces in a 500 server error response.
+
+Open Telematics server implementors must ensure that their software is deployed such that it does not include stack
+traces in any response; e.g. no stacktraces in a 500 server error response.
 
 **Prevent Resource Exhaustion by Slow-posting**
-Open Telematics server implementors must ensure that, when receiving data from clients, the server implements short-enough timeouts such that exhaustion of the server resources through malicious client 'slow-posting' is not possible. For more details, consult this [Qualys blog post](https://blog.qualys.com/securitylabs/2011/11/02/how-to-protect-against-slow-http-attacks).
+
+Open Telematics server implementors must ensure that, when receiving data from clients, the server implements short-
+enough timeouts such that exhaustion of the server resources through malicious client 'slow-posting' is not possible.
+For more details, consult this [Qualys blog post](https://blog.qualys.com/securitylabs/2011/11/02/how-to-protect-
+against-slow-http-attacks).
 
 **Input Sanitization**
-Open Telematics server implementors must employ input sanitization when ingesting any data, i.e. for the `POST`, `PUT`, `PATCH` methods. This API uses exclusively JSON for data serialization; therefore, at a minimum all input data should be verified as valid JSON before being further processed. Furthermore, this specification includes generated JSON schema for the expected inputs and so additional verification that the input JSON conforms to the expected schema can also be performed before further processing is performed.
+
+Open Telematics server implementors must employ input sanitization when ingesting any data, i.e. for the `POST`, `PUT`,
+`PATCH` methods. This API uses exclusively JSON for data serialization; therefore, at a minimum all input data should be
+verified as valid JSON before being further processed. Furthermore, this specification includes generated JSON schema
+for the expected inputs and so additional verification that the input JSON conforms to the expected schema can also be
+performed before further processing is performed.
 
 ## Open Telematics API Client Security Requirements
 
 **Certificate Pinning**
+
 Because the confidentiality of credentials is only protected by TLS in this version, it is
 very important that all Open Telematics API clients must be configured such that substitution of
 any TLS certificates results in a failure to establish any connections
 to the Open Telematics API server.
 
-All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
+All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for
+certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
 
 # Working With Dates
 
@@ -138,6 +171,16 @@ they are formatted properly as an ISO 8601 string (format
 `yyyy-MM-ddTHH:mm:ss.fffZ`). In addition, all dates will have to first be
 converted to UTC in order to ensure time zone information and daylight
 savings times are accounted for correctly.
+
+## Working with Time-Based Queries
+
+There are many API endpoints which support searches of data based on a time range. In all cases, the time rage specified
+by a pair of `start` and `stop` parameters represents an inclusive-exclusive time range. i.e. a time period which
+includes the moment in time given by `start` and all times up-to but not including the moment in time given by `stop.`
+
+The matching performed in all of these searches will be a time-intersection. i.e. the objects will be returned in search
+results if their associated time periods (however defined) have any intersection with the inclusive-exclusive time range
+given by the pair of `start` and `stop` parameters.
 
 # Working With Locations
 
@@ -150,29 +193,50 @@ The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-htt
 
 # Server Performance
 
-This API is intended to be integrated into motor freight carriers back end operations systems; therefore, there are performance requirements to be considered also. The API has been modeled in terms of use cases by the motor freight carriers (see below). Each of these use cases can be considered to be executing concurrently in the motor freight carrier. For large motor freight carriers, each use case interacts with TSP servers at up to 10,000 requests per minute.
+This API is intended to be integrated into motor freight carriers back end operations systems; therefore, there are
+performance requirements to be considered also. The API has been modeled in terms of use cases by the motor freight
+carriers (see below). Each of these use cases can be considered to be executing concurrently in the motor freight
+carrier. For large motor freight carriers, each use case interacts with TSP servers at up to 10,000 requests per minute.
 
 Therefore, server implementations of this API are expected to be able to serve 10,000 requests per minute per use case.
 
 # Provider Identifiers
 
-An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data or conflicts.
+An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more
+than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data
+or conflicts.
 
-To prepare a solution to these problems, this specification includes provisions to identify the source of all data by a 'Provider ID'. Implementors are required to choose a unique identifier and assign it to all 'Provider ID' fields in all data structures where it is included in this specification. We reccommend that TSPs use their domain (e.g. `api.provider.com`) which should be sufficiently unique; however, TSPs can elect to use whatever identifier they like but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's service.
+To prepare a solution to these problems, this specification includes provisions to identify the source of all data by a
+'Provider ID'. Implementors are required to choose a unique identifier and assign it to all 'Provider ID' fields in all
+data structures where it is included in this specification. We reccommend that TSPs use their domain (e.g.
+`api.provider.com`) which should be sufficiently unique; however, TSPs can elect to use whatever identifier they like
+but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's
+service.
 
 # Localization
 
-The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the descriptions of the enumerated constants in the API.
+The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable
+display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the
+descriptions of the enumerated constants in the API.
 
-The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or comment fields.
+The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does
+the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or
+comment fields.
 
-Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-Language: `. If no request header is present then `Accept-Language: en` will be assumed.
+Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
+Language: `. If no request header is present then `Accept-Language: en` will be assumed.
 
-Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is provided below for convenience in the sample response to `GET /api{version}/i18n`.
+Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header
+specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response
+will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is
+provided below for convenience in the sample response to `GET /api{version}/i18n`.
 
 # Telematics API Use Cases by Motor Freight Carriers
 
-The Open Telematics API is envisioned to be complete enough that motor freight carriers can use these APIs instead of the proprietary TSP APIs -- while still connecting-to TSP-hosted servers and hence still using the same provider. In the interest of ensuring that the APIs are _useful_ to their intended users (motor freight carriers) we will capture -- and organize -- the API by these use cases.
+The Open Telematics API is envisioned to be complete enough that motor freight carriers can use these APIs instead of
+the proprietary TSP APIs -- while still connecting-to TSP-hosted servers and hence still using the same provider. In the
+interest of ensuring that the APIs are _useful_ to their intended users (motor freight carriers) we will capture -- and
+organize -- the API by these use cases.
 
 ## Data Structures
 
@@ -180,11 +244,13 @@ The Open Telematics API is envisioned to be complete enough that motor freight c
 
 All the objects that follow are forward definitions of the data object types used in the API.
 
-Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
+Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there.
+See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
 
 Note 2: And this object definition exists just to tell you about that limitation.
 
-Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
+Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open
+Telematics Data Model* for object descriptions as well.
 
 ### Annotation Log (object)
 
@@ -198,8 +264,8 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ annotations                                            (array[Annotation Log]) - The list of AnnotationLog(s) which are associated with this log.
-+ coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string]) - The list of the co-driver User(s) for this log.
++ annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
++ coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log.
 + dateTime       :             `2019-01-0100:00:00.000Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
@@ -305,7 +371,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 + address           :                  `13 Sycamore Ave` (string) - an optional street address
 + comment                                                (string) - an optional comment
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
-+ entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
++ entryArea                                              (array[string], fixed-type) - optional geographic location polygon detailing the entryway area for this stop
 
 ### Vehicle Location Time (object)
 
@@ -317,7 +383,7 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Vehicle Location Time History (object)
 
-+ data                                                   (required, array[Vehicle Location Time History], fixed-type) - array of Location Times representing the vehicle's location over time.
++ data                                                   (required, array[Vehicle Location Time], fixed-type) - array of Location Times representing the vehicle's location over time.
 + timeResolution    :            `TIMERESOLUTION_NOTMAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
     + Members
         + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
@@ -544,31 +610,66 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### State of Health (object)
 
-+ serviceStatus:        `operational` (required, enum[string]) - the current status of the service
++ serviceStatus:        `SERVICESTATUS_OPERATIONAL`      (required, enum[string]) - the current status of the service
     + Members
         + `SERVICESTATUS_OPERATIONAL` - the service is operational
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime: `2019-01-0100:00:00.000Z` (required, string) - Date and time of this service status
-+ factors: `upstream server operational`, `authentication service operational` (array[string]) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
++ dateTime: `2019-01-0100:00:00.000Z`                    (required, string) - Date and time of this service status
++ factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
+
+### Vehicle Only Complete Telematics Records (object)
+
++ stopGeographicDetails                                  (array[Stop Geographic Details], fixed-type) - All of the Stop Geographic Details objects known to the TSP at the time of the request
++ performanceThresholds                                  (array[Performance Thresholds], fixed-type) - All of the Performance Thresholds objects known to the TSP at the time of the request
++ vehicles                                               (array[Vehicle], fixed-type) - All of the Vehicle objects known to the TSP at the time of the request
++ vehicleLocationTimeHistories                           (array[Vehicle Location Time History], fixed-type) - Any of the Vehicle Location Time History objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ flaggedVehiclePerformanceEvents                        (array[Flagged Vehicle Performance Event], fixed-type) - Any of the Flagged Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
+
+### Complete Telematics Records (Vehicle Only Complete Telematics Records)
+
++ drivers                                                (array[Driver], fixed-type) - All of the Driver objects known to the TSP at the time of the request
++ annotationLogs                                         (array[Annotation Log], fixed-type) - Any of the Annotation Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ dutyStatusLogs                                         (array[Duty Status Log], fixed-type) - Any of the Duty Status Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ regionSpecificBreaksRules                              (array[Region Specific Breaks Rules], fixed-type) - Any of the Region Specific Breaks Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
 ## Data Structures
 
 ### Open Telematics TSP Inbound Objects (object)
 
-The objects below are forward definitions of the data object types used in sending data to the TSP in the API. These objects do not need to have unique identification because they are processed by the server into changes to existing objects or creating new objects. Because these are inbound objects, extra attention should be paid to restricting the allowable space of values in these objects to enable robust input sanitization by implementors.
+The objects below are forward definitions of the data object types used in sending data to the TSP in the API. These
+objects do not need to have unique identification because they are processed by the server into changes to existing
+objects or creating new objects. Because these are inbound objects, extra attention should be paid to restricting the
+allowable space of values in these objects to enable robust input sanitization by implementors.
 
-Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there. See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
+Note 1: due to the way the apiary documentation renderer works, this section will not be visible when rendered there.
+See the *Open Telematics Data Model* for a section designed to be rendered in apiary.
 
 Note 2: And this object definition exists just to tell you about that limitation.
 
-Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open Telematics Data Model* for object descriptions as well.
+Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open
+Telematics Data Model* for object descriptions as well.
 
-### Externally Sourced Stop Details (object)
+### Externally Sourced Route Stop Details (object)
 
-+ location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
-+ deadline          :          `2019-01-0100:00:00.000Z` (string) - optional time and date when the stop must be arrived at
++ stopName          :                 `pickup place 101` (required, string) - a name for the stop location
++ stopAddress       :                  `13 Sycamore Ave` (string) - an optional street address
++ stopLocation      :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
++ stopDeadline      :          `2019-01-0100:00:00.000Z` (string) - optional time and date when the stop must be arrived at
+
+### Externally Sourced Route Start Stop Details (Externally Sourced Route Stop Details)
+
++ startName         :                  `start place 202` (required, string) - a name for the start location
++ startAddress      :                    `11 Elm Street` (string) - an optional street address of the start
++ startLocation     :         ` 37.4224764 -122.0842499` (required, string) - the location of the start
++ routeAddInstructions :     `take trailers XXX and YYY` (string) - an optional comment with details about the route
 
 ### Externally Sourced Vehicle Display Messages (object)
 
@@ -577,8 +678,9 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Externally Sourced Stop Geographic Details (object)
 
++ comment                                                (string) - an optional comment
 + location          :         ` 37.4224764 -122.0842499` (required, string) - the location of the delivery date at this stop
-+ entryArea                                              (array[string]) - optional geographic location polygon detailing the entryway area for this stop
++ entryArea                                              (array[string], fixed-type) - optional geographic location polygon detailing the entryway area for this stop
 
 ### Externally Triggered Duty Status Change (object)
 
@@ -591,26 +693,35 @@ Note 3: Also, any descriptions put on these data structures will not get rendere
 
 ### Externally Sourced Driver Info (object)
 
-+ username                                               (string) - a username of this driver
++ username                                               (required, string) - a username of this driver
++ hoursWorked       :                              `1.5` (number) - the hours worked on-duty by this user so far today (on any duty at all)
 + driverLicenseNumber                                    (string) - the driver's license number
-+ country           :                               `CA` (string) - short code for the country of the region dictating the specific break rules
-+ region            :                               `ON` (string) - short code for the country's region/state/province/territory home region
++ country           :                               `CA` (string) - short code for the country of the driver's license
++ region            :                               `ON` (string) - short code for the country's region/state/province/territory of the driver's license
 + driverHomeTerminal                                     (string) - the home terminal of the driver
 
 ### External TSP Portal User Management (object)
 
 + username          :                             `joe2` (string) - TSP portal username
 + password                                               (string) - user password
++ enabled           :                             `true` (boolean) - this user is enabled or disabled
 
 # Group Use Case Check Provider's State of Health
 
-Users of telematics that is highly integrated into their operations need assurances of the state of health of the Provider's services.
+Users of telematics that is highly integrated into their operations need assurances of the state of health of the
+Provider's services.
+
+The IT and operations staff responsible for system uptime want to query the Open Telematics API provider (TSP) Provider
+State of Health. They expect to receive either an 'all-clear' response indicating that the provider is not aware of any
+issues with its services at the moment of query or some details describing the contributing factors that have led to
+less than optimal operation.
 
 ## Check Current State of Health [GET /api{version}/status]
 
-The IT and operations staff responsible for system uptime want to query the Open Telematics API provider (TSP) Provider State of Health. They expect to receive either an 'all-clear' response indicating that the provider is not aware of any issues with its services at the moment of query or some details describing the contributing factors that have led to less than optimal operation.
+Clients can request the current service status. The response to this query will be a data structure indicating
+everything is good or showing some details as to why the service is not presently at 100%.
 
-The method to query for state of health is detailed below. Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
@@ -638,11 +749,10 @@ The method to query for state of health is detailed below. Clients must treat an
 
 ## Check Past 30d State of Health [GET /api{version}/incidents]
 
-The IT and operations staff responsible for system uptime want to query the Open Telematics API provider (TSP) history of state of health to understand. As with querying the current state of health, they expect to receive either an 'all-clear' response indicating that the provider is not aware of any issues with its services at the moment of query or some details describing the contributing factors that have led to less than optimal operation.
+Clients can request the recent history of all service statuses. The response to this query will return all service
+status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
 
-The response to this query will return all service status records (i.e. `/api{version}/status`) from over the past 30 days.
-
-The method to query for state of health history is detailed below. Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
@@ -671,29 +781,140 @@ The method to query for state of health history is detailed below. Clients must 
 
 # Group Use Case Data Export
 
-Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of this specification is all the data specified here and does not include any other proprietary data structures designed and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case we aim to support here please see below on 'data import.'
+Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of
+this specification is all the data specified here and does not include any other proprietary data structures designed
+and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of
+TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case
+we aim to support here please see below on 'data import.'
 
-TODO: define API endpoints for this use case
+The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above)
+for a given time-period. They do this by querying for either
 
-The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above) for a given time-period. They do this by querying
-
-* Complete Telematics Record
+* Complete Telematics Records OR Vehicle-Only Telematics Records
 
 for a given period of time.
 
-The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
+same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
+data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
+## Complete Telematics Records Export Format [/api{version}/export/allrecords{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Attributes (Complete Telematics Records)
+
+### Retrieve Complete Telematics Records for a Given Time Period [GET]
+
+Clients can retrieve the entirety of all Telematics data from the TSP for a given time period.
+
+The response to this request will include both time-varying objects (those that have time associated with them) and also
+those that do not. The response will only include those time-varying objects whose associated time periods have an
+intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
+will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Complete Telematics Records)
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Vehicle-Only Complete Telematics Records Export Format [/api{version}/export/vehiclerecords{?start,stop}]
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Attributes (Vehicle Only Complete Telematics Records)
+
+### Retrieve Vehicle-Only Complete Telematics Records for a Given Time Period [GET]
+
+Clients can retrieve the entirety of all Telematics data from the TSP -- that data which does not deal with Driver PII
+-- for a given time period.
+
+The response to this request will include both time-varying objects (those that have time associated with them) and also
+those that do not. The response will only include those time-varying objects whose associated time periods have an
+intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
+will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Only Complete Telematics Records)
+
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case Driver Availability
 
-Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
+Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of
+those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
 
-## Retrieve Driver Availability Factors [GET /api{version}/driveravailability/{driverId}{?start,stop}]
-
-Both personnel and semi-automated systems responsible for planning and assigning driver routes want to model the current availability of a Driver; they retrieve all of the following from that time up until the current moment, from which the current driver availability can be calculated.
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to model the current
+availability of a Driver; they retrieve all of the following 'driver availability factors' from that time up until the
+current moment, from which the current driver availability can be calculated.
 
 * Coarse Vehicle Location Time History
 * Vehicle Flagged Event
 * Duty Status Log
+
+The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if
+they operate in regions with specific break rules or waivers.
+
+* Region Specific Breaks Rules
+* Region Specific Waivers
+
+In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
+this their systems send data _to_ the TSPs.
+
+* Externally Triggered Duty Status Change
+
+## Retrieve Driver Availability Factors [GET /api{version}/driveravailability/{driverId}{?start,stop}]
+
+Clients can request all the factors contributing to driver availability for a given driver, over a given time period.
 
 **Access Controls**
 
@@ -714,13 +935,19 @@ Both personnel and semi-automated systems responsible for planning and assigning
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-+ Response 200
-
++ Response 200 (application/json)
     + Attributes (object)
-        + dutyStatusLogs                                     (required, array[Duty Status Log]) - The Duty Status Logs of the requested `driverId` for the requested time period [`start`, `stop`)
-        + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event]) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
-        + coarseVehicleLocationTimeHistory                   (required, array[Coarse Vehicle Location Time History]) - The Coarse Vehicle Location Time History associated with the requested `driverId` for the requested time period [`start`, `stop`)
+        + dutyStatusLogs                                     (required, array[Duty Status Log], fixed-type) - The Duty Status Logs of the requested `driverId` for the requested time period [`start`, `stop`)
+        + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event], fixed-type) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
+        + coarseVehicleLocationTimeHistory                   (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History associated with the requested `driverId` for the requested time period [`start`, `stop`)
 
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
 
 + Response 401
     + Headers
@@ -729,16 +956,14 @@ Both personnel and semi-automated systems responsible for planning and assigning
 
 ## Check Break Rules and Waivers [GET /api{version}/driveravailability/breaksandwaivers/{driverId}{?start,stop}]
 
-The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if they operate in regions with specific break rules or waivers.
-
-* Region Specific Breaks Rules
-* Region Specific Waivers
+Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
+time period.
 
 **Access Controls**
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -753,21 +978,27 @@ The same personnel and semi-automated systems will need to for breaks and exempt
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-+ Response 200
-
++ Response 200 (application/json)
     + Attributes (object)
-        + breakRules                                             (required, array[Region Specific Breaks Rules]) - the Region Specific Breaks Rules for this driver for the requested time period
-        + waivers                                                (required, array[Region Specific Waivers]) - the Region Specific Waivers for this driver for the requested time period
+        + breakRules                                             (required, array[Region Specific Breaks Rules], fixed-type) - the Region Specific Breaks Rules for this driver for the requested time period
+        + waivers                                                (required, array[Region Specific Waivers], fixed-type) - the Region Specific Waivers for this driver for the requested time period
 
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
-## Send Duty Status Changes to the TSP [POST /api{version}/driveravailability/dutystatuschanges/{driverId}]
+## Send Custom-Integrated Duty Status Changes to the TSP [PATCH /api{version}/driveravailability/dutystatuschanges/{driverId}]
 
-In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do this their systems send data _to_ the TSPs.
+Clients can trigger duty status changes for a given driver by pushing data to this endpoint.
 
 **Access Controls**
 
@@ -788,7 +1019,13 @@ In some cases, facilities systems want to set the driver status in cases where t
 
     + Attributes (Externally Triggered Duty Status Change)
 
-+ Response 200
++ Response 200 (application/json)
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
 
 + Response 401
     + Headers
@@ -797,182 +1034,770 @@ In some cases, facilities systems want to set the driver status in cases where t
 
 # Group Use Case Driver Route & Directions Communication
 
-Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to changing conditions in weather, the needs of regulatory restrictions on hours, optimizing follow-on activities after a trip, etc.
-
-TODO: define API endpoints for this use case
+Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to
+changing conditions in weather, the needs of regulatory restrictions on hours, optimizing follow-on activities after a
+trip, etc.
 
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-Both personnel and semi-automated systems responsible for planning and assigning driver routes want to update the Driver's destination and route during a trip. They do this by querying
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to update the
+Driver's destination and route during a trip. They retrieve the driver availability factors for the time period from the
+driver's start of route up until the present (see *Retrieve Driver Availability Factors* above for more details.)
+
+In the process of updating the Driver's destination and route, the motor freight carrier sends the following _to_ the
+TSP
 
 * Stop Geographic Details
-* Duty Status Log
-* Vehicle Flagged Event
+* Stop Details
 
-In the process of updating the Driver's destination and route, the motor freight carrier sends the following _to_ the TSP
+## Update Driver's Route Stop [PUT /api{version}/vehicles/{vehicleId}/routes/{routeId}]
 
-* Externally Sourced Stop Geographic Details
-* Externally Sourced Stop Details
+Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
+change the destination of the route, hence also changing the stopId associated with the route.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Route Stop Details)
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the updated route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId or routeId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Route Stop Geographic Details [/api{version}/stops/{stopId}/geographicdetail]
+
+## Retrieve Route Stop Geographic Details [GET]
+
+Clients can retrieve the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
+truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
+truck should drive on approach).
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Stop Geographic Details)
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: stopId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+### Update Route Stop Geographic Details [PATCH]
+
+Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
+truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
+truck should drive on approach).
+
+Sending data to this endpoint, using a previously returned `stopId` will update the geograhic details of the stop and
+any other routes using this stop will also be updated.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Stop Geographic Details)
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: stopId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case Driver Route & Directions Start
 
-Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab components of a telematics system.
-
-TODO: define API endpoints for this use case
+Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab
+components of a telematics system.
 
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-Both personnel and semi-automated systems responsible for planning and assigning driver routes want to inform their drivers about their planned route before the driver starts the trip. They first check the vehicle for any faults or alarms by querying
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to inform their
+drivers about their planned route before the driver starts the trip. Given the vehicle that the Driver will take on the
+route, they first check the vehicle for any faults or alarms in the past 24h by querying this endpoint.
 
 * Vehicle Flagged Event
 
-Then the trip destination is sent to the driver by sending the following _to_ the TSP
+Then the trip start and stop destination is sent to the driver along with any other instructions (such as which trailers
+to take). A successful creation of a route will yield a response indicating the routeId to use in further updates or
+modifications to the route.
 
-* Externally Sourced Stop Details
+* Externally Sourced Route Start Stop Details
 
-# Group Use Case Driver Route & Directions Done
+## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flaggedevents{?start,stop}]
+
+Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Flagged Event)
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Create a Route with Start and Stop Details [POST /api{version}/vehicles/{vehicleId}/routes]
+
+Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
+additional instructions in a *Externally Sourced Route Start Stop Details* object.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Route Start Stop Details)
+
++ Response 201 (application/json)
+
+    + Attributes (object)
+        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+# Group Use Case Driver Route and Directions Done
 
 Motor freight carriers receive notifications when Drivers have completed their trip.
 
-TODO: define API endpoints for this use case
-
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-Both personnel and semi-automated systems responsible for planning and assigning driver routes want to be notified of a completed trip, along with the driver information about duty on the trip. They follow the feed of:
+Both personnel and semi-automated systems responsible for planning and assigning driver routes want to be notified of a
+completed trip, along with the driver information about duty on the trip. They follow the feed of:
 
 * Duty Status Log
 
-And mark trips completed based on the Duty Status Log context; at the end of a trip they also query
+And mark trips completed based on the Duty Status Log context; at the end of a trip they also query for the most recent
 
 * Stop Geographic Details
 
-to receive updates on changes to gates, access, repairs etc at the destination.
+to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
+Details* above for more details.)
+
+## Follow a Feed of Duty Status Logs [GET /api{version}/dutystatuslogs/feed{?token}]
+
+Clients can follow a feed of Duty Status Log entries as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
+        + feed                                  (array[Duty Status Log], fixed-type) - the 'feed' of Duty Status Logs
+
++ Response 400 (text/plain)
+
+        Error: token parameter invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case Driver Messaging by Geo-Location
 
-Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to notify the drivers of dangerous weather conditions in their area.
+Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to
+notify the drivers of dangerous weather conditions in their area.
 
-TODO: define API endpoints for this use case
+Personnel responsible for planning and assigning driver routes want to send messages to drivers in a particular
+geographic region. They query the API for
 
-Personnel responsible for planning and assigning driver routes want to send messages to drivers in a particular geographic region. They query the API for
+* Coarse Vehicle Location Time History
 
-* Vehicle Location Time History
-
-of all vehicles over the present time period; then filtering-out all vehicles outside the particular geographic region, then send messages to each vehicle by sending data _to_ the TSP:
+of all vehicles over the present time period; then filtering-out all vehicles outside the particular geographic region,
+then send messages to each vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
+
+## Retrieve All Coarse Vehicle Location Time Histories [GET /api{version}/coarsevehiclelocations/{?start,stop}]
+
+Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Coarse Vehicle Location Time History)
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Send a Vehicle Display Message to a Vehicle [POST /api{version}/vehicles/{vehicleId}/message]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Vehicle Display Messages)
+
++ Response 201 (application/json)
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId not found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case Driver Messaging by Vehicle
 
 Motor freight carriers also message their drivers by sending messages directly to a vehicle.
 
-TODO: define API endpoints for this use case
-
-Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They send data _to_ the TSP for a given vehicle:
+Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They send
+data _to_ the TSP for a given vehicle:
 
 * Externally Sourced Vehicle Display Messages
 
+(see *Send a Vehicle Display Message to a Vehicle* above for more details.)
+
 # Group Use Case Vehicle Location Time History Tracking
 
-Motor freight carriers use telematics fleet Location Time History for multiple 'fleet dynamics modeling' use cases such as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
+Motor freight carriers use telematics fleet Location Time History for multiple 'fleet dynamics modeling' use cases such
+as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
 
-TODO: define API endpoints for this use case
-
-Autonomous analysis and reporting systems want to get the Location Time History of the fleet over a particular time period. They query the API for
+Autonomous analysis and reporting systems want to get the Location Time History of the fleet over a particular time
+period. They query the API for
 
 * Vehicle Location Time History
 
 of all vehicles over a given time period.
 
+## Retrieve All Vehicle Location Time Histories [GET /api{version}/vehiclelocations/{?start,stop}]
+
+Clients can retrieve the (hi-resolution) vehicle locations (of all vehicles) over a given time period.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Location Time History)
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 # Group Use Case Human Resources Process: Payroll
 
-Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that are important to modern motor freight carrier operations.
+Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
+are important to modern motor freight carrier operations.
 
-TODO: define API endpoints for this use case
-
-Automated payroll/HR systems want to receive duty status logs and convert these into payroll tracking entries. To do this they follow a feed of:
+Automated payroll/HR systems want to receive duty status logs and convert these into payroll tracking entries. To do
+this they follow a feed of:
 
 * Duty Status Log
 
-and they query for breaks and exemption rules for drivers in those logs:
+(see *Follow a Feed of Duty Status Logs* above for more details) and they query for breaks and exemption rules for
+(drivers in those logs:
 
 * Region Specific Breaks Rules
 * Region Specific Waivers
 
-In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do this their systems send data _to_ the TSPs:
+(see *Check Break Rules and Waivers* above for more details.)
+
+In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
+this their systems send data _to_ the TSPs:
 
 * Externally Triggered Duty Status Change
 
-HR staff want to associate their Driver's with metadata for use by the TSP. e.g. the region of governance for duty breaks and exemptions. To do this their systems send data _to_ the TSPs:
+(see *Send Custom-Integrated Duty Status Changes to the TSP* above for more details.) HR staff want to associate their
+(Driver's with metadata for use by the TSP. e.g. the region of governance for duty breaks and exemptions. To do this
+(their systems send data _to_ the TSPs:
 
 * Externally Sourced Driver Info
+
+## Update Driver with Externally Sourced Driver Info [PATCH /api{version}/drivers/{driverId}]
+
+Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Driver Info)
+
++ Response 200 (application/json)
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case Human Resources Process: Accident Report
 
 Motor freight carriers use telematics systems to monitor their fleets for accidents.
 
-TODO: define API endpoints for this use case
-
-Semi-automated systems want to receive notification of any accidents in their fleet and handle accident reports internally according to their own processes. To do this they follow a feed of:
+Semi-automated systems want to receive notification of any accidents in their fleet and handle accident reports
+internally according to their own processes. To do this they follow a feed of:
 
 * Duty Status Log
 
+(see *Follow a Feed of Duty Status Logs* above for more details.)
+
 # Group Use Case Carrier Custom Business Intelligence
 
-Motor freight carriers use telematics systems for multiple, custom, business intelligence purposes where the overall health of their fleet is considered and fed into their own proprietary models.
+Motor freight carriers use telematics systems for multiple, custom, business intelligence purposes where the overall
+health of their fleet is considered and fed into their own proprietary models.
 
-TODO: define API endpoints for this use case
-
-Automated and semi-automated analysis and reporting systems want to get the overall fleet health status for a particular time period. They query the API for
+Automated and semi-automated analysis and reporting systems want to get the overall fleet health status for a particular
+time period. They query the API for
 
 * Coarse Vehicle Location Time History
-* Vehicle Location Time History
 * Flagged Vehicle Performance Event
 * Vehicle Performance Event
 * Vehicle Fault Code Event
 
 of all vehicles over a given time period.
 
+They may also follow-up with queries of the hi-resolution time history of the fleet for a given time period:
+
+* Vehicle Location Time History
+
+(see *Retrieve All Vehicle Location Time Histories* above for more details.)
+
+## Retrieve Fleet Vehicle Info [GET /api{version}/vehicleinfos/{?start,stop}]
+
+Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
+        + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+        + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
+        + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 # Group Use Case Compliance and Safety Monitoring
 
 Motor freight carriers use telematics systems to monitor compliance and safety for their operations.
 
-TODO: define API endpoints for this use case
-
-Personnel responsible for safety and compliance want to review the safety and compliance of their drivers. For a given driver they retrieve from the TSP:
+Personnel responsible for safety and compliance want to review the safety and compliance of their drivers. For a given
+driver they retrieve from the TSP:
 
 * Driver Performance Summary
 
-Driver Performance Summary is a data object which is created by the TSP by summarizing vehicle behaviors across the same driver. Drivers must log-in to their in-vehicle telematics systems so that the data can be summarized per-driver.
-
-Motor freight carriers want to create, delete and modify driver login credentials that the drivers will use in the field. They send data _to_ the TSP:
+Motor freight carriers want to create, delete and modify driver login credentials that the drivers will use in the
+field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
+
+## Retrieve Driver Performance Summaries [GET /api{version}/driverperformance/summaries/{driverId}{?start,stop}]
+
+Clients can request all driver performance summaries for a specific driver within a given period of time.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + performanceSummaries                                   (required, array[Driver Performance Summary], fixed-type) - all the Driver Performance Summary objects for this driver for the requested time period
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameter invalid
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Update TSP Portal User [PATCH /api{version}/driverportaluser/{driverId}]
+
+Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (External TSP Portal User Management)
+
++ Response 200 (application/json)
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: driverId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Use Case In-Field Maintenance & Repair
 
 Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
 
-TODO: define API endpoints for this use case
-
-Automated back-end systems at the motor freight carrier want to be notified of any vehicle issues requiring maintenance. The systems determine which events require maintenance by reading raw information from the TSP:
+Automated back-end systems at the motor freight carrier want to be notified of any vehicle issues requiring maintenance.
+The systems determine which events require maintenance by following a feed of:
 
 * Vehicle Fault Code Event
 
-In the event that an issue requiring maintenance must be resolved in the field, the system will query
+In the event that an issue requiring maintenance must be resolved in the field, the system will query to get the most
+recent vehicle location
 
-* Coarse Vehicle Location Time History
+* Vehicle Location Time History
+
+## Follow a Feed of All Vehicle Fault Code Events [GET /api{version}/vehiclefaults/feed?{token}]
+
+Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
+bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
+        + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Duty Status Logs
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Get Location of a Vehicle [GET /api{version}/vehiclelocations/{vehicleId}{?start,stop}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Location Time History)
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
 
 # Group Localization
 
 ## Translation Table [/api{version}/i18n]
 
-Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented in API Blueprint's formal spec language.
+Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO
+files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented
+in API Blueprint's formal spec language.
 
 + Attributes (object)
     + data (array[Token Translation], fixed-type)
 
 ### Retrieve a Translation Table [GET]
+
+Clients can retrieve the current translation table for this TSP's Open Telematics API for given language (provided in the request headers.)
 
 **Access Controls**
 
@@ -1437,7 +2262,9 @@ Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); whe
 
 # Group Open Telematics Data Model
 
-For the purposes of clearly detailing the data object types used by the API endpoints above, we include the object models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes; it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
+For the purposes of clearly detailing the data object types used by the API endpoints above, we include the object
+models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes;
+it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
 ## Duty Status Log Object [/api{version}/byid/dutystatuslogs/{id}]
 
@@ -1535,7 +2362,9 @@ For the purposes of clearly detailing the data object types used by the API endp
 
 ## Region Specific Breaks Rules Object [/api{version}/byid/regionspecificbreaksrules/{id}]
 
-Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break rules.
+Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
+only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
+rules.
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1568,7 +2397,8 @@ Rules governing driver brakes for the specific region of governance of the drive
 
 ## Region Specific Waivers Object [/api{version}/byid/regionspecificwaivers/{id}]
 
-Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver available
+Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
+available
 
 + Parameters
     + version: `v1` (enum[string]) - API version
