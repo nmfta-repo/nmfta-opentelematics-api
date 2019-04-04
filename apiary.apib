@@ -205,11 +205,23 @@ The total number of elements available is returned in the `X-Total-Count` respon
 # Server Performance
 
 This API is intended to be integrated into motor freight carriers back end operations systems; therefore, there are
-performance requirements to be considered also. The API has been modeled in terms of use cases by the motor freight
+performance requirements to be considered as well. The API has been modeled in terms of use cases by the motor freight
 carriers (see below). Each of these use cases can be considered to be executing concurrently in the motor freight
-carrier. For large motor freight carriers, each use case interacts with TSP servers at up to 10,000 requests per minute.
+carrier. This has important design implications. For example, if a motor freight carrier has 10,000 trucks and makes
+requests regarding their location once a minute this would imply 10,000 method invocations per minute with a relatively
+small return data point. Other methods such as vehicle histories will have larger return data sets and require more
+server side processing but would not be expected to be called with a high frequency. Given that it is not possible to
+understand how these methods might be used by motor freight carriers in a final implementation it is difficult to
+provide concrete performance metric requirements at this stage. Instead, implementors should consider this per-truck
+scaling and design accordingly. i.e. consider that fleets can have more than 100,000 trucks and that some API endpoints
+in this specification will be called rapidly (1 request per minute) whereas others will be called infrequently (1
+request per day).
 
-Therefore, server implementations of this API are expected to be able to serve 10,000 requests per minute per use case.
+This specification does not go into implementation specific design decisions which are up to the individual TSPs since
+such decisions are heavily dependent on their architecture. It is, however, strongly recommended that the TSPs consider
+building-in performance features such as request queueing and request rate limiters to provide a stable and robust
+solution. It is also recommended that the TSPs provide information on the frequency of updates for data feed
+subscriptions such as the vehicle feed so the consumers can make appropriate design decisions.
 
 # Unknown Drivers
 
