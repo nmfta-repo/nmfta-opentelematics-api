@@ -199,6 +199,21 @@ When exchanging locations as parameters to API methods or in responses from the 
 formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]ooo.ooooooo`). Positive in the first component,
 Latitude, indicates North (N) and East (E) in the second component, Longitude.
 
+# Working with *Feed Follow* Queries
+
+There are endpoints of the API which are intended to be polled by clients so that new data (data newer than the previous
+query) is returned. Theses *Feed Follow* endpoints are intended to assist in real-time client applications.
+
+In some cases, the clients require that no data is ever missed by following (polling the endpoint); however, due to the
+nature of telematics systems there can be a high latency between time of creation and time of delivery to the TSP. Hence
+there is a non-trivial cost associated with providing endpoints that can ensure that no data is missed in following.
+e.g. the *Follow a Feed of Duty Status Logs* endpoint below.
+
+Unless stated otherwise, all *Feed Follow* endpoints will be such that no data is missed by following; including cases
+of very high latency between data creation and delivery. Special exceptions will be noted on the endpoints for the cases
+where the clients require that they have the newest information and are not concerned with ensuring that no data is
+missed.
+
 # Error States
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
@@ -1888,7 +1903,7 @@ And mark trips completed based on the Duty Status Log context; at the end of a t
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Follow a Feed of Duty Status Logs [GET /api{version}/dutystatuslogs/feed{?token}]
+## Feed Follow all Duty Status Logs [GET /api{version}/dutystatuslogs/feed{?token}]
 
 Clients can follow a feed of Duty Status Log entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -2201,7 +2216,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
             WWW-Authenticate: Basic realm="protected"
 
-## Follow Fleet Vehicle Info [GET /api{version}/vehicleinfos/feed{?token}]
+## Feed Follow all Fleet Vehicle Info [GET /api{version}/vehicleinfos/feed{?token}]
 
 Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
 system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
