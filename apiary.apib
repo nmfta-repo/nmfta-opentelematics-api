@@ -2140,6 +2140,8 @@ time period. They query the API for
 
 of all vehicles over a given time period.
 
+For certain use cases, they may opt to *follow* a feed of the above objects instead. See *Follow Fleet Vehicle Info* below.
+
 They may also follow-up with queries of the hi-resolution time history of the fleet for a given time period:
 
 * Vehicle Location Time History
@@ -2154,7 +2156,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2183,6 +2185,48 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
+## Follow Fleet Vehicle Info [GET /api{version}/vehicleinfos/feed{?token}]
+
+Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
+system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
+entries with each query in the polling.
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
+        + feed                                  (object) - the 'feed' of Fleet Vehicle Info
+            + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
+            + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+            + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
+            + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period        
+
++ Response 400 (text/plain)
+
+        Error: token parameter invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 
 # Group Use Case Compliance and Safety Monitoring
 
