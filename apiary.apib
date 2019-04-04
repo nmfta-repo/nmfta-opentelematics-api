@@ -559,7 +559,7 @@ Telematics Data Model* for object descriptions as well.
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
 + headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
 + speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in m/s
-+ overRpmTime                                            (number)           - the total amount of time spent over the RPM threshold during this event, in seconds
++ overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
 + overSpeedTime                                          (number)           - the total amount of time spent over the speed threshold during this event, in seconds
 + excessSpeedTime                                        (number)           - the total amount of time spent over the excess speed threshold, in seconds
 + longIdleTime                                           (number)           - the total amount of time spent in 'long' idle during this event, in seconds
@@ -589,8 +589,8 @@ Telematics Data Model* for object descriptions as well.
 + exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
 + overspeedLowThrottle                                   (boolean)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
 + overspeedHiThrottle                                    (boolean)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
-+ overrpmLowThrottle                                     (boolean)          - the total amount of time spent over the rpm threshold and simultaneously below the throttle threshold, in seconds
-+ overrpmHiThrottle                                      (boolean)          - the total amount of time spent over the rpm threshold and simultaneously above the throttle threshold, in seconds
++ overrpmLowThrottle                                     (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
++ overrpmHiThrottle                                      (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
 + lkaActive                                              (boolean)          - Lane Keep Assist active status
 + lkaDisable                                             (boolean)          - Lake Keep Assist disable switch status
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
@@ -650,7 +650,7 @@ Telematics Data Model* for object descriptions as well.
 + fuel                                                   (number) - the total fuel consumed during this event, in litres
 + cruiseTime                                             (number) - the total time spent with cruise control engaged during this event, in seconds
 + engineLoadPercent                                      (number) - the average engine load percent during this event
-+ overRpmTime                                            (number) - the total time spent above rpm threshold during this event, in seconds
++ overRpmTime                                            (number) - the total time the driver's vehicles spent moving while above rpm threshold, in seconds
 + brakeEvents                                            (number) - the number of break events during this event
 
 ### Vehicle (object)
