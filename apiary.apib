@@ -454,8 +454,8 @@ Telematics Data Model* for object descriptions as well.
 + engineRPM                                              (required, number) - engine RPMs at time of event, in revolutions per minute
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
-+ cruiseStatus                                           (required, Cruise Status) - the cruise status at the time of this event
-+ parkingBreak      :                             false  (required, boolean) - parking break status at time of event
++ cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
++ parkingBreak      :                             false  (optional, boolean) - parking break status at time of event
 + ignitionStatus                                         (required, Ignition Status) - the ignition status at the time of the event
 + forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in m/s
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
