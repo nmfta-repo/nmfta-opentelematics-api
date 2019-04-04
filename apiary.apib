@@ -211,6 +211,12 @@ carrier. For large motor freight carriers, each use case interacts with TSP serv
 
 Therefore, server implementations of this API are expected to be able to serve 10,000 requests per minute per use case.
 
+# Unknown Drivers
+
+For the elements of Open Telematics API which are concerned with Driver log events, or other driver-associated data,
+there needs to be a concept of an 'unknown driver'. Indeed this concept is part of the ELD mandate. In Open Telematics
+API objects: `driverID` references to the unknown driver is represented by `null`.
+
 # Provider Identifiers
 
 An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more
