@@ -172,7 +172,7 @@ they are formatted properly as an ISO 8601 string (format
 converted to UTC in order to ensure time zone information and daylight
 savings times are accounted for correctly.
 
-## Working with Time-Based Queries
+# Working with Time-Based Queries
 
 There are many API endpoints which support searches of data based on a time range. In all cases, the time rage specified
 by a pair of `start` and `stop` parameters represents an inclusive-exclusive time range. i.e. a time period which
@@ -181,6 +181,17 @@ includes the moment in time given by `start` and all times up-to but not includi
 The matching performed in all of these searches will be a time-intersection. i.e. the objects will be returned in search
 results if their associated time periods (however defined) have any intersection with the inclusive-exclusive time range
 given by the pair of `start` and `stop` parameters.
+
+Objects may have multiple time periods associated with them; e.g. events recorded and transmitted by TSPs may have the
+times at which the event was created, when it was recorded and/or when it was made available by the TSP to the motor
+freight carrier. Unless otherwise specified, the time period of objects against which matching is performed will be the
+*creation times*. Furthermore, implementors are required to ensure that the creation times of any objects are preserved
+through all data transfers, i.e. that the creation times are not modified after initial recording at the telematics
+devices in the field.
+
+In the special case of matching against an object with a single time field, *instantaneous events* the object will be
+returned if its instantaneous time value is within the inclusive-exclusive time range given by the pair of `start` and
+`stop` parameters.
 
 # Working With Locations
 
