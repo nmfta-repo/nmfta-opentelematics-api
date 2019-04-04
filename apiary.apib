@@ -191,6 +191,16 @@ that they are formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]
 
 The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
 
+# Pagination
+
+Where requests may return large collections and where the collections to be returned are presumed to be static the API
+will include support for pagination of requests. The scheme for pagination closely follows [the pagination scheme of github](https://developer.github.com/v3/#pagination).
+
+Requests that are paginated will return 50 items by default. The `page` parameter can be used to access later pages;
+it defaults to the first page, page *1*. A custom number of items can be requested with the `count` parameter.
+
+The total number of elements available is returned in the `X-Total-Count` response header.
+
 # Server Performance
 
 This API is intended to be integrated into motor freight carriers back end operations systems; therefore, there are
@@ -621,27 +631,6 @@ Telematics Data Model* for object descriptions as well.
 + dateTime: `2019-01-0100:00:00.000Z`                    (required, string) - Date and time of this service status
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
 
-### Vehicle Only Complete Telematics Records (object)
-
-+ stopGeographicDetails                                  (array[Stop Geographic Details], fixed-type) - All of the Stop Geographic Details objects known to the TSP at the time of the request
-+ performanceThresholds                                  (array[Performance Thresholds], fixed-type) - All of the Performance Thresholds objects known to the TSP at the time of the request
-+ vehicles                                               (array[Vehicle], fixed-type) - All of the Vehicle objects known to the TSP at the time of the request
-+ vehicleLocationTimeHistories                           (array[Vehicle Location Time History], fixed-type) - Any of the Vehicle Location Time History objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ flaggedVehiclePerformanceEvents                        (array[Flagged Vehicle Performance Event], fixed-type) - Any of the Flagged Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-
-### Complete Telematics Records (Vehicle Only Complete Telematics Records)
-
-+ drivers                                                (array[Driver], fixed-type) - All of the Driver objects known to the TSP at the time of the request
-+ annotationLogs                                         (array[Annotation Log], fixed-type) - Any of the Annotation Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ dutyStatusLogs                                         (array[Duty Status Log], fixed-type) - Any of the Duty Status Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ regionSpecificBreaksRules                              (array[Region Specific Breaks Rules], fixed-type) - Any of the Region Specific Breaks Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-
 ## Data Structures
 
 ### Open Telematics TSP Inbound Objects (object)
@@ -790,17 +779,63 @@ TSP outage or for research purposes offline or to restore data -- although this 
 we aim to support here please see below on 'data import.'
 
 The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above)
-for a given time-period. They do this by querying for either
+for a given time-period. They do this by querying for sets of the following data types over a given period of time:
 
-* Complete Telematics Records OR Vehicle-Only Telematics Records
-
-for a given period of time.
+* Vehicle
+* Vehicle Location Time History
+* Vehicle Flagged Event
+* Vehicle Performance Event
+* Flagged Vehicle Performance Event
+* Performance Thresholds
+* Stop Geographic Details
+* Vehicle Fault Code Event
+* Driver
+* Annotation Log
+* Duty Status Log
+* Region Specific Breaks Rules
+* Region Specific Waivers
+* Driver Performance Summary
+* State of Health
 
 The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
 same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
 data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
 
-## Complete Telematics Records Export Format [/api{version}/export/allrecords{?start,stop}]
+The following methods are defined to enable clients to retrieve the entirety of all Telematics data from the TSP for a given time period.
+
+The response to the request will include both time-varying objects (those that have time associated with them) and also
+those that do not.
+
+* For time-varying objects: the responses will only include whose associated time periods have an intesection with the
+requested time period (as per the details of the *Working With Dates* section above);
+
+* For non time-varying objects: the response will include all objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
+API consistency under `/export/...`)
+
+***Vehicle-Only Data Export***
+
+To export data that does not deal with driver PII, the motor freight carrier can request sets of the following data
+types (see below for details on how to request). As is noted in the access controls below, requests for these data types
+deny access by the *Vehicle X* roles.
+
+* Stop Geographic Details
+* Performance Thresholds
+* Vehicle
+* Vehicle Location Time History
+* Vehicle Flagged Event
+* Vehicle Performance Event
+* Flagged Vehicle Performance Event
+* Vehicle Fault Code Event
+* State of Health
+
+## Export of all Vehicle objects [GET /api{version}/export/vehicles{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -808,24 +843,11 @@ data structures such that any TSP wanting to implement _import_ is enabled to do
             + `v1`
     + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
     + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
 
-+ Attributes (Complete Telematics Records)
-
-### Retrieve Complete Telematics Records for a Given Time Period [GET]
-
-Clients can retrieve the entirety of all Telematics data from the TSP for a given time period.
-
-The response to this request will include both time-varying objects (those that have time associated with them) and also
-those that do not. The response will only include those time-varying objects whose associated time periods have an
-intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
-will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters.
-
-**Access Controls**
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -833,7 +855,12 @@ regardless of the time period requested as defined by `start` and `stop` query p
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Complete Telematics Records)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
 
 + Response 400 (text/plain)
 
@@ -844,7 +871,13 @@ regardless of the time period requested as defined by `start` and `stop` query p
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle-Only Complete Telematics Records Export Format [/api{version}/export/vehiclerecords{?start,stop}]
+## Export of all Vehicle Location Time History objects     [GET /api{version}/export/coarsevehiclelocations{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -852,25 +885,11 @@ regardless of the time period requested as defined by `start` and `stop` query p
             + `v1`
     + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
     + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
 
-+ Attributes (Vehicle Only Complete Telematics Records)
-
-### Retrieve Vehicle-Only Complete Telematics Records for a Given Time Period [GET]
-
-Clients can retrieve the entirety of all Telematics data from the TSP -- that data which does not deal with Driver PII
--- for a given time period.
-
-The response to this request will include both time-varying objects (those that have time associated with them) and also
-those that do not. The response will only include those time-varying objects whose associated time periods have an
-intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
-will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters.
-
-**Access Controls**
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -878,8 +897,546 @@ regardless of the time period requested as defined by `start` and `stop` query p
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Vehicle Only Complete Telematics Records)
+    + Headers
 
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle Location Time History], fixed-type) - array of all objects which match the date parameters in the query
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Vehicle Flagged Event objects             [GET /api{version}/export/vehicleflaggedevents{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Vehicle Performance Event objects         [GET /api{version}/export/vehicleperformanceevents{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Flagged Vehicle Performance Event objects [GET /api{version}/export/flaggedvehicleperformanceevents{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Performance Thresholds objects            [GET /api{version}/export/performancethresholds{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Stop Geographic Details objects           [GET /api{version}/export/steopgeographicdetails{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Vehicle Fault Code Event objects          [GET /api{version}/export/faultcodeevents{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Driver objects                            [GET /api{version}/export/drivers{?start,stop,page,count}]
+
+**Access Controls**
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Annotation Log objects                    [GET /api{version}/export/annotationlogevents{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Duty Status Log objects                   [GET /api{version}/export/eventlogobjects{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Region Specific Breaks Rules objects      [GET /api{version}/export/regionspecificbreakrules{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Region Specific Waivers objects           [GET /api{version}/export/regionspecificwaivers{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all Driver Performance Summary objects        [GET /api{version}/export/driverperformancesummaries{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
+
++ Response 400 (text/plain)
+
+        Error: start or stop parameters invalid
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
+## Export of all State of Health objects                   [GET /api{version}/export/serverstateofhealths{?start,stop,page,count}]
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + version: `v1` (enum[string]) - API version
+        + Members
+            + `v1`
+    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
+    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (object)
+        + data                             (required, array[Vehicle], fixed-type) - array of all objects which match the date parameters in the query.
 
 + Response 400 (text/plain)
 
