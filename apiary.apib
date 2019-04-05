@@ -268,6 +268,29 @@ data structures where it is included in this specification. We reccommend that T
 but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's
 service.
 
+# Extending This API
+
+The Open Telematics API is intended to enable motor freight carriers to be able to substitute TSPs (either concurently
+or as fail-overs). This, of course, means that OTAPI must include only the most common elements of all the TSPs (so-
+called Lowest Common Denominator).
+
+However, each TSP has their own special value-add and, in some cases, the motor freight carriers would rather have
+access to this special value-add via OTAPI rather than include parallel integrations with SDKs in their operations.
+Unique vehicle performance data is a good example of this, where it is more useful embedded with the other events in the
+TSP stream.
+
+Thus, extensions to the API will be necessary and in preparation for this the data models specified in the current API
+have been left 'open'. i.e. the addition of data fields to the definitions of the objects which are returned by OTAPI
+according to this specification will not cause validation errors by clients which are following the JSON schema in this
+specification.
+
+* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier is fine
+* Adding additional possible values to enumerations is not a valid extension to the OTAPI
+* Adding additional endpoints/methods is not a valid extension to the OTAPI
+
+In cases where enumerations need to be changed and additional endpoints need to be added, this should be approached by
+changing the OTAPI upstream -- also, ideally, adding fields should also be done by suggesting changes upstream.
+
 # Localization
 
 The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable
