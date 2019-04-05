@@ -73,15 +73,16 @@ in the **Access Controls** tables throughout this API specification. The tables 
 |Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
 The intent of these access controls is so that carriers can limit which clients they deploy have access to:
-* any resources at all
+* streaming *feeds* of objects as they are added to the TSP
 * any Personally Identifiable Information (PII)
-* streaming feeds of new events as they are added to the TSP
 
 As can be seen in the **Access Controls** tables in the requests subsections of *References* that follow, the roles
 are assigned `DENY/ALLOW` such that:
-* the *X Follow* roles have access to streaming feeds and queries, whereas the *X Query* roles have access only to collections
-queries and
-* the *Vehicle X* roles are intended to be safe from PII
+
+* the *X Query* roles have access only to collections queries
+* the *X Follow* roles have access to streaming feeds and queries
+* the *Vehicle X* roles cannot access any PII
+* the *Driver X* roles can access both vehicle info and PII
 * the *Driver Dispatch* role is allowed to update route info and send messages to drivers
 * the *Driver Duty* role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)
 * the *HR* role is allowed to update Driver information and TSP portal user accounts
@@ -1008,7 +1009,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1050,7 +1051,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1092,7 +1093,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1134,7 +1135,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1176,7 +1177,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1218,7 +1219,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1260,7 +1261,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1302,7 +1303,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1344,7 +1345,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1384,7 +1385,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1424,7 +1425,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1464,7 +1465,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1504,7 +1505,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1544,7 +1545,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -1584,7 +1585,7 @@ deny access by the *Vehicle X* roles.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2034,7 +2035,7 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2190,7 +2191,7 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2240,7 +2241,7 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2352,7 +2353,7 @@ Clients can retrieve the (hi-resolution) vehicle locations (of all vehicles) ove
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2525,7 +2526,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2565,7 +2566,7 @@ entries with each query in the polling.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | ALLOW        | **DENY***  | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2734,7 +2735,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY***   | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -2767,7 +2768,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3649,7 +3650,7 @@ Summary statistics on performance of drivers.
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Request
     + Headers
