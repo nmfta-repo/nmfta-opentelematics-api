@@ -313,7 +313,7 @@ Telematics Data Model* for object descriptions as well.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + comment           : `note: something noteworthy`       (required, string) - The annotation text associated with the log.
-+ dateTime          :          `2019-01-0100:00:00.000Z` (required, string) - Date and time for this annotation log
++ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time for this annotation log
 
 ### Duty Status Log (object)
 
@@ -321,7 +321,7 @@ Telematics Data Model* for object descriptions as well.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
 + annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
-+ dateTime       :             `2019-01-0100:00:00.000Z` (required, string) - Date and time from the telematics device
++ dateTime       :                `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + distanceLastValid :                                117 (required, number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
@@ -435,7 +435,7 @@ Telematics Data Model* for object descriptions as well.
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this Location Time
-+ dateTime          :          `2019-01-0100:00:00.000Z` (required, string) - time
++ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - time
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
 
 ### Vehicle Location Time History (object)
@@ -481,8 +481,8 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ eventStart        :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the start of the event
-+ eventEnd          :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the end of the event
++ eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event
++ eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + trigger                                                (required, enum[string]) - type flagged event
@@ -512,8 +512,8 @@ Telematics Data Model* for object descriptions as well.
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific break rules.
-+ activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time the break rules take effect
-+ activeTo          :          `2019-01-0100:00:00.000Z` (string) - The date and time the break rules stop taking effect, if left blank then the rules apply in perpetuity
++ activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time the break rules take effect
++ activeTo          :             `2019-04-05T02:04:16Z` (string) - The date and time the break rules stop taking effect, if left blank then the rules apply in perpetuity
 + country           :                               `CA` (string) - short code for the country of the region dictating the specific break rules
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory dictating the specific break rules
 
@@ -524,14 +524,14 @@ Telematics Data Model* for object descriptions as well.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific waiver.
 + country           :                               `CA` (string) - short code for the country of the region dictating the specific waiver
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory dictating the specific waiver
-+ waiverDay        :          `2019-01-0100:00:00.000Z`  (required, string) - The date of the effect of the waiver -- time is ignored
++ waiverDay        :             `2019-04-05T02:04:16Z`  (required, string) - The date of the effect of the waiver -- time is ignored
 
 ### Performance Thresholds (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ activeFrom        :          `2019-01-0100:00:00.000Z` (required, string) - The date and time these thresholds take effect
-+ activeTo          :          `2019-01-0100:00:00.000Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
++ activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time these thresholds take effect
++ activeTo          :             `2019-04-05T02:04:16Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
 + rpmOverValue                                           (number)           - the configured RPM threshold, above which engine RPM readings are considered 'over', in revolutions per minute
 + overSpeedValue                                         (number)           - the configured speed threshold, above which speed readings are considered 'over', in m/s
 + excessSpeedValue                                       (number)           - the configured speed threshold, above which the speed readings are considered 'excess', in m/s
@@ -542,8 +542,8 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ eventStart        :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the start of the event (engine start)
-+ eventEnd          :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the end of the event (engine stop)
++ eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event (engine start)
++ eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `performance event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + hours             :                                  6 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
@@ -603,8 +603,8 @@ Telematics Data Model* for object descriptions as well.
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ triggeredDate     :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the fault code being triggered
-+ clearedDate       :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the fault code being cleared
++ triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
++ clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
 + occurences        :                                  1 (required, number) - the number of occurences of this fault
 + messageIdentifier                                      (required, number) - MID from J1939
 + parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID?
@@ -643,8 +643,8 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ eventStart        :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the start of this driver performance summary
-+ eventEnd          :          `2019-01-0100:00:00.000Z` (required, string) - Date and time of the end of this driver performance summary
++ eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of this driver performance summary
++ eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of this driver performance summary
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for this performance summary
 + distance                                               (number) - the total distance covered during this event, in m
 + fuel                                                   (number) - the total fuel consumed during this event, in litres
@@ -676,7 +676,7 @@ Telematics Data Model* for object descriptions as well.
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime: `2019-01-0100:00:00.000Z`                    (required, string) - Date and time of this service status
++ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
 
 ## Data Structures
@@ -708,7 +708,7 @@ data type defined below. If you change one you should probably also change the o
 + stopName          :                 `pickup place 101` (required, string) - a name for the stop location
 + stopAddress       :                  `13 Sycamore Ave` (string) - an optional street address
 + stopLocation      :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
-+ stopDeadline      :          `2019-01-0100:00:00.000Z` (string) - optional time and date when the stop must be arrived at
++ stopDeadline      :             `2019-04-05T02:04:16Z` (string) - optional time and date when the stop must be arrived at
 
 ### Externally Sourced Route Start Stop Details (Externally Sourced Route Stop Details)
 
@@ -730,7 +730,7 @@ data type defined below. If you change one you should probably also change the o
 
 ### Externally Triggered Duty Status Change (object)
 
-+ dateTime          :          `2019-01-0100:00:00.000Z` (required, string) - Date and time for this status change
++ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time for this status change
 + location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for this status change.
 + status            :                `EXTTRIG_STATUS_ON` (required, enum[string]) - The status changed-to in this status change
     + Members
@@ -896,8 +896,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -938,8 +938,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -980,8 +980,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1022,8 +1022,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1064,8 +1064,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1106,8 +1106,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1148,8 +1148,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1190,8 +1190,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1232,8 +1232,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1272,8 +1272,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1312,8 +1312,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1352,8 +1352,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1392,8 +1392,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1432,8 +1432,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1472,8 +1472,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1541,8 +1541,8 @@ Clients can request all the factors contributing to driver availability for a gi
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1584,8 +1584,8 @@ time period.
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1648,7 +1648,8 @@ Clients can trigger duty status changes for a given driver by pushing data to th
                   "dateTime": {
                     "type": "string",
                     "description": "Date and time for this status change",
-                    "example": "2019-01-0100:00:00.000Z"
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
+                    "example": "2019-04-05T02:04:16Z"
                   },
                   "location": {
                     "type": "string",
@@ -1752,7 +1753,8 @@ change the destination of the route, hence also changing the stopId associated w
                   "stopDeadline": {
                     "type": "string",
                     "description": "optional time and date when the stop must be arrived at",
-                    "example": "2019-01-0100:00:00.000Z"
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",                    
+                    "example": "2019-04-05T02:04:16Z"
                   }
                 }
               }
@@ -1921,8 +1923,8 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
         + Members
             + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2020,7 +2022,8 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
                   "stopDeadline": {
                     "type": "string",
                     "description": "optional time and date when the stop must be arrived at",
-                    "example": "2019-01-0100:00:00.000Z"
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
+                    "example": "2019-04-05T02:04:16Z"
                   }
                 }
             }
@@ -2125,8 +2128,8 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2237,8 +2240,8 @@ Clients can retrieve the (hi-resolution) vehicle locations (of all vehicles) ove
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2410,8 +2413,8 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2505,8 +2508,8 @@ Clients can request all driver performance summaries for a specific driver withi
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2653,8 +2656,8 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
         + Members
             + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
