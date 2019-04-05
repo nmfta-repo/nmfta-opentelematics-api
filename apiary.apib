@@ -350,6 +350,15 @@ Telematics Data Model* for object descriptions as well.
 + comment           : `note: something noteworthy`       (required, string) - The annotation text associated with the log.
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time for this annotation log
 
+### Compliance Location (object)
+
++ id                : `6A7BB37176874980F14A351BED7DF656` (required, string) - The unique identifier for the specific Entity object in the system.
++ location          :         ` 37.4224764 -122.0842499` (required, string) - the lat long encoding of this location
++ identifiedPlace   :                         `New York` (string) - place name of the identified geo-location
++ identifiedState   :                               `NY` (string) - state/province abbreviate of identified geo-location
++ distanceFrom      :                             `5000` (number) - distance from the identified geo-location, in m
++ directionFrom     :                              `NNE` (string) - cardinal direction from the identified geo-location
+
 ### Duty Status Log (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
@@ -380,7 +389,7 @@ Telematics Data Model* for object descriptions as well.
         + `EVENTTYPE_CMV_POWERUPDOWN`           - CMV's engine power up / shut down activity
         + `EVENTTYPE_MALFUNCTION_OR_DIAGNOSTIC` - A malfunction or data diagnostic detection
 
-+ location          :         ` 37.4224764 -122.0842499` (required, string) - An object with the location information for the log data.
++ location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
 + malfunction       :                 `MALFUNCTION_NONE` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
 
     + Members
