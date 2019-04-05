@@ -326,7 +326,83 @@ provided below for convenience in the sample response to `GET /api{version}/i18n
 The Open Telematics API is envisioned to be complete enough that motor freight carriers can use these APIs instead of
 the proprietary TSP APIs -- while still connecting-to TSP-hosted servers and hence still using the same provider. In the
 interest of ensuring that the APIs are _useful_ to their intended users (motor freight carriers) we will capture -- and
-organize -- the API by these use cases.
+organize -- the API by these use cases. See the sections below for the API endpoints in those categories. For ease of
+reference, we summarize the use cases here:
+
+***Check Provider's State of Health***
+
+Users of telematics that is highly integrated into their operations need assurances of the state of health of the
+Provider's services.
+
+***Data Export***
+
+Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of
+this specification is all the data specified here and does not include any other proprietary data structures designed
+and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of
+TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case
+we aim to support here please see below on 'data import.'
+
+***Driver Availability***
+
+Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of
+those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
+
+***Driver Route & Directions Communication***
+
+Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to
+changing conditions in weather, the needs of regulatory restrictions on hours, optimizing follow-on activities after a
+trip, etc.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+***Driver Route & Directions Start***
+
+Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab
+components of a telematics system.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+***Driver Route and Directions Done***
+
+Motor freight carriers receive notifications when Drivers have completed their trip.
+
+This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
+
+***Driver Messaging by Geo-Location***
+
+Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to
+notify the drivers of dangerous weather conditions in their area.
+
+***Driver Messaging by Vehicle***
+
+Motor freight carriers also message their drivers by sending messages directly to a vehicle.
+
+***Vehicle Location Time History Tracking***
+
+Motor freight carriers use telematics fleet Location Time History for multiple 'fleet dynamics modeling' use cases such
+as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
+
+***Human Resources Process: Payroll***
+
+Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
+are important to modern motor freight carrier operations.
+
+***Human Resources Process: Accident Report***
+
+Motor freight carriers use telematics systems to monitor their fleets for accidents.
+
+***Carrier Custom Business Intelligence***
+
+Motor freight carriers use telematics systems for multiple, custom, business intelligence purposes where the overall
+health of their fleet is considered and fed into their own proprietary models.
+
+***Compliance and Safety Monitoring***
+
+Motor freight carriers use telematics systems to monitor compliance and safety for their operations.
+
+***In-Field Maintenance & Repair***
+
+Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
 
 ## Data Structures
 
