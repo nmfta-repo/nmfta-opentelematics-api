@@ -694,7 +694,14 @@ See the *Open Telematics Data Model* for a section designed to be rendered in ap
 Note 2: And this object definition exists just to tell you about that limitation.
 
 Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open
-Telematics Data Model* for object descriptions as well.
+Telematics Data Model* section for object descriptions as well.
+
+Note 4 (who's counting these anyways?): as these are inbound objects we want lock-down the space of all possible
+serializations to make the input processing of the server more robust. e.g. specifying content restrictions for strings
+that should only contain timestamps. APIBlueprint doesn't provide a way to do this in MSON; but it is possible to add a
+JSON Schema to an action which overides the JSON schema generated from the MSON. So, whereas these data structures
+define the data types used for inbound objects, there is also corresponding JSON Schemas for endpoints accepting these
+data type defined below. If you change one you should probably also change the other.
 
 ### Externally Sourced Route Stop Details (object)
 
@@ -1626,6 +1633,40 @@ Clients can trigger duty status changes for a given driver by pushing data to th
 
     + Attributes (Externally Triggered Duty Status Change)
 
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallyTriggeredDutyStatusChange",
+                "required": [
+                  "dateTime",
+                  "location",
+                  "status"
+                ],
+                "type": "object",
+                "properties": {
+                  "dateTime": {
+                    "type": "string",
+                    "description": "Date and time for this status change",
+                    "example": "2019-01-0100:00:00.000Z"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "An object with the location information for this status change.",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "status": {
+                    "enum": [
+                      "EXTTRIG_STATUS_ON",
+                      "EXTTRIG_STATUS_OFF"
+                    ],
+                    "type": "string",
+                    "description": "The status changed-to in this status change",
+                    "example": "EXTTRIG_STATUS_ON"
+                  }
+                }
+            }
+
 + Response 200 (application/json)
 
 + Response 204
@@ -1681,6 +1722,40 @@ change the destination of the route, hence also changing the stopId associated w
             Authorization: Basic YWRtaW46YWRtaW4=
 
     + Attributes (Externally Sourced Route Stop Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedRouteStopDetails",
+                "required": [
+                  "stopName",
+                  "stopLocation"
+                ],
+                "type": "object",
+                "properties": {
+                  "stopName": {
+                    "type": "string",
+                    "description": "a name for the stop location",
+                    "example": "pickup place 101"
+                  },
+                  "stopAddress": {
+                    "type": "string",
+                    "description": "an optional street address",
+                    "example": "13 Sycamore Ave"
+                  },
+                  "stopLocation": {
+                    "type": "string",
+                    "description": "the location of the stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "stopDeadline": {
+                    "type": "string",
+                    "description": "optional time and date when the stop must be arrived at",
+                    "example": "2019-01-0100:00:00.000Z"
+                  }
+                }
+              }
 
 + Response 200 (application/json)
 
@@ -1769,6 +1844,35 @@ any other routes using this stop will also be updated.
             Authorization: Basic YWRtaW46YWRtaW4=
 
     + Attributes (Externally Sourced Stop Geographic Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedStopGeographicDetails",
+                "required": [
+                  "location"
+                ],
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "description": "an optional comment"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "the location of the delivery date at this stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "entryArea": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "optional geographic location polygon detailing the entryway area for this stop"
+                  }
+                }
+            }
 
 + Response 200 (application/json)
 
@@ -1867,6 +1971,62 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
             Authorization: Basic YWRtaW46YWRtaW4=
 
     + Attributes (Externally Sourced Route Start Stop Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedRouteStartStopDetails",
+                "required": [
+                  "startName",
+                  "startLocation",
+                  "stopName",
+                  "stopLocation"
+                ],
+                "type": "object",
+                "properties": {
+                  "startName": {
+                    "type": "string",
+                    "description": "a name for the start location",
+                    "example": "start place 202"
+                  },
+                  "startAddress": {
+                    "type": "string",
+                    "description": "an optional street address of the start",
+                    "example": "11 Elm Street"
+                  },
+                  "startLocation": {
+                    "type": "string",
+                    "description": "the location of the start",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "routeAddInstructions": {
+                    "type": "string",
+                    "description": "an optional comment with details about the route",
+                    "example": "take trailers XXX and YYY"
+                  },
+                  "stopName": {
+                    "type": "string",
+                    "description": "a name for the stop location",
+                    "example": "pickup place 101"
+                  },
+                  "stopAddress": {
+                    "type": "string",
+                    "description": "an optional street address",
+                    "example": "13 Sycamore Ave"
+                  },
+                  "stopLocation": {
+                    "type": "string",
+                    "description": "the location of the stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "stopDeadline": {
+                    "type": "string",
+                    "description": "optional time and date when the stop must be arrived at",
+                    "example": "2019-01-0100:00:00.000Z"
+                  }
+                }
+            }
 
 + Response 201 (application/json)
 
@@ -2009,6 +2169,27 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
     + Attributes (Externally Sourced Vehicle Display Messages)
 
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedVehicleDisplayMessages",
+                "required": [
+                  "message"
+                ],
+                "type": "object",
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "description": "a brief 'subject-line' for this message"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "the message to be displayed to the driver"
+                  }
+                }
+            }
+
 + Response 201 (application/json)
 
 + Response 204
@@ -2130,6 +2311,46 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
             Authorization: Basic YWRtaW46YWRtaW4=
 
     + Attributes (Externally Sourced Driver Info)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedDriverInfo",
+                "required": [
+                  "username"
+                ],
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "a username of this driver"
+                  },
+                  "hoursWorked": {
+                    "type": "number",
+                    "description": "the hours worked on-duty by this user so far today (on any duty at all)",
+                    "example": 1.5
+                  },
+                  "driverLicenseNumber": {
+                    "type": "string",
+                    "description": "the driver's license number"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "short code for the country of the driver's license",
+                    "example": "CA"
+                  },
+                  "region": {
+                    "type": "string",
+                    "description": "short code for the country's region/state/province/territory of the driver's license",
+                    "example": "ON"
+                  },
+                  "driverHomeTerminal": {
+                    "type": "string",
+                    "description": "the home terminal of the driver"
+                  }
+                }
+            }
 
 + Response 200 (application/json)
 
@@ -2334,6 +2555,30 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
             Authorization: Basic YWRtaW46YWRtaW4=
 
     + Attributes (External TSP Portal User Management)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternalTSPPortalUserManagement",
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "TSP portal username",
+                    "example": "joe2"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "user password"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "this user is enabled or disabled",
+                    "example": true
+                  }
+                }
+              }
 
 + Response 200 (application/json)
 
