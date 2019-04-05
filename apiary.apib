@@ -324,7 +324,7 @@ Telematics Data Model* for object descriptions as well.
 + dateTime       :                `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
-+ distanceLastValid :                                117 (required, number) - The distance in whole miles traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
++ distanceLastValid :                                117 (required, number) - The distance in km traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
 + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
 + eventRecordStatus :              `RECORDSTATUS_ACTIVE` (required, enum[string]) - The record status number of this log
 
@@ -393,7 +393,7 @@ Telematics Data Model* for object descriptions as well.
         + `STATUS_ENGINEPOWERUPPC`               - Engine power up in PC record.
         + `STATUS_ENGINESHUTDOWN`                - Engine shutdown record.
         + `STATUS_ENGINESHUTDOWNPC`              - Engine shutdown in PC record.
-        + `STATUS_ENGINESYNCCOMPLIANCE`          - Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
+        + `STATUS_ENGINESYNCCOMPLIANCE`          - Occurs when engine information (power, motion, distance, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
         + `STATUS_EXEMPTION16H`                  - Exemption 16 hour.
         + `STATUS_EXEMPTIONOFFDUTYDEFERRAL`      - Exemption off duty deferral.
         + `STATUS_INT_D`                         - Intermediate Drive Event.
@@ -2873,7 +2873,7 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
                 {
                     "origin": "Duty Status Log, status",
                     "msgid":  "STATUS_ENGINESYNCCOMPLIANCE",
-                    "msgstr": "Occurs when engine information (power, motion, miles, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic."
+                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic."
                 },
                 {
                     "origin": "Duty Status Log, status",
