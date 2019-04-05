@@ -4,7 +4,10 @@ FORMAT: 1A
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
-This document is written using [api-blueprint](https://apiblueprint.org/) and available online at both [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io/#) (for browsable document) and https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
+This document is written using [api-blueprint](https://apiblueprint.org/) and available online at both
+[opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io/#) (for browsable document) and
+https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com
+/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
 
 If a telematics system provider (TSP) suddenly goes out of business
 (have had two examples of this in 2018) any commercial fleet relying on
@@ -13,7 +16,10 @@ standardized telematics data format, a commercial fleet manager will
 have to reintegrate an alternate telematics provider's data format into
 their existing system reporting.
 
-The Open Telematics API is intended to make the TSP-Carrier interface the same across multiple TSPs. It is not intended to specify any aspects of the TSP's connections to their telematics devices. Neither does it imply any changes to the location where data is stored or access controls on the data -- the data will still live at the Motor Freight Carrier as-sourced from their accounts at the TSP.
+The Open Telematics API (OTAPI) is intended to make the TSP-Carrier interface the same across multiple TSPs. It is not
+intended to specify any aspects of the TSP's connections to their telematics devices. Neither does it imply any changes
+to the location where data is stored or access controls on the data -- the data will still live at the Motor Freight
+Carrier as-sourced from their accounts at the TSP.
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/overview.png)
 
@@ -198,6 +204,12 @@ returned if its instantaneous time value is within the inclusive-exclusive time 
 When exchanging locations as parameters to API methods or in responses from the API, you must ensure that they are
 formatted as a latitude+longitude pair (format `[-]aaa.aaaaaaa [-]ooo.ooooooo`). Positive in the first component,
 Latitude, indicates North (N) and East (E) in the second component, Longitude.
+
+Note that all locations assigned to objects by the TSP in the OTAPI are done so on a best-effort basis. Different TSPs
+have different rates of location update, different accuracies and different means of mapping a previously known location
+into events after the known location (e.g. prediction vs. interpolation). This Open Telematics API draft does not make
+any specifications about how often, how accurate or any other statements about how geographic locations must be assigned
+to objects by the TSP.
 
 # Working with *Feed Follow* Queries
 
