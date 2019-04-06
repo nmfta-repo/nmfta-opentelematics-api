@@ -963,7 +963,6 @@ for a given time-period. They do this by querying for sets of the following data
 * Stop Geographic Details
 * Vehicle Fault Code Event
 * Driver
-* Annotation Log
 * Duty Status Log
 * Region Specific Breaks Rules
 * Region Specific Waivers
@@ -1327,46 +1326,6 @@ deny access by the *Vehicle X* roles.
 
     + Attributes (object)
         + data                             (required, array[Driver], fixed-type) - array of all objects which match the date parameters in the query.
-
-+ Response 400 (text/plain)
-
-        Error: start or stop parameters invalid
-
-+ Response 401
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-## Export of all Annotation Log objects                        [GET /api{version}/export/annotationlogevents/{?start,stop,page,count}]
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
-    + page                             (optional, number) - the page to select for paginated response
-        + Default: 1
-    + count                            (optional, number) - the number of items to return
-        + Default: 50
-
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Headers
-
-            X-Total-Count: {+totalCount}
-
-    + Attributes (object)
-        + data                             (required, array[Annotation Log], fixed-type) - array of all objects which match the date parameters in the query.
 
 + Response 400 (text/plain)
 
