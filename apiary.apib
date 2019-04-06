@@ -881,7 +881,7 @@ State of Health. They expect to receive either an 'all-clear' response indicatin
 issues with its services at the moment of query or some details describing the contributing factors that have led to
 less than optimal operation.
 
-## Check Current State of Health [GET /api{version}/status]
+## Check Current State of Health                               [GET /api{version}/health/current]
 
 Clients can request the current service status. The response to this query will be a data structure indicating
 everything is good or showing some details as to why the service is not presently at 100%.
@@ -912,7 +912,7 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
             WWW-Authenticate: Basic realm="protected"
 
-## Check Past 30d State of Health [GET /api{version}/incidents]
+## Check Past 30d State of Health                              [GET /api{version}/health/recents]
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
 status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
@@ -1003,7 +1003,7 @@ deny access by the *Vehicle X* roles.
 * Vehicle Fault Code Event
 * State of Health
 
-## Export of all Vehicle objects [GET /api{version}/export/vehicles{?start,stop,page,count}]
+## Export of all Vehicle objects                               [GET /api{version}/vehicles/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1045,7 +1045,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Location Time History objects     [GET /api{version}/export/coarsevehiclelocations{?start,stop,page,count}]
+## Export of all Vehicle Location Time History objects         [GET /api{version}/fleet/locations/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1087,7 +1087,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Flagged Event objects             [GET /api{version}/export/vehicleflaggedevents{?start,stop,page,count}]
+## Export of all Vehicle Flagged Event objects                 [GET /api{version}/fleet/flagged_events/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1129,7 +1129,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Performance Event objects         [GET /api{version}/export/vehicleperformanceevents{?start,stop,page,count}]
+## Export of all Vehicle Performance Event objects             [GET /api{version}/fleet/performance_events/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1171,7 +1171,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Flagged Vehicle Performance Event objects [GET /api{version}/export/flaggedvehicleperformanceevents{?start,stop,page,count}]
+## Export of all Flagged Vehicle Performance Event objectsDELET[GET /api{version}/fleet/flagged_performance_events/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1213,7 +1213,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Performance Thresholds objects            [GET /api{version}/export/performancethresholds{?start,stop,page,count}]
+## Export of all Performance Thresholds objects                [GET /api{version}/fleet/performance_thresholds/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1255,7 +1255,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Stop Geographic Details objects           [GET /api{version}/export/steopgeographicdetails{?start,stop,page,count}]
+## Export of all Stop Geographic Details objects               [GET /api{version}/stops/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1297,7 +1297,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Fault Code Event objects          [GET /api{version}/export/faultcodeevents{?start,stop,page,count}]
+## Export of all Vehicle Fault Code Event objects              [GET /api{version}/fleet/faults/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1339,7 +1339,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Driver objects                            [GET /api{version}/export/drivers{?start,stop,page,count}]
+## Export of all Driver objects                                [GET /api{version}/drivers/{?start,stop,page,count}]
 
 **Access Controls**
 
@@ -1381,7 +1381,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Annotation Log objects                    [GET /api{version}/export/annotationlogevents{?start,stop,page,count}]
+## Export of all Annotation Log objects                        [GET /api{version}/export/annotationlogevents/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1421,7 +1421,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Duty Status Log objects                   [GET /api{version}/export/eventlogobjects{?start,stop,page,count}]
+## Export of all Duty Status Log objects                       [GET /api{version}/event_logs/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1461,7 +1461,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Region Specific Breaks Rules objects      [GET /api{version}/export/regionspecificbreakrules{?start,stop,page,count}]
+## Export of all Region Specific Breaks Rules objects          [GET /api{version}/region_specific_breaks/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1501,7 +1501,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Region Specific Waivers objects           [GET /api{version}/export/regionspecificwaivers{?start,stop,page,count}]
+## Export of all Region Specific Waivers objects               [GET /api{version}/region_specific_waivers/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1541,7 +1541,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Driver Performance Summary objects        [GET /api{version}/export/driverperformancesummaries{?start,stop,page,count}]
+## Export of all Driver Performance Summary objects            [GET /api{version}/driver_performance_summaries/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1581,7 +1581,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all State of Health objects                   [GET /api{version}/export/serverstateofhealths{?start,stop,page,count}]
+## Export of all State of Health objects                       [GET /api{version}/health/{?start,stop,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1645,7 +1645,7 @@ this their systems send data _to_ the TSPs.
 
 * Externally Triggered Duty Status Change
 
-## Retrieve Driver Availability Factors [GET /api{version}/driveravailability/{driverId}{?start,stop}]
+## Retrieve Driver Availability Factors                        [GET /api{version}/drivers/{driverId}/availability_factors/{?start,stop}]
 
 Clients can request all the factors contributing to driver availability for a given driver, over a given time period.
 
@@ -1687,7 +1687,7 @@ Clients can request all the factors contributing to driver availability for a gi
 
             WWW-Authenticate: Basic realm="protected"
 
-## Check Break Rules and Waivers [GET /api{version}/driveravailability/breaksandwaivers/{driverId}{?start,stop}]
+## Check Break Rules and Waivers                               [GET /api{version}/drivers/{driverId}/breaks_and_waivers/{?start,stop}]
 
 Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
 time period.
@@ -1729,7 +1729,7 @@ time period.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Send Custom-Integrated Duty Status Changes to the TSP [PATCH /api{version}/driveravailability/dutystatuschanges/{driverId}]
+## Send Custom-Integrated Duty Status Changes to the TSP     [PATCH /api{version}/drivers/{driverId}/duty_status]
 
 Clients can trigger duty status changes for a given driver by pushing data to this endpoint.
 
@@ -1818,7 +1818,7 @@ TSP
 * Stop Geographic Details
 * Stop Details
 
-## Update Driver's Route Stop [PUT /api{version}/vehicles/{vehicleId}/routes/{routeId}]
+## Update Driver's Route Stop                                  [PUT /api{version}/vehicles/{vehicleId}/routes/{routeId}]
 
 Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
 change the destination of the route, hence also changing the stopId associated with the route.
@@ -1872,7 +1872,7 @@ change the destination of the route, hence also changing the stopId associated w
                   "stopDeadline": {
                     "type": "string",
                     "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",                    
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
                     "example": "2019-04-05T02:04:16Z"
                   }
                 }
@@ -1895,7 +1895,7 @@ change the destination of the route, hence also changing the stopId associated w
 
             WWW-Authenticate: Basic realm="protected"
 
-## Route Stop Geographic Details [/api{version}/stops/{stopId}/geographicdetail]
+## Route Stop Geographic Details                                   [/api{version}/stops/{stopId}]
 
 ## Retrieve Route Stop Geographic Details [GET]
 
@@ -2027,7 +2027,7 @@ modifications to the route.
 
 * Externally Sourced Route Start Stop Details
 
-## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flaggedevents{?start,stop}]
+## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flagged_events/{?start,stop}]
 
 Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
 
@@ -2066,7 +2066,7 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
             WWW-Authenticate: Basic realm="protected"
 
-## Create a Route with Start and Stop Details [POST /api{version}/vehicles/{vehicleId}/routes]
+## Create a Route with Start and Stop Details                 [POST /api{version}/vehicles/{vehicleId}/routes]
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
 additional instructions in a *Externally Sourced Route Start Stop Details* object.
@@ -2182,7 +2182,7 @@ And mark trips completed based on the Duty Status Log context; at the end of a t
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Feed Follow all Duty Status Logs [GET /api{version}/dutystatuslogs/feed{?token}]
+## Feed Follow all Duty Status Logs                            [GET /api{version}/event_logs/feed{?token}]
 
 Clients can follow a feed of Duty Status Log entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -2233,7 +2233,7 @@ then send messages to each vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Coarse Vehicle Location Time Histories [GET /api{version}/coarsevehiclelocations/{?start,stop}]
+## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?start,stop}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -2267,7 +2267,7 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             WWW-Authenticate: Basic realm="protected"
 
-## Send a Vehicle Display Message to a Vehicle [POST /api{version}/vehicles/{vehicleId}/message]
+## Send a Vehicle Display Message to a Vehicle                [POST /api{version}/vehicles/{vehicleId}/message]
 
 **Access Controls**
 
@@ -2345,7 +2345,7 @@ period. They query the API for
 
 of all vehicles over a given time period.
 
-## Retrieve All Vehicle Location Time Histories [GET /api{version}/vehiclelocations/{?start,stop}]
+## Retrieve All Vehicle Location Time Histories DELETE         [GET /api{version}/fleet/locations/{?start,stop,page,count}]
 
 Clients can retrieve the (hi-resolution) vehicle locations (of all vehicles) over a given time period.
 
@@ -2408,7 +2408,7 @@ this their systems send data _to_ the TSPs:
 
 * Externally Sourced Driver Info
 
-## Update Driver with Externally Sourced Driver Info [PATCH /api{version}/drivers/{driverId}]
+## Update Driver with Externally Sourced Driver Info         [PATCH /api{version}/drivers/{driverId}]
 
 Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
 
@@ -2518,7 +2518,7 @@ They may also follow-up with queries of the hi-resolution time history of the fl
 
 (see *Retrieve All Vehicle Location Time Histories* above for more details.)
 
-## Retrieve Fleet Vehicle Info [GET /api{version}/vehicleinfos/{?start,stop}]
+## Retrieve Fleet Vehicle Info                                 [GET /api{version}/fleet/infos/{?start,stop}]
 
 Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
 
@@ -2556,7 +2556,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
             WWW-Authenticate: Basic realm="protected"
 
-## Feed Follow all Fleet Vehicle Info [GET /api{version}/vehicleinfos/feed{?token}]
+## Feed Follow all Fleet Vehicle Info                          [GET /api{version}/fleet/infos/feed{?token}]
 
 Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
 system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
@@ -2586,7 +2586,7 @@ entries with each query in the polling.
             + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
             + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
             + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
-            + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period        
+            + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
 
 + Response 400 (text/plain)
 
@@ -2612,7 +2612,7 @@ field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
 
-## Retrieve Driver Performance Summaries [GET /api{version}/driverperformance/summaries/{driverId}{?start,stop}]
+## Retrieve Driver Performance Summaries                       [GET /api{version}/drivers/{driverId}/performance_summaries/{?start,stop}]
 
 Clients can request all driver performance summaries for a specific driver within a given period of time.
 
@@ -2652,7 +2652,7 @@ Clients can request all driver performance summaries for a specific driver withi
 
             WWW-Authenticate: Basic realm="protected"
 
-## Update TSP Portal User [PATCH /api{version}/driverportaluser/{driverId}]
+## Update TSP Portal User                                    [PATCH /api{version}/drivers/{driverId}/driverportaluser]
 
 Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
 
@@ -2726,7 +2726,7 @@ recent vehicle location
 
 * Vehicle Location Time History
 
-## Follow a Feed of All Vehicle Fault Code Events [GET /api{version}/vehiclefaults/feed?{token}]
+## Follow a Feed of All Vehicle Fault Code Events              [GET /api{version}/fleet/faults/feed?{token}]
 
 Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
 bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -2762,7 +2762,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Get Location of a Vehicle [GET /api{version}/vehiclelocations/{vehicleId}{?start,stop}]
+## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?start,stop}]
 
 **Access Controls**
 
@@ -2801,7 +2801,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 # Group Localization
 
-## Translation Table [/api{version}/i18n]
+## Translation Table                                               [/api{version}/i18n]
 
 Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO
 files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented
@@ -3281,7 +3281,7 @@ For the purposes of clearly detailing the data object types used by the API endp
 models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes;
 it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
-## Duty Status Log Object [/api{version}/byid/dutystatuslogs/{id}]
+## Duty Status Log Object                                          [/api{version}/event_logs/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3312,7 +3312,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Object [/api{version}/byid/drivers/{id}]
+## Driver Object                                                   [/api{version}/drivers/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3343,7 +3343,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Object [/api{version}/byid/vehicles/{id}]
+## Vehicle Object                                                  [/api{version}/vehicles/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3375,7 +3375,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Breaks Rules Object [/api{version}/byid/regionspecificbreaksrules/{id}]
+## Region Specific Breaks Rules Object                             [/api{version}/region_specific_breaks/{id}]
 
 Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
 only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
@@ -3410,7 +3410,7 @@ rules.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Waivers Object [/api{version}/byid/regionspecificwaivers/{id}]
+## Region Specific Waivers Object                                  [/api{version}/region_specific_waivers/{id}]
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
 available
@@ -3444,7 +3444,7 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Stop Geographic Details Object [/api{version}/byid/stopgeographicdetails/{id}]
+## Stop Geographic Details Object                                  [/api{version}/stops/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3475,7 +3475,7 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Location Time Object [/api{version}/byid/vehiclelocationtimes/{id}]
+## Vehicle Location Time Object                                    [/api{version}/fleet/locations/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3506,7 +3506,7 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Flagged Event Object [/api{version}/byid/vehicleflaggedevents/{id}]
+## Vehicle Flagged Event Object                                    [/api{version}/fleet/flagged_events/{id}]
 
 The purpose of the flagged events is to flag potential saftey issues for motor freight carrier staff to validate
 
@@ -3539,7 +3539,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Fault Code Event Object [/api{version}/byid/vehiclefaultcodeevents/{id}]
+## Vehicle Fault Code Event Object                                 [/api{version}/fleet/faults/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3570,7 +3570,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Performance Thresholds Object [/api{version}/byid/performancethresholds/{id}]
+## Performance Thresholds Object                                   [/api{version}/fleet/performance_thresholds/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3601,7 +3601,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Performance Event Object [/api{version}/byid/vehicleperformanceevents/{id}]
+## Vehicle Performance Event Object                                [/api{version}/fleet/performance_events/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
@@ -3632,7 +3632,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Performance Summary Object [/api{version}/byid/driverperformancesummaries/{id}]
+## Driver Performance Summary Object                               [/api{version}/driver_performance_summaries/{id}]
 
 Summary statistics on performance of drivers.
 
