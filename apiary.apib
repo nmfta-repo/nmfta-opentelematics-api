@@ -356,6 +356,19 @@ and employed by the TSP. These data exports could be used by carriers to complet
 TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case
 we aim to support here please see below on 'data import.'
 
+***Generate Records of Duty Status for Compliance***
+
+Motor freight carriers use telematics systems to maintain Record of Duty Status (RODS) compliance. The TSP to the
+carrier will supply compliant records directly, without the need for the carrier to use the OTAPI. The carrier may use
+OTAPI for RODS in the event that compliant records need to be produced when a TSP is no longer available. i.e. as a
+backup process only; however, to do so will require processing and it is not expected that OTAPI data be ready for
+compliance as-is. A couple examples; the `line data check` and `file data check` values will need to be calculated after
+the creation of line and files in the process of creating RODS files for compliance; OTAPI will not include these
+values. Also note that preparing compliance reports is a value added by TSPs; e.g. in at least one case, the ordering
+used by regulators used truncated timestamps and the higher-resolution available in the TSP RODS information led to
+events being out-of-order in the view of the regulators without special handling by the TSP. This is an example of the
+kinds of nuances that are handled by TPSs in their service offering and OTAPI is not meant to replace that service.
+
 ***Driver Availability***
 
 Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of
@@ -1548,6 +1561,24 @@ deny access by the *Vehicle X* roles.
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
+# Group Use Case Generate Records of Duty Status for Compliance
+
+Motor freight carriers use telematics systems to maintain Record of Duty Status (RODS) compliance. The TSP to the
+carrier will supply compliant records directly, without the need for the carrier to use the OTAPI. The carrier may use
+OTAPI for RODS in the event that compliant records need to be produced when a TSP is no longer available. i.e. as a
+backup process only; however, to do so will require processing and it is not expected that OTAPI data be ready for
+compliance as-is. A couple examples; the `line data check` and `file data check` values will need to be calculated after
+the creation of line and files in the process of creating RODS files for compliance; OTAPI will not include these
+values. Also note that preparing compliance reports is a value added by TSPs; e.g. in at least one case, the ordering
+used by regulators used truncated timestamps and the higher-resolution available in the TSP RODS information led to
+events being out-of-order in the view of the regulators without special handling by the TSP. This is an example of the
+kinds of nuances that are handled by TPSs in their service offering and OTAPI is not meant to replace that service.
+
+Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
+event a TSP is no longer available.
+
+(see *Export of all Duty Status Log objects* above for more details)
 
 # Group Use Case Driver Availability
 
