@@ -1037,6 +1037,12 @@ requested time period (as per the details of the *Working With Dates* section ab
 regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
 API consistency under `/export/...`)
 
+Furthermore, the event and object times considered in the time queries for data export use *received times* (as opposed
+the default policy of relying on *creation times*). These are the times when the event or object was received, recorded
+and/or made available by the OTAPI server. This could pose problems for processing exported data for RODS compliance as
+multiple files may need to be processed in high-latency situations; however, the alternative is allow for data loss in
+the daily export files.
+
 ***Complete Data Export***
 
 The *Complete Data Export* objects will contain all of the following object embedded, see *Complete Telematics Records
