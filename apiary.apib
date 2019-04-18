@@ -1027,7 +1027,7 @@ deny access by the *Vehicle X* roles.
 * Vehicle Fault Code Event
 * State of Health
 
-## Export of all Vehicle objects                               [GET /api{version}/vehicles/{?start,stop,page,count}]
+## Export of all Vehicle objects                               [GET /api{version}/vehicles/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1039,8 +1039,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1069,7 +1069,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Location Time History objects         [GET /api{version}/fleet/locations/{?start,stop,page,count}]
+## Export of all Vehicle Location Time History objects         [GET /api{version}/fleet/locations/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1081,8 +1081,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1111,7 +1111,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Flagged Event objects                 [GET /api{version}/fleet/flagged_events/{?start,stop,page,count}]
+## Export of all Vehicle Flagged Event objects                 [GET /api{version}/fleet/flagged_events/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1123,8 +1123,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1153,7 +1153,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Performance Event objects             [GET /api{version}/fleet/performance_events/{?start,stop,page,count}]
+## Export of all Vehicle Performance Event objects             [GET /api{version}/fleet/performance_events/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1165,8 +1165,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1195,7 +1195,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Performance Thresholds objects                [GET /api{version}/fleet/performance_thresholds/{?start,stop,page,count}]
+## Export of all Performance Thresholds objects                [GET /api{version}/fleet/performance_thresholds/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1207,8 +1207,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1237,7 +1237,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Stop Geographic Details objects               [GET /api{version}/stops/{?start,stop,page,count}]
+## Export of all Stop Geographic Details objects               [GET /api{version}/stops/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1249,8 +1249,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1279,7 +1279,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Vehicle Fault Code Event objects              [GET /api{version}/fleet/faults/{?start,stop,page,count}]
+## Export of all Vehicle Fault Code Event objects              [GET /api{version}/fleet/faults/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1291,8 +1291,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1321,7 +1321,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Driver objects                                [GET /api{version}/drivers/{?start,stop,page,count}]
+## Export of all Driver objects                                [GET /api{version}/drivers/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1333,8 +1333,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1363,7 +1363,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Duty Status Log objects                       [GET /api{version}/event_logs/{?start,stop,page,count}]
+## Export of all Duty Status Log objects                       [GET /api{version}/event_logs/{?startTime,stopTime,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1373,8 +1373,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1403,7 +1403,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Region Specific Breaks Rules objects          [GET /api{version}/region_specific_breaks/{?start,stop,page,count}]
+## Export of all Region Specific Breaks Rules objects          [GET /api{version}/region_specific_breaks/{?startTime,stopTime,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1413,8 +1413,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1443,7 +1443,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Region Specific Waivers objects               [GET /api{version}/region_specific_waivers/{?start,stop,page,count}]
+## Export of all Region Specific Waivers objects               [GET /api{version}/region_specific_waivers/{?startTime,stopTime,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1453,8 +1453,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1483,7 +1483,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all Driver Performance Summary objects            [GET /api{version}/driver_performance_summaries/{?start,stop,page,count}]
+## Export of all Driver Performance Summary objects            [GET /api{version}/driver_performance_summaries/{?startTime,stopTime,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1493,8 +1493,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1523,7 +1523,7 @@ deny access by the *Vehicle X* roles.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Export of all State of Health objects                       [GET /api{version}/health/{?start,stop,page,count}]
+## Export of all State of Health objects                       [GET /api{version}/health/{?startTime,stopTime,page,count}]
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1533,8 +1533,8 @@ deny access by the *Vehicle X* roles.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1605,7 +1605,7 @@ this their systems send data _to_ the TSPs.
 
 * Externally Triggered Duty Status Change
 
-## Retrieve Driver Availability Factors                        [GET /api{version}/drivers/{driverId}/availability_factors/{?start,stop}]
+## Retrieve Driver Availability Factors                        [GET /api{version}/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
 
 Clients can request all the factors contributing to driver availability for a given driver, over a given time period.
 
@@ -1620,8 +1620,8 @@ Clients can request all the factors contributing to driver availability for a gi
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1647,7 +1647,7 @@ Clients can request all the factors contributing to driver availability for a gi
 
             WWW-Authenticate: Basic realm="protected"
 
-## Check Break Rules and Waivers                               [GET /api{version}/drivers/{driverId}/breaks_and_waivers/{?start,stop}]
+## Check Break Rules and Waivers                               [GET /api{version}/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
 
 Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
 time period.
@@ -1663,8 +1663,8 @@ time period.
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1987,7 +1987,7 @@ modifications to the route.
 
 * Externally Sourced Route Start Stop Details
 
-## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flagged_events/{?start,stop}]
+## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
 
 Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
 
@@ -2002,8 +2002,8 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
         + Members
             + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2193,7 +2193,7 @@ then send messages to each vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?start,stop}]
+## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?startTime,stopTime}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -2207,8 +2207,8 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2446,7 +2446,7 @@ They may also follow-up with queries of the hi-resolution time history of the fl
 
 (see *Retrieve All Vehicle Location Time Histories* above for more details.)
 
-## Retrieve Fleet Vehicle Info                                 [GET /api{version}/fleet/infos/{?start,stop}]
+## Retrieve Fleet Vehicle Info                                 [GET /api{version}/fleet/infos/{?startTime,stopTime}]
 
 Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
 
@@ -2460,8 +2460,8 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2540,7 +2540,7 @@ field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
 
-## Retrieve Driver Performance Summaries                       [GET /api{version}/drivers/{driverId}/performance_summaries/{?start,stop}]
+## Retrieve Driver Performance Summaries                       [GET /api{version}/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 
 Clients can request all driver performance summaries for a specific driver within a given period of time.
 
@@ -2555,8 +2555,8 @@ Clients can request all driver performance summaries for a specific driver withi
         + Members
             + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -2690,7 +2690,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?start,stop}]
+## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
 
@@ -2703,8 +2703,8 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
         + Members
             + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + start:    `2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stop:     `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
