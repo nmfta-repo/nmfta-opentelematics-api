@@ -2193,7 +2193,7 @@ then send messages to each vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?startTime,stopTime}]
+## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?startTime,stopTime,page,count}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -2209,6 +2209,10 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
             + `v1`
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
 
 + Request
     + Headers
@@ -2216,6 +2220,10 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
     + Attributes (Coarse Vehicle Location Time History)
 
 + Response 400 (text/plain)
