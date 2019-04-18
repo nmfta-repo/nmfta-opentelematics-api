@@ -994,14 +994,53 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
 # Group Use Case Data Export
 
-Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of
+Motor freight carriers want to export all data from a TSP on a daily basis. Where 'all data' for the purposes of
 this specification is all the data specified here and does not include any other proprietary data structures designed
 and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of
-TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case
-we aim to support here please see below on 'data import.'
+TSP outage or to restore data -- although this last potential use is _not_ a use case we aim to support in OTAPI.
 
-The IT staff and automated systems want to retrieve a complete record of all TSP-hosted data (with caveat notes above)
-for a given time-period. They do this by querying for
+***Data Import***
+
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
+same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
+data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
+***PII Separation***
+
+The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
+above. OTAPI implementations must provide for export of both *Vehicle Only Complete Telematics Records* and *Complete
+Telematics Records* objects so that systems which must be separated from PII can download the *Vehicle Only Complete
+Telematics Records* type. As is noted in the access controls below, requests for these data types
+deny access by the *Vehicle X* roles.
+
+***Polling for Daily Files***
+
+The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
+server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
+not yet ready, or respond with a redirect to a location serving the complete file (statically).
+
+Implementors are free to make the files available for download from any service they choose. If the service hosting the
+files for download exposes endpoints under that of the OTAPI endpoints then the same authentication and authorization
+schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible
+without any authentication or authorization and the client is expected to be configured with the appropriate credentials
+for download independently of responses from the OTAPI server.
+
+***Time-base for Data Export***
+
+Note that the data export files will include both time-varying objects (those that have time associated with them) and
+also those that do not.
+
+* For time-varying objects: the files will only include whose associated time periods have an intesection with the
+requested time period (as per the details of the *Working With Dates* section above);
+
+* For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
+API consistency under `/export/...`)
+
+***Complete Data Export***
+
+The *Complete Data Export* objects will contain all of the following object embedded, see *Complete Telematics Records
+Daily Export Format* below for more details.
 
 * Vehicle
 * Vehicle Location Time History
@@ -1017,27 +1056,10 @@ for a given time-period. They do this by querying for
 * Driver Performance Summary
 * State of Health
 
-The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
-same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
-data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
-
-The following methods are defined to enable clients to retrieve the entirety of all Telematics data from the TSP for a given time period.
-
-The response to the request will include both time-varying objects (those that have time associated with them) and also
-those that do not.
-
-* For time-varying objects: the responses will only include whose associated time periods have an intesection with the
-requested time period (as per the details of the *Working With Dates* section above);
-
-* For non time-varying objects: the response will include all objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
-API consistency under `/export/...`)
-
 ***Vehicle-Only Data Export***
 
-To export data that does not deal with driver PII, the motor freight carrier can request sets of the following data
-types (see below for details on how to request). As is noted in the access controls below, requests for these data types
-deny access by the *Vehicle X* roles.
+The *Vehicle Only Complete Telematics Records* objects will contain only the following embedded objects, see *Vehicle-
+Only Complete Telematics Records Daily Export Format* for more details.
 
 * Stop Geographic Details
 * Performance Thresholds
@@ -1048,26 +1070,20 @@ deny access by the *Vehicle X* roles.
 * Vehicle Fault Code Event
 * State of Health
 
-## Complete Telematics Records Export Format [/api{version}/export/allrecords{?start,stop}]
+## Complete Telematics Records Daily Export Format [/api{version}/export/allrecords/status{?dayOf}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Complete Telematics Records)
 
-### Retrieve Complete Telematics Records for a Given Time Period [GET]
+### Poll for Availability of Daily Complete Telematics Records [GET]
 
-Clients can retrieve the entirety of all Telematics data from the TSP for a given time period.
-
-The response to this request will include both time-varying objects (those that have time associated with them) and also
-those that do not. The response will only include those time-varying objects whose associated time periods have an
-intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
-will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters.
+If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
+ready then a `204` return code will be returned.
 
 **Access Controls**
 
@@ -1081,39 +1097,34 @@ regardless of the time period requested as defined by `start` and `stop` query p
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Complete Telematics Records)
+    + Attributes (object)
+        + location: `https://api.provider.com/api{version}/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+
++ Response 204
 
 + Response 400 (text/plain)
 
-        Error: start or stop parameters invalid
+        Error: dayOf parameter invalid
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle-Only Complete Telematics Records Export Format [/api{version}/export/vehiclerecords{?start,stop}]
-
+## Vehicle-Only Complete Telematics Records Daily Export Format [/api{version}/export/vehiclerecords/status{?dayOf}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + start: `2019-01-0100:00:00.000Z` (required, string) - the start-date of the search
-    + stop:  `2019-01-0100:00:00.000Z` (required, string) - the stop-date of the search
+    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Vehicle Only Complete Telematics Records)
 
-### Retrieve Vehicle-Only Complete Telematics Records for a Given Time Period [GET]
+### Poll for Availability of Daily Complete Telematics Records [GET]
 
-Clients can retrieve the entirety of all Telematics data from the TSP -- that data which does not deal with Driver PII
--- for a given time period.
-
-The response to this request will include both time-varying objects (those that have time associated with them) and also
-those that do not. The response will only include those time-varying objects whose associated time periods have an
-intesection with the requested time period (as per the details of the *Working With Dates* section above); the response
-will also include the entire list of all non time-varying objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters.
+If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
+ready then a `204` return code will be returned.
 
 **Access Controls**
 
@@ -1127,12 +1138,14 @@ regardless of the time period requested as defined by `start` and `stop` query p
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Vehicle Only Complete Telematics Records)
+    + Attributes (object)
+        + location: `https://api.provider.com/api{version}/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
++ Response 204
 
 + Response 400 (text/plain)
 
-        Error: start or stop parameters invalid
+        Error: dayOf parameter invalid
 
 + Response 401
     + Headers
@@ -1155,7 +1168,8 @@ kinds of nuances that are handled by TPSs in their service offering and OTAPI is
 Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
 event a TSP is no longer available.
 
-(see *Export of all Duty Status Log objects* above for more details)
+See *Complete Telematics Records Daily Export Format* above for more details on the file format which should contain
+sufficient data for this use case in the array of *Duty Status Log* objects.
 
 # Group Use Case Driver Availability
 
