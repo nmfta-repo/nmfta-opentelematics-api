@@ -1804,16 +1804,16 @@ Motor freight carriers use telematics systems to message their drivers for vario
 notify the drivers of dangerous weather conditions in their area.
 
 Personnel responsible for planning and assigning driver routes want to send messages to drivers in a particular
-geographic region. They query the API for
+geographic region. They query the API for the most recent
 
-* Coarse Vehicle Location Time History
+* Vehicle Location Time History
 
-of all vehicles over the present time period; then filtering-out all vehicles outside the particular geographic region,
-then send messages to each vehicle by sending data _to_ the TSP:
+of all vehicles; then filtering-out all vehicles outside the particular geographic region, then send messages to each
+vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Coarse Vehicle Location Time Histories         [GET /api{version}/fleet/coarse_locations/{?startTime,stopTime,page,count}]
+## Retrieve All Latest Vehicle Location Time History Objects   [GET /api{version}/fleet/locations/latest{?page,count}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -1827,8 +1827,6 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1844,18 +1842,16 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             X-Total-Count: {+totalCount}
 
-    + Attributes (Coarse Vehicle Location Time History)
+    + Attributes (Vehicle Location Time History)
 
 + Response 400 (text/plain)
 
-        Error: start or stop parameters invalid
+        Error: page or count parameters invalid
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
 
 ## Send a Vehicle Display Message to a Vehicle                [POST /api{version}/vehicles/{vehicleId}/message]
 
