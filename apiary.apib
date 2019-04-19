@@ -601,14 +601,14 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Location Time History (object)
 
 + data                                                   (required, array[Vehicle Location Time], fixed-type) - array of Location Times representing the vehicle's location over time.
-+ timeResolution    :            `TIMERESOLUTION_NOTMAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
++ timeResolution    :               `TIMERESOLUTION_MAX` (required, enum[string], fixed) - a status variable to indicate if this time history has a higher available resolution at the TSP
     + Members
         + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
-        + `TIMERESOLUTION_NOT_MAX` - This is not
+        + `TIMERESOLUTION_NOT_MAX` - This is not at the highest available time resolution
 
 ### Coarse Vehicle Location Time History (Vehicle Location Time History)
 
-+ timeResolution    :               `TIMERESOLUTION_MAX` (required, enum[string]) - a status variable to indicate if this time history has a higher available resolution at the TSP
++ timeResolution    :           `TIMERESOLUTION_NOT_MAX` (required, enum[string], fixed) - a status variable to indicate if this time history has a higher available resolution at the TSP
     + Members
         + `TIMERESOLUTION_MAX` - This is at the highest available time resolution
         + `TIMERESOLUTION_NOT_MAX` - This is not at the highest available time resolution
