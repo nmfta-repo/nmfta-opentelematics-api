@@ -326,12 +326,18 @@ have been left 'open'. i.e. the addition of data fields to the definitions of th
 according to this specification will not cause validation errors by clients which are following the JSON schema in this
 specification.
 
-* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier is fine
-* Adding additional possible values to enumerations is not a valid extension to the OTAPI
-* Adding additional endpoints/methods is not a valid extension to the OTAPI
+Addition of fields to the objects must be done such that it is not possible for the new extension fields to collide with
+other extensions or with future versions of the API; therefore, all fields added as extensions must be prefixed with
+`x_providerid_` where `providerid` is the provider ID (see *Provider Identifiers* above for more details).
+
+* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier IS a valid extension to the OTAPI
+* Adding additional possible values to enumerations IS NOT a valid extension to the OTAPI
+* Adding additional endpoints/methods IS NOT a valid extension to the OTAPI
 
 In cases where enumerations need to be changed and additional endpoints need to be added, this should be approached by
-changing the OTAPI upstream -- also, ideally, adding fields should also be done by suggesting changes upstream.
+changing the OTAPI upstream. Also, ideally, adding fields should also be done by suggesting changes upstream; in this
+case, an example roadmap of the process might look like: starting with a prefixed field in the TSP extensions then
+suggesting the useful fields for inclusion and review leading to a new field without a prefix.
 
 # Localization
 
