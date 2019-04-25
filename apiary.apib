@@ -494,14 +494,6 @@ Telematics Data Model* for object descriptions as well.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + distanceLastValid :                                117 (required, number) - The distance in km traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
 + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
-+ eventRecordStatus :              `RECORDSTATUS_ACTIVE` (required, enum[string]) - The record status number of this log
-
-    + Members
-        + `RECORDSTATUS_ACTIVE`                       - Active
-        + `RECORDSTATUS_INACTIVE_TO_CHANGED`          - Inactive -> Changed
-        + `RECORDSTATUS_INACTIVE_TO_CHANGE_REQUESTED` - Inactive -> Change Requested
-        + `RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED`  - Inactive -> Change Rejected
-
 + eventTypeCode     :                   `EVENTTYPE_Code` (required, enum[number]) - The event type code of this log. (Table 6; 7.25 of the ELD Final Rule)
 
     + Members
