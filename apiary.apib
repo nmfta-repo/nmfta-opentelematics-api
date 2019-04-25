@@ -496,20 +496,6 @@ Telematics Data Model* for object descriptions as well.
 + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
 
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
-+ malfunction       :                 `MALFUNCTION_NONE` (required, enum[string]) - The MalfunctionType of the Log Event record.
-
-    + Members
-        + `MALFUNCTION_DIAGNOSTIC`                   - In a diagnostic state.
-        + `MALFUNCTION_DIAGNOSTICMANUALPOSITION`     - Combination of ManualPosition and Diagnostic
-        + `MALFUNCTION_MALFUNCTION`                  - In a malfunction state.
-        + `MALFUNCTION_MALFUNCTIONMANUALPOSITION`    - Combination of ManualPosition and Malfunction
-        + `MALFUNCTION_MANUALPOSITION`               - User has inputted a manual address for the log during a position compliance diagnostic event
-        + `MALFUNCTION_NONE`                         - No malfunction or diagnostic present or cleared.
-        + `MALFUNCTION_SYSTEMDIAGNOSTICCLEAR`        - System has determined that the diagnostic is cleared. Not exported to FMCSA.
-        + `MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
-        + `MALFUNCTION_USERDIAGNOSTICCLEAR`          - User has cleared the diagnostic.
-        + `MALFUNCTION_USERMALFUNCTIONCLEAR`         - User has cleared the malfunction.
-
 + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
 
     + Members
@@ -2433,56 +2419,6 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 
             {
               "data": [
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_DIAGNOSTIC",
-                    "msgstr": "In a diagnostic state"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_DIAGNOSTICMANUALPOSITION",
-                    "msgstr": "Combination of ManualPosition and Diagnostic"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_MALFUNCTION",
-                    "msgstr": "In a malfunction state"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_MALFUNCTIONMANUALPOSITION",
-                    "msgstr": "Combination of ManualPosition and Malfunction"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_MANUALPOSITION",
-                    "msgstr": "User has inputted a manual address for the log during a position compliance diagnostic even"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_NONE",
-                    "msgstr": "No malfunction or diagnostic present or cleared"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEAR",
-                    "msgstr": "System has determined that the diagnostic is cleared. Not exported to FMCSA"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING",
-                    "msgstr": "System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_USERDIAGNOSTICCLEAR",
-                    "msgstr": "User has cleared the diagnostic"
-                },
-                {
-                    "origin": "Log Event, malfunction",
-                    "msgid":  "MALFUNCTION_USERMALFUNCTIONCLEAR",
-                    "msgstr": "User has cleared the malfunction"
-                },
                 {
                     "origin": "Log Event, origin",
                     "msgid":  "ORIGIN_AUTOMATIC",
