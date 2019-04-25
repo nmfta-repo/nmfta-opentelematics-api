@@ -514,42 +514,45 @@ Telematics Data Model* for object descriptions as well.
         + `STATE_REJECTED`  - The log is a rejected edit request from another user.
         + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
-+ status            :                         `STATUS_D` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states
++ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states
 
     + Members
-        + `STATUS_ADVERSEWEATHER`                - Adverse weather and driving conditions exemption.
-        + `STATUS_AUTHORITY`                     - Authority status.
-        + `STATUS_CERTIFY`                       - Daily certify record.
-        + `STATUS_CONNECTED`                     - System log for device power connection.
-        + `STATUS_D`                             - Drive status.
-        + `STATUS_DATARECORDINGCOMPLIANCE`       - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
-        + `STATUS_DATATRANSFERCOMPLIANCE`        - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
-        + `STATUS_DISCONNECTED`                  - System log for device power disconnection.
-        + `STATUS_ENGINEPOWERUP`                 - Engine power up record.
-        + `STATUS_ENGINEPOWERUPPC`               - Engine power up in PC record.
-        + `STATUS_ENGINESHUTDOWN`                - Engine shutdown record.
-        + `STATUS_ENGINESHUTDOWNPC`              - Engine shutdown in PC record.
-        + `STATUS_ENGINESYNCCOMPLIANCE`          - Occurs when engine information (power, motion, distance, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
-        + `STATUS_EXEMPTION16H`                  - Exemption 16 hour.
-        + `STATUS_EXEMPTIONOFFDUTYDEFERRAL`      - Exemption off duty deferral.
-        + `STATUS_INT_D`                         - Intermediate Drive Event.
-        + `STATUS_INT_PC`                        - Intermediate Personal Conveyance Event.
-        + `STATUS_LOGIN`                         - User login record.
-        + `STATUS_LOGOFF`                        - User logout record.
-        + `STATUS_MISSINGELEMENTCOMPLIANCE`      - Missing data elements. Applies to Malfunction or Diagnostic.
-        + `STATUS_OFF`                           - Off-duty status.
-        + `STATUS_ON`                            - On-duty status.
-        + `STATUS_OTHERCOMPLIANCE`               - Other instances of Malfunction or Diagnostic.
-        + `STATUS_PC`                            - Personal conveyance driver status.
-        + `STATUS_POSITIONINGCOMPLIANCE`         - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
-        + `STATUS_POWERCOMPLIANCE`               - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
-        + `STATUS_SB`                            - Sleeper berth status.
-        + `STATUS_SITUATIONALDRIVINGCLEAR`       - YM, PC, or WT clearing event.
-        + `STATUS_TIMINGCOMPLIANCE`              - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
-        + `STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
-        + `STATUS_WT`                            - Wait time oil well driver status.
-        + `STATUS_YM`                            - Yard move driver status.
+        + `EVENTTYPE_DUTY_OFF`                                              - Off-duty status.
+        + `EVENTTYPE_DUTY_OFF_WT`                                           - Wait time oil well driver status.
+        + `EVENTTYPE_DUTY_SB`                                               - Sleeper berth status.
+        + `EVENTTYPE_DUTY_D`                                                - Drive status.
+        + `EVENTTYPE_DUTY_ON`                                               - On-duty status.
+        + `EVENTTYPE_INDICATION_PC`                                         - Personal conveyance driver status.
+        + `EVENTTYPE_INDICATION_YM`                                         - Yard move driver status.
+        + `EVENTTYPE_INDICATION_NONE`                                       - Cleared indication (e.g. no YM or PC or any other indication)
+        + `EVENTTYPE_ENGINE_POWERUP`                                        - Engine power up record.
+        + `EVENTTYPE_ENGINE_SHUTDOWN`                                       - Engine shutdown record.
+        + `EVENTTYPE_INTERMEDIATE`                                          - Intermediate Log Event.
+        + `EVENTTYPE_DRIVER_LOGIN`                                          - User login record.
+        + `EVENTTYPE_DRIVER_LOGOFF`                                         - User logout record.
+        + `EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE`                           - Engine power status engages ELD within 1 minute.
+        + `EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE`                      - Occurs when engine information (power, motion, distance, and hours) cannot be obtained by ELD.
+        + `EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE`                          - When ELD date and time exceeds 10 minute offset from UTC.
+        + `EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE`                     - ELD continually fails to acquire valid position measurement.
+        + `EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE`                   - Storage capacity is reached, or missing data elements exist.
+        + `EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE`                    - Transfer of data fails to complete.
+        + `EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE`                           - Other instances of Malfunction.
+        + `EVENTTYPE_MALFUNCTION_NONE`                                      - Clear previous instances of Malfunction.
+        + `EVENTTYPE_DIAGNOSTIC_POWERDATA`                                  - Power data diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA`                             - Engine synchronization data diagnostic
+        + `EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT`                             - Missing data elements.
+        + `EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA`                           - Data transfer data diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS`                 - More than 30 minutes of driving with unidentified driving.
+        + `EVENTTYPE_DIAGNOSTIC_OTHER`                                      - Other identified diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_NONE`                                       - Clear previous instance of Diagnostic
+        + `EVENTTYPE_CERTIFICATION`                                         - Driver certification event, can be multiple -- see `certificationCount`
+        + `EVENTTYPE_DEVICE_CONNECTED`                                      - System log for device power connection.
+        + `EVENTTYPE_DEVICE_DISCONNECTED`                                   - System log for device power disconnection.
+        + `EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL`                             - Exemption off duty deferral.
+        + `EVENTTYPE_EXEMPTION_ADVERSEWEATHER`                              - Adverse weather and driving conditions exemption.
+        + `EVENTTYPE_EXEMPTION_16H`                                         - Exemption 16 hour.
 
++ certificationCount                                     (number) - a certification count asssociated with driver certification (`EVENTTYPE_CERTIFICATION`) events -- serialized into ELD Event Code, see ELD 7.20
 + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
 + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
 + outputFileComment : `fake Log Event for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
@@ -2460,184 +2463,174 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
                     "msgstr": "The log is a pending edit request from another user."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ADVERSEWEATHER",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
                     "msgstr": "Adverse weather and driving conditions exemption."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_AUTHORITY",
-                    "msgstr": "Authority status."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_CERTIFICATION",
+                    "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_CERTIFY",
-                    "msgstr": "Daily certify record."
-                },
-                {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_CONNECTED",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DEVICE_CONNECTED",
                     "msgstr": "System log for device power connection."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_D",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_D",
                     "msgstr": "Drive status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_DATARECORDINGCOMPLIANCE",
-                    "msgstr": "Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
+                    "msgstr": "Storage capacity is reached, or missing data elements exist."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_DATATRANSFERCOMPLIANCE",
-                    "msgstr": "Transfer of data fails to complete. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
+                    "msgstr": "Transfer of data fails to complete."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_DISCONNECTED",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DEVICE_DISCONNECTED",
                     "msgstr": "System log for device power disconnection."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ENGINEPOWERUP",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_ENGINE_POWERUP",
                     "msgstr": "Engine power up record."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ENGINEPOWERUPPC",
-                    "msgstr": "Engine power up in PC record."
-                },
-                {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ENGINESHUTDOWN",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_ENGINE_SHUTDOWN",
                     "msgstr": "Engine shutdown record."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ENGINESHUTDOWNPC",
-                    "msgstr": "Engine shutdown in PC record."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
+                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ENGINESYNCCOMPLIANCE",
-                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic."
-                },
-                {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_EXEMPTION16H",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_16H",
                     "msgstr": "Exemption 16 hour."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_EXEMPTIONOFFDUTYDEFERRAL",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
                     "msgstr": "Exemption off duty deferral."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_INT_D",
-                    "msgstr": "Intermediate Drive Event."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INTERMEDIATE",
+                    "msgstr": "Intermediate Log Event."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_INT_PC",
-                    "msgstr": "Intermediate Personal Conveyance Event."
-                },
-                {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_LOGIN",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DRIVER_LOGIN",
                     "msgstr": "User login record."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_LOGOFF",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DRIVER_LOGOFF",
                     "msgstr": "User logout record."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_MISSINGELEMENTCOMPLIANCE",
-                    "msgstr": "Missing data elements. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
+                    "msgstr": "Missing data elements."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_OFF",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_POWERDATA",
+                    "msgstr": "Power data diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
+                    "msgstr": "Engine synchronization data diagnostic"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
+                    "msgstr": "Data transfer data diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_OTHER",
+                    "msgstr": "Other identified diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_NONE",
+                    "msgstr": "Clear previous instance of Diagnostic"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_OFF",
                     "msgstr": "Off-duty status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_ON",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_ON",
                     "msgstr": "On-duty status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_OTHERCOMPLIANCE",
-                    "msgstr": "Other instances of Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
+                    "msgstr": "Other instances of Malfunction."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_PC",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_NONE",
+                    "msgstr": "Clear previous instances of Malfunction."
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_PC",
                     "msgstr": "Personal conveyance driver status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_POSITIONINGCOMPLIANCE",
-                    "msgstr": "ELD continually fails to acquire valid position measurement. Applies to Malfunction."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_NONE",
+                    "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_POWERCOMPLIANCE",
-                    "msgstr": "Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
+                    "msgstr": "ELD continually fails to acquire valid position measurement."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_SB",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
+                    "msgstr": "Engine power status engages ELD within 1 minute."
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_SB",
                     "msgstr": "Sleeper berth status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_SITUATIONALDRIVINGCLEAR",
-                    "msgstr": "YM, PC, or WT clearing event."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
+                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_TIMINGCOMPLIANCE",
-                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
+                    "msgstr": "More than 30 minutes of driving with unidentified driving."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE",
-                    "msgstr": "More than 30 minutes of driving with unidentified driving. Applies to Diagnostic."
-                },
-                {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_WT",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_OFF_WT",
                     "msgstr": "Wait time oil well driver status."
                 },
                 {
-                    "origin": "Log Event, status",
-                    "msgid":  "STATUS_YM",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_YM",
                     "msgstr": "Yard move driver status."
-                },
-                {
-                    "origin": "Log Event, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_ACTIVE",
-                    "msgstr": "Active"
-                },
-                {
-                    "origin": "Log Event, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGED",
-                    "msgstr": "Inactive -> Changed"
-                },
-                {
-                    "origin": "Log Event, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGE_REQUESTED",
-                    "msgstr": "Inactive -> Change Requested"
-                },
-                {
-                    "origin": "Log Event, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED",
-                    "msgstr": "Inactive -> Change Rejected"
                 },
                 {
                     "origin": "State of Health, status",
