@@ -44,6 +44,7 @@ their time and energy to make this a reality.
 |Bill Brown, SEFL | Geotab | Altaz Valani, Security Compass |
 | | Samsara Networks, Inc.| Stephen Raio, U.S. Army Combat Capabilities Development Command |
 | | | Andrew Smith, ISE Inc. |
+| | | Dr. Jeremy Daily, UTulsa |
 
 ![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png)
 
@@ -198,7 +199,7 @@ savings times are accounted for correctly.
 
 # Working with Time-Based Queries
 
-There are many API endpoints which support searches of data based on a time range. In all cases, the time rage specified
+There are many API endpoints which support searches of data based on a time range. In all cases, the time range specified
 by a pair of `start` and `stop` parameters represents an inclusive-exclusive time range. i.e. a time period which
 includes the moment in time given by `start` and all times up-to but not including the moment in time given by `stop.`
 
@@ -347,9 +348,9 @@ The Open Telematics API is ready to be used in locales other than the United Sta
 display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the
 descriptions of the enumerated constants in the API.
 
-The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does
-the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or
-comment fields.
+The localization does not apply to units of measure. With the exception of velocities where units of `km/h` are used,
+the Open Telematics API will use SI units. Nor does the localization apply to arbitrary strings in data objects of the
+API such as messages for display in vehicles or comment fields.
 
 Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
 Language: `. If no request header is present then `Accept-Language: en` will be assumed.
@@ -611,7 +612,7 @@ Telematics Data Model* for object descriptions as well.
 + ccResumeSwitch    :                             false  (required, boolean) - cruise control resume switch status at time of event
 + ccAccelerationSwitch:                           false  (required, boolean) - cruise control acceleration switch status at time of event
 + ccBrakeSwitch     :                             false  (required, boolean) - cruise control brake switch status at time of event
-+ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in m/s
++ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in km/h
 
 ### Ignition Status (object)
 
@@ -636,22 +637,22 @@ Telematics Data Model* for object descriptions as well.
         + `FLAGGEDTYPE_SUDDEN_STOP` - Sudden stop flagged event
         + `FLAGGEDTYPE_COLLISION` - Collision flagged event
         + `FLAGGEDTYPE_ONBOARD_RECORDING` - onboard recording flagged event
-+ gpsSpeed                                               (number) - speed of vehicle at time of event, in m/s
++ gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
-+ ecmSpeed                                               (required, number) - speed of vehicle at time of event, in m/s
-+ engineRPM                                              (required, number) - engine RPMs at time of event, in revolutions per minute
++ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
++ engineRPM                                              (required, number) - engine speed at time of event, in revolutions per minute (RPM)
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
 + cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
-+ parkingBreak      :                             false  (optional, boolean) - parking break status at time of event
++ parkingBrake      :                             false  (optional, boolean) - parking brake status at time of event
 + ignitionStatus                                         (required, Ignition Status) - the ignition status at the time of the event
-+ forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in m/s
++ forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in km/h
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
 + forwardVehicleElapsed:                              2  (required, number) - vehicle forward travel elapsed time, in s
-+ odometer                                               (required, number) - Odometer reading at time of event, in m
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 
-### Region Specific Breaks Rules (object)
+### Region Specific Break Rules (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
@@ -680,8 +681,8 @@ Telematics Data Model* for object descriptions as well.
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time these thresholds take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
 + rpmOverValue                                           (number)           - the configured RPM threshold, above which engine RPM readings are considered 'over', in revolutions per minute
-+ overSpeedValue                                         (number)           - the configured speed threshold, above which speed readings are considered 'over', in m/s
-+ excessSpeedValue                                       (number)           - the configured speed threshold, above which the speed readings are considered 'excess', in m/s
++ overSpeedValue                                         (number)           - the configured speed threshold, above which speed readings are considered 'over', in km/h
++ excessSpeedValue                                       (number)           - the configured speed threshold, above which the speed readings are considered 'excess', in km/h
 + longIdleValue     :                                300 (number)           - the configured time threshold, beyond which time spent in idle will be considered 'long', in seconds
 + hiThrottleValue                                        (number)           - the configured throttle threshold, above which throttle values are considered 'hi'
 
@@ -694,7 +695,7 @@ Telematics Data Model* for object descriptions as well.
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `performance event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ hours             :                                  6 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
++ hours             :                                6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
 + thresholds                                             (required, Performance Thresholds) - the thresholds that were active during this event
 + odometerStart                                          (required, number) - the vehicle odometer reading at the start of this event, in m
 + odometerEnd                                            (required, number) - the vehicle odometer reading at the end of this event, in m
@@ -706,7 +707,7 @@ Telematics Data Model* for object descriptions as well.
 + engineLoadStopped                                      (required, number) - the average engine load while the vehicle was stopped during this event, in percent
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
 + headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
-+ speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in m/s
++ speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in km/h
 + overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
 + overSpeedTime                                          (number)           - the total amount of time spent over the speed threshold during this event, in seconds
 + excessSpeedTime                                        (number)           - the total amount of time spent over the excess speed threshold, in seconds
@@ -719,7 +720,7 @@ Telematics Data Model* for object descriptions as well.
 + cruiseTime                                             (number)           - the total amount of time spent in cruise during this event, in seconds
 + cruiseFuel                                             (number)           - the total amount of fuel consumed in cruise during this event, in seconds
 + cruiseDistance                                         (number)           - the total distance covered in cruise during this event, in meters
-+ topGearValue                                           (number)           - this vehicle's particular top gear
++ topGearValue                                           (number)           - this vehicle's particular top gear ratio including the transmission and axle
 + topGearTime                                            (number)           - the total amount of time spent while in top gear during this event, in seconds
 + topGearFuel                                            (number)           - the total amount of fuel consumed while in top gear during this event, in litres
 + topGearDistance                                        (number)           - the total distance covered while in top gear during this event, in meters
@@ -735,14 +736,14 @@ Telematics Data Model* for object descriptions as well.
         + `FILTERSTATUS_ACTIVE_REGEN_END' - Filter active regen ended
         + `FILTERSTATUS_PASSIVE_REGEN_END' - Filter passive regen ended
 + exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
-+ overspeedLowThrottle                                   (boolean)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
-+ overspeedHiThrottle                                    (boolean)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
-+ overrpmLowThrottle                                     (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
-+ overrpmHiThrottle                                      (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
++ overspeedLowThrottle                                   (number)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
++ overspeedHiThrottle                                    (number)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
++ overrpmLowThrottle                                     (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
++ overrpmHiThrottle                                      (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
 + lkaActive                                              (boolean)          - Lane Keep Assist active status
-+ lkaDisable                                             (boolean)          - Lake Keep Assist disable switch status
++ lkaDisable                                             (boolean)          - Lane Keep Assist disable switch status
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
-+ ldwDisable                                             (boolean)          - Lane Departure Warning disabel switch status
++ ldwDisable                                             (boolean)          - Lane Departure Warning disable switch status
 
 ### Vehicle Fault Code Event (object)
 
@@ -755,19 +756,19 @@ Telematics Data Model* for object descriptions as well.
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
 + occurences        :                                  1 (required, number) - the number of occurences of this fault; OC from J1939
-+ messageIdentifier                                      (required, number) - MID from J1939
-+ parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID?
++ messageIdentifier :                 128                (number) - MID from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
++ parameterOrSubsystemIdType                             (enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID as defined in SAE J1587?
     + Members
         + `PIDORSID_PID` - This is a PID
         + `PIDORSID_SID` - This is a SID
-+ faultCodeParameterorSubsystemId                        (required, number) - either the PID or SID , as in J1939
-+ sourceAddress                                          (required, number) - SA from J1939
-+ suspectParameterNumber                                 (required, number) - SPN from J1939
-+ failureModeIdentifier                                  (required, number) - FMI from J1939
++ faultCodeParameterorSubsystemId                        (number) - either the PID or SID, as in SAE J1587
++ sourceAddress                                          (required, number) - SA from SAE J1939
++ suspectParameterNumber                                 (required, number) - SPN from SAE J1939
++ failureModeIdentifier                                  (required, number) - FMI from SAE J1939
 + urgentFlag        :                              false (required, boolean) - is the fault urgent?
-+ odometer                                               (required, number) - Odometer reading at time of event, in m
-+ engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute
-+ ecmSpeed                                               (required, number) - speed of vehicle at time of event, in m/s
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
++ engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
++ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
 + cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
 + ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
@@ -802,7 +803,7 @@ Telematics Data Model* for object descriptions as well.
 + cruiseTime                                             (number) - the total time spent with cruise control engaged during this event, in seconds
 + engineLoadPercent                                      (number) - the average engine load percent during this event
 + overRpmTime                                            (number) - the total time the driver's vehicles spent moving while above rpm threshold, in seconds
-+ brakeEvents                                            (number) - the number of break events during this event
++ brakeEvents                                            (number) - the number of brake events during this event
 
 ### Vehicle (object)
 
@@ -848,7 +849,7 @@ Telematics Data Model* for object descriptions as well.
 + drivers                                                (array[Driver], fixed-type) - All of the Driver objects known to the TSP at the time of the request
 + annotationLogs                                         (array[Annotation Log], fixed-type) - Any of the Annotation Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + logEvents                                              (array[Log Event], fixed-type) - Any of the Log Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ regionSpecificBreaksRules                              (array[Region Specific Breaks Rules], fixed-type) - Any of the Region Specific Breaks Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ regionSpecificBreakRules                               (array[Region Specific Break Rules], fixed-type) - Any of the Region Specific Break Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -1065,7 +1066,7 @@ Daily Export Format* below for more details.
 * Vehicle Fault Code Event
 * Driver
 * Log Event
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 * Driver Performance Summary
 * State of Health
@@ -1211,7 +1212,7 @@ current moment, from which the current driver availability can be calculated.
 The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if
 they operate in regions with specific break rules or waivers.
 
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
@@ -1290,7 +1291,7 @@ time period.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + breakRules                                             (required, array[Region Specific Breaks Rules], fixed-type) - the Region Specific Breaks Rules for this driver for the requested time period
+        + breakRules                                             (required, array[Region Specific Break Rules], fixed-type) - the Region Specific Break Rules for this driver for the requested time period
         + waivers                                                (required, array[Region Specific Waivers], fixed-type) - the Region Specific Waivers for this driver for the requested time period
 
 + Response 400 (text/plain)
@@ -2023,7 +2024,7 @@ this they follow a feed of:
 (see *Follow a Feed of Log Events* above for more details) and they query for breaks and exemption rules for
 (drivers in those logs:
 
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 
 (see *Check Break Rules and Waivers* above for more details.)
@@ -2813,12 +2814,12 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
                     {
                         "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
                         "msgid": "PIDORSID_PID",
-                        "msgstr": "This is a PID"
+                        "msgstr": "This is a PID as defined in SAE J1587"
                     },
                     {
                         "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
                         "msgid": "PIDORSID_SID",
-                        "msgstr": "This is a SID"
+                        "msgstr": "This is a SID as defined in SAE J1587"
                     },
                     {
                         "origin": "Vehicle Locatoin Time History",
@@ -2954,18 +2955,18 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             Retry-After: {implementation-defined}
 
-## Region Specific Breaks Rules Object                             [/v1.0/region_specific_breaks/{id}]
+## Region Specific Break Rules Object                              [/v1.0/region_specific_breaks/{id}]
 
 Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
 only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
 rules.
 
 + Parameters
-    + id            (string) - ID of the Region Specific Breaks Rules of interest
+    + id            (string) - ID of the Region Specific Break Rules of interest
 
-+ Attributes (Region Specific Breaks Rules)
++ Attributes (Region Specific Break Rules)
 
-### Get a Region Specific Breaks Rules by its ID               [GET]
+### Get a Region Specific Break Rules by its ID                [GET]
 
 **Access Controls**
 
@@ -2980,7 +2981,7 @@ rules.
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Region Specific Breaks Rules)
+    + Attributes (Region Specific Break Rules)
 
 + Response 401
     + Headers
