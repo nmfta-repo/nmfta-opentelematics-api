@@ -235,7 +235,7 @@ query) is returned. Theses *Feed Follow* endpoints are intended to assist in rea
 In some cases, the clients require that no data is ever missed by following (polling the endpoint); however, due to the
 nature of telematics systems there can be a high latency between time of creation and time of delivery to the TSP. Hence
 there is a non-trivial cost associated with providing endpoints that can ensure that no data is missed in following.
-e.g. the *Follow a Feed of Duty Status Logs* endpoint below.
+e.g. the *Follow a Feed of Log Events* endpoint below.
 
 Unless stated otherwise, all *Feed Follow* endpoints will be such that no data is missed by following; including cases
 of very high latency between data creation and delivery. Special exceptions will be noted on the endpoints for the cases
@@ -326,12 +326,18 @@ have been left 'open'. i.e. the addition of data fields to the definitions of th
 according to this specification will not cause validation errors by clients which are following the JSON schema in this
 specification.
 
-* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier is fine
-* Adding additional possible values to enumerations is not a valid extension to the OTAPI
-* Adding additional endpoints/methods is not a valid extension to the OTAPI
+Addition of fields to the objects must be done such that it is not possible for the new extension fields to collide with
+other extensions or with future versions of the API; therefore, all fields added as extensions must be prefixed with
+`x_providerid_` where `providerid` is the provider ID (see *Provider Identifiers* above for more details).
+
+* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier IS a valid extension to the OTAPI
+* Adding additional possible values to enumerations IS NOT a valid extension to the OTAPI
+* Adding additional endpoints/methods IS NOT a valid extension to the OTAPI
 
 In cases where enumerations need to be changed and additional endpoints need to be added, this should be approached by
-changing the OTAPI upstream -- also, ideally, adding fields should also be done by suggesting changes upstream.
+changing the OTAPI upstream. Also, ideally, adding fields should also be done by suggesting changes upstream; in this
+case, an example roadmap of the process might look like: starting with a prefixed field in the TSP extensions then
+suggesting the useful fields for inclusion and review leading to a new field without a prefix.
 
 # Localization
 
@@ -477,7 +483,7 @@ Telematics Data Model* for object descriptions as well.
 + distanceFrom      :                             `5000` (number) - distance from the identified geo-location, in m
 + directionFrom     :                              `NNE` (string) - cardinal direction from the identified geo-location
 
-### Duty Status Log (object)
+### Log Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
@@ -488,41 +494,9 @@ Telematics Data Model* for object descriptions as well.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + distanceLastValid :                                117 (required, number) - The distance in km traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
 + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
-+ eventRecordStatus :              `RECORDSTATUS_ACTIVE` (required, enum[string]) - The record status number of this log
-
-    + Members
-        + `RECORDSTATUS_ACTIVE`                       - Active
-        + `RECORDSTATUS_INACTIVE_TO_CHANGED`          - Inactive -> Changed
-        + `RECORDSTATUS_INACTIVE_TO_CHANGE_REQUESTED` - Inactive -> Change Requested
-        + `RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED`  - Inactive -> Change Rejected
-
-+ eventType         :      `EVENTTYPE_LOGINOUT_ACTIVITY` (required, enum[string]) - The event type number of this log. (Table 6; 7.25 of the ELD Final Rule)
-
-    + Members
-        + `EVENTTYPE_CHANGE_DUTYSTATUS`         - A change in driver's duty-status
-        + `EVENTTYPE_INTERMEDIATE_LOG`          - An intermediate log
-        + `EVENTTYPE_CHANGE_PERSONAL_OR_YM`     - A change in driver's indication of authorized personal use of CMV or yard moves
-        + `EVENTTYPE_CERT_RECORDS`              - A driver's certification/re-certification of records
-        + `EVENTTYPE_LOGINOUT_ACTIVITY`         - A driver's login/logout activity
-        + `EVENTTYPE_CMV_POWERUPDOWN`           - CMV's engine power up / shut down activity
-        + `EVENTTYPE_MALFUNCTION_OR_DIAGNOSTIC` - A malfunction or data diagnostic detection
 
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
-+ malfunction       :                 `MALFUNCTION_NONE` (required, enum[string]) - The DutyStatusMalfunctionType of the DutyStatusLog record.
-
-    + Members
-        + `MALFUNCTION_DIAGNOSTIC`                   - In a diagnostic state.
-        + `MALFUNCTION_DIAGNOSTICMANUALPOSITION`     - Combination of ManualPosition and Diagnostic
-        + `MALFUNCTION_MALFUNCTION`                  - In a malfunction state.
-        + `MALFUNCTION_MALFUNCTIONMANUALPOSITION`    - Combination of ManualPosition and Malfunction
-        + `MALFUNCTION_MANUALPOSITION`               - User has inputted a manual address for the log during a position compliance diagnostic event
-        + `MALFUNCTION_NONE`                         - No malfunction or diagnostic present or cleared.
-        + `MALFUNCTION_SYSTEMDIAGNOSTICCLEAR`        - System has determined that the diagnostic is cleared. Not exported to FMCSA.
-        + `MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING` - System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance.
-        + `MALFUNCTION_USERDIAGNOSTICCLEAR`          - User has cleared the diagnostic.
-        + `MALFUNCTION_USERMALFUNCTIONCLEAR`         - User has cleared the malfunction.
-
-+ origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The DutyStatusOrigin from where this log originated.
++ origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
 
     + Members
         + `ORIGIN_AUTOMATIC`  - Automatic recorded by device
@@ -530,9 +504,9 @@ Telematics Data Model* for object descriptions as well.
         + `ORIGIN_OTHERUSER`  - Other authenticated user.
         + `ORIGIN_UNASSIGNED` - Unassigned driver.
 
-+ parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent DutyStatusLog. Used when a DutyStatusLog is edited. When returning history, this field will be populated.
++ parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent Log Event. Used when a Log Event is edited. When returning history, this field will be populated.
 + sequence          :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
-+ state             :                     `STATE_ACTIVE` (required, enum[string]) - The DutyStatusState of the DutyStatusLog record.
++ state             :                     `STATE_ACTIVE` (required, enum[string]) - The State of the Log Event record.
 
     + Members
         + `STATE_ACTIVE`    - The log is active and has been accepted by the driver.
@@ -540,46 +514,48 @@ Telematics Data Model* for object descriptions as well.
         + `STATE_REJECTED`  - The log is a rejected edit request from another user.
         + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
-+ status            :                         `STATUS_D` (required, enum[string]) - The DutyStatusLogType representing the driver's duty status.
++ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states
 
     + Members
-        + `STATUS_ADVERSEWEATHER`                - Adverse weather and driving conditions exemption.
-        + `STATUS_AUTHORITY`                     - Authority status.
-        + `STATUS_CERTIFY`                       - Daily certify record.
-        + `STATUS_CONNECTED`                     - System log for device power connection.
-        + `STATUS_D`                             - Drive status.
-        + `STATUS_DATARECORDINGCOMPLIANCE`       - Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic.
-        + `STATUS_DATATRANSFERCOMPLIANCE`        - Transfer of data fails to complete. Applies to Malfunction or Diagnostic.
-        + `STATUS_DISCONNECTED`                  - System log for device power disconnection.
-        + `STATUS_ENGINEPOWERUP`                 - Engine power up record.
-        + `STATUS_ENGINEPOWERUPPC`               - Engine power up in PC record.
-        + `STATUS_ENGINESHUTDOWN`                - Engine shutdown record.
-        + `STATUS_ENGINESHUTDOWNPC`              - Engine shutdown in PC record.
-        + `STATUS_ENGINESYNCCOMPLIANCE`          - Occurs when engine information (power, motion, distance, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic.
-        + `STATUS_EXEMPTION16H`                  - Exemption 16 hour.
-        + `STATUS_EXEMPTIONOFFDUTYDEFERRAL`      - Exemption off duty deferral.
-        + `STATUS_INT_D`                         - Intermediate Drive Event.
-        + `STATUS_INT_PC`                        - Intermediate Personal Conveyance Event.
-        + `STATUS_LOGIN`                         - User login record.
-        + `STATUS_LOGOFF`                        - User logout record.
-        + `STATUS_MISSINGELEMENTCOMPLIANCE`      - Missing data elements. Applies to Malfunction or Diagnostic.
-        + `STATUS_OFF`                           - Off-duty status.
-        + `STATUS_ON`                            - On-duty status.
-        + `STATUS_OTHERCOMPLIANCE`               - Other instances of Malfunction or Diagnostic.
-        + `STATUS_PC`                            - Personal conveyance driver status.
-        + `STATUS_POSITIONINGCOMPLIANCE`         - ELD continually fails to acquire valid position measurement. Applies to Malfunction.
-        + `STATUS_POWERCOMPLIANCE`               - Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic.
-        + `STATUS_SB`                            - Sleeper berth status.
-        + `STATUS_SITUATIONALDRIVINGCLEAR`       - YM, PC, or WT clearing event.
-        + `STATUS_TIMINGCOMPLIANCE`              - When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction.
-        + `STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE` - More than 30 minutes of driving with unidentified driving. Applies to Diagnostic.
-        + `STATUS_WT`                            - Wait time oil well driver status.
-        + `STATUS_YM`                            - Yard move driver status.
+        + `EVENTTYPE_DUTY_OFF`                                              - Off-duty status.
+        + `EVENTTYPE_DUTY_OFF_WT`                                           - Wait time oil well driver status.
+        + `EVENTTYPE_DUTY_SB`                                               - Sleeper berth status.
+        + `EVENTTYPE_DUTY_D`                                                - Drive status.
+        + `EVENTTYPE_DUTY_ON`                                               - On-duty status.
+        + `EVENTTYPE_INDICATION_PC`                                         - Personal conveyance driver status.
+        + `EVENTTYPE_INDICATION_YM`                                         - Yard move driver status.
+        + `EVENTTYPE_INDICATION_NONE`                                       - Cleared indication (e.g. no YM or PC or any other indication)
+        + `EVENTTYPE_ENGINE_POWERUP`                                        - Engine power up record.
+        + `EVENTTYPE_ENGINE_SHUTDOWN`                                       - Engine shutdown record.
+        + `EVENTTYPE_INTERMEDIATE`                                          - Intermediate Log Event.
+        + `EVENTTYPE_DRIVER_LOGIN`                                          - User login record.
+        + `EVENTTYPE_DRIVER_LOGOFF`                                         - User logout record.
+        + `EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE`                           - Engine power status engages ELD within 1 minute.
+        + `EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE`                      - Occurs when engine information (power, motion, distance, and hours) cannot be obtained by ELD.
+        + `EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE`                          - When ELD date and time exceeds 10 minute offset from UTC.
+        + `EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE`                     - ELD continually fails to acquire valid position measurement.
+        + `EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE`                   - Storage capacity is reached, or missing data elements exist.
+        + `EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE`                    - Transfer of data fails to complete.
+        + `EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE`                           - Other instances of Malfunction.
+        + `EVENTTYPE_MALFUNCTION_NONE`                                      - Clear previous instances of Malfunction.
+        + `EVENTTYPE_DIAGNOSTIC_POWERDATA`                                  - Power data diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA`                             - Engine synchronization data diagnostic
+        + `EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT`                             - Missing data elements.
+        + `EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA`                           - Data transfer data diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS`                 - More than 30 minutes of driving with unidentified driving.
+        + `EVENTTYPE_DIAGNOSTIC_OTHER`                                      - Other identified diagnostic event
+        + `EVENTTYPE_DIAGNOSTIC_NONE`                                       - Clear previous instance of Diagnostic
+        + `EVENTTYPE_CERTIFICATION`                                         - Driver certification event, can be multiple -- see `certificationCount`
+        + `EVENTTYPE_DEVICE_CONNECTED`                                      - System log for device power connection.
+        + `EVENTTYPE_DEVICE_DISCONNECTED`                                   - System log for device power disconnection.
+        + `EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL`                             - Exemption off duty deferral.
+        + `EVENTTYPE_EXEMPTION_ADVERSEWEATHER`                              - Adverse weather and driving conditions exemption.
+        + `EVENTTYPE_EXEMPTION_16H`                                         - Exemption 16 hour.
 
++ certificationCount                                     (number) - a certification count asssociated with driver certification (`EVENTTYPE_CERTIFICATION`) events -- serialized into ELD Event Code, see ELD 7.20
 + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
 + multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
-+ outputFileComment : `fake Duty Status Log for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
-
++ comment :                 `fake Log Event for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
 + eventDataChecksum                                      (required, string) - The hexidecimal value result of a bitwise exclusive OR(XOR) operation using Table 3 of the ELD mandate
 
 ### Stop Geographic Details (object)
@@ -825,7 +801,7 @@ Telematics Data Model* for object descriptions as well.
 
 ### Token Translation (object)
 
-+ origin :                `Duty Status Log, malfunction` (string) - optional note of origin of token to be translated
++ origin :                `Log Event, malfunction` (string) - optional note of origin of token to be translated
 + comment : `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
 + msgid :                             `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
 + msgstr :                                  `Diagnostic` (required, string) - The locale's representation (translation) of the token
@@ -857,7 +833,7 @@ Telematics Data Model* for object descriptions as well.
 
 + drivers                                                (array[Driver], fixed-type) - All of the Driver objects known to the TSP at the time of the request
 + annotationLogs                                         (array[Annotation Log], fixed-type) - Any of the Annotation Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ dutyStatusLogs                                         (array[Duty Status Log], fixed-type) - Any of the Duty Status Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ logEvents                                              (array[Log Event], fixed-type) - Any of the Log Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificBreaksRules                              (array[Region Specific Breaks Rules], fixed-type) - Any of the Region Specific Breaks Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
@@ -1072,7 +1048,7 @@ Daily Export Format* below for more details.
 * Stop Geographic Details
 * Vehicle Fault Code Event
 * Driver
-* Duty Status Log
+* Log Event
 * Region Specific Breaks Rules
 * Region Specific Waivers
 * Driver Performance Summary
@@ -1195,7 +1171,7 @@ Personnel responsible for compliance need to be able to create RODS based on inf
 event a TSP is no longer available.
 
 See *Complete Telematics Records Daily Export Format* above for more details on the file format which should contain
-sufficient data for this use case in the array of *Duty Status Log* objects.
+sufficient data for this use case in the array of *Log Event* objects.
 
 # Group Use Case Driver Availability
 
@@ -1208,7 +1184,7 @@ current moment, from which the current driver availability can be calculated.
 
 * Coarse Vehicle Location Time History
 * Vehicle Flagged Event
-* Duty Status Log
+* Log Event
 
 The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if
 they operate in regions with specific break rules or waivers.
@@ -1246,7 +1222,7 @@ Clients can request all the factors contributing to driver availability for a gi
 
 + Response 200 (application/json)
     + Attributes (object)
-        + dutyStatusLogs                                     (required, array[Duty Status Log], fixed-type) - The Duty Status Logs of the requested `driverId` for the requested time period [`start`, `stop`)
+        + logEvents                                          (required, array[Log Event], fixed-type) - The Log Events of the requested `driverId` for the requested time period [`start`, `stop`)
         + vehicleFlaggedEvents                               (required, array[Vehicle Flagged Event], fixed-type) - All Vehicle Flagged Events which are associated with the requested `driverId` and which occur within the requested time period [`start`, `stop`)
         + coarseVehicleLocationTimeHistory                   (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History associated with the requested `driverId` for the requested time period [`start`, `stop`)
 
@@ -1755,18 +1731,18 @@ This feature is heavily used but also is commonly offered as an add-on to the TS
 Both personnel and semi-automated systems responsible for planning and assigning driver routes want to be notified of a
 completed trip, along with the driver information about duty on the trip. They follow the feed of:
 
-* Duty Status Log
+* Log Event
 
-And mark trips completed based on the Duty Status Log context; at the end of a trip they also query for the most recent
+And mark trips completed based on the Log Event context; at the end of a trip they also query for the most recent
 
 * Stop Geographic Details
 
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Feed Follow all Duty Status Logs                            [GET /api{version}/event_logs/feed{?token}]
+## Feed Follow all Log Events                                  [GET /api{version}/event_logs/feed{?token}]
 
-Clients can follow a feed of Duty Status Log entries as they are added to the TSP system; following is accomplished via
+Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
 
 **Access Controls**
@@ -1779,7 +1755,7 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
     + Headers
@@ -1788,8 +1764,8 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 
 + Response 200 (application/json)
     + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
-        + feed                                  (array[Duty Status Log], fixed-type) - the 'feed' of Duty Status Logs
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + feed                                  (array[Log Event], fixed-type) - the 'feed' of Log Events
 
 + Response 400 (text/plain)
 
@@ -1981,12 +1957,12 @@ of all vehicles over a given time period.
 Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
 are important to modern motor freight carrier operations.
 
-Automated payroll/HR systems want to receive duty status logs and convert these into payroll tracking entries. To do
+Automated payroll/HR systems want to receive Log Events and convert these into payroll tracking entries. To do
 this they follow a feed of:
 
-* Duty Status Log
+* Log Event
 
-(see *Follow a Feed of Duty Status Logs* above for more details) and they query for breaks and exemption rules for
+(see *Follow a Feed of Log Events* above for more details) and they query for breaks and exemption rules for
 (drivers in those logs:
 
 * Region Specific Breaks Rules
@@ -2088,9 +2064,9 @@ Motor freight carriers use telematics systems to monitor their fleets for accide
 Semi-automated systems want to receive notification of any accidents in their fleet and handle accident reports
 internally according to their own processes. To do this they follow a feed of:
 
-* Duty Status Log
+* Log Event
 
-(see *Follow a Feed of Duty Status Logs* above for more details.)
+(see *Follow a Feed of Log Events* above for more details.)
 
 # Group Use Case Carrier Custom Business Intelligence
 
@@ -2171,7 +2147,7 @@ entries with each query in the polling.
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
     + Headers
@@ -2180,7 +2156,7 @@ entries with each query in the polling.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
         + feed                                  (object) - the 'feed' of Fleet Vehicle Info
             + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
             + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
@@ -2343,7 +2319,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Duty Status Logs; pass in a `null` or omit this token to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
     + Headers
@@ -2352,8 +2328,8 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 200 (application/json)
     + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Duty Status Logs
-        + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Duty Status Logs
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Log Events
 
 + Response 400 (text/plain)
 
@@ -2446,309 +2422,214 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
             {
               "data": [
                 {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_DIAGNOSTIC",
-                    "msgstr": "In a diagnostic state"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_DIAGNOSTICMANUALPOSITION",
-                    "msgstr": "Combination of ManualPosition and Diagnostic"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_MALFUNCTION",
-                    "msgstr": "In a malfunction state"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_MALFUNCTIONMANUALPOSITION",
-                    "msgstr": "Combination of ManualPosition and Malfunction"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_MANUALPOSITION",
-                    "msgstr": "User has inputted a manual address for the log during a position compliance diagnostic even"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_NONE",
-                    "msgstr": "No malfunction or diagnostic present or cleared"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEAR",
-                    "msgstr": "System has determined that the diagnostic is cleared. Not exported to FMCSA"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_SYSTEMDIAGNOSTICCLEARDRIVING",
-                    "msgstr": "System has determined that the diagnostic is cleared and the vehicle was in motion. Used for PowerCompliance"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_USERDIAGNOSTICCLEAR",
-                    "msgstr": "User has cleared the diagnostic"
-                },
-                {
-                    "origin": "Duty Status Log, malfunction",
-                    "msgid":  "MALFUNCTION_USERMALFUNCTIONCLEAR",
-                    "msgstr": "User has cleared the malfunction"
-                },
-                {
-                    "origin": "Duty Status Log, origin",
+                    "origin": "Log Event, origin",
                     "msgid":  "ORIGIN_AUTOMATIC",
                     "msgstr": "Automatic recorded by device"
                 },
                 {
-                    "origin": "Duty Status Log, origin",
+                    "origin": "Log Event, origin",
                     "msgid":  "ORIGIN_MANUAL",
                     "msgstr": "Manual entry by driver"
                 },
                 {
-                    "origin": "Duty Status Log, origin",
+                    "origin": "Log Event, origin",
                     "msgid":  "ORIGIN_OTHERUSER",
                     "msgstr": "Other authenticated user"
                 },
                 {
-                    "origin": "Duty Status Log, origin",
+                    "origin": "Log Event, origin",
                     "msgid":  "ORIGIN_UNASSIGNED",
                     "msgstr": "Unassigned driver"
                 },
                 {
-                    "origin": "Duty Status Log, state",
+                    "origin": "Log Event, state",
                     "msgid":  "STATE_ACTIVE",
                     "msgstr": "The log is active and has been accepted by the driver."
                 },
                 {
-                    "origin": "Duty Status Log, state",
+                    "origin": "Log Event, state",
                     "msgid":  "STATE_INACTIVE",
                     "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
                 },
                 {
-                    "origin": "Duty Status Log, state",
+                    "origin": "Log Event, state",
                     "msgid":  "STATE_REJECTED",
                     "msgstr": "The log is a rejected edit request from another user."
                 },
                 {
-                    "origin": "Duty Status Log, state",
+                    "origin": "Log Event, state",
                     "msgid":  "STATE_REQUESTED",
                     "msgstr": "The log is a pending edit request from another user."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ADVERSEWEATHER",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
                     "msgstr": "Adverse weather and driving conditions exemption."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_AUTHORITY",
-                    "msgstr": "Authority status."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_CERTIFICATION",
+                    "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_CERTIFY",
-                    "msgstr": "Daily certify record."
-                },
-                {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_CONNECTED",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DEVICE_CONNECTED",
                     "msgstr": "System log for device power connection."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_D",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_D",
                     "msgstr": "Drive status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_DATARECORDINGCOMPLIANCE",
-                    "msgstr": "Storage capacity is reached, or missing data elements exist. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
+                    "msgstr": "Storage capacity is reached, or missing data elements exist."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_DATATRANSFERCOMPLIANCE",
-                    "msgstr": "Transfer of data fails to complete. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
+                    "msgstr": "Transfer of data fails to complete."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_DISCONNECTED",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DEVICE_DISCONNECTED",
                     "msgstr": "System log for device power disconnection."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ENGINEPOWERUP",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_ENGINE_POWERUP",
                     "msgstr": "Engine power up record."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ENGINEPOWERUPPC",
-                    "msgstr": "Engine power up in PC record."
-                },
-                {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ENGINESHUTDOWN",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_ENGINE_SHUTDOWN",
                     "msgstr": "Engine shutdown record."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ENGINESHUTDOWNPC",
-                    "msgstr": "Engine shutdown in PC record."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
+                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ENGINESYNCCOMPLIANCE",
-                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD. Applies to Malfunction or Diagnostic."
-                },
-                {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_EXEMPTION16H",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_16H",
                     "msgstr": "Exemption 16 hour."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_EXEMPTIONOFFDUTYDEFERRAL",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
                     "msgstr": "Exemption off duty deferral."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_INT_D",
-                    "msgstr": "Intermediate Drive Event."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INTERMEDIATE",
+                    "msgstr": "Intermediate Log Event."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_INT_PC",
-                    "msgstr": "Intermediate Personal Conveyance Event."
-                },
-                {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_LOGIN",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DRIVER_LOGIN",
                     "msgstr": "User login record."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_LOGOFF",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DRIVER_LOGOFF",
                     "msgstr": "User logout record."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_MISSINGELEMENTCOMPLIANCE",
-                    "msgstr": "Missing data elements. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
+                    "msgstr": "Missing data elements."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_OFF",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_POWERDATA",
+                    "msgstr": "Power data diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
+                    "msgstr": "Engine synchronization data diagnostic"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
+                    "msgstr": "Data transfer data diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_OTHER",
+                    "msgstr": "Other identified diagnostic event"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_NONE",
+                    "msgstr": "Clear previous instance of Diagnostic"
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_OFF",
                     "msgstr": "Off-duty status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_ON",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_ON",
                     "msgstr": "On-duty status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_OTHERCOMPLIANCE",
-                    "msgstr": "Other instances of Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
+                    "msgstr": "Other instances of Malfunction."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_PC",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_NONE",
+                    "msgstr": "Clear previous instances of Malfunction."
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_PC",
                     "msgstr": "Personal conveyance driver status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_POSITIONINGCOMPLIANCE",
-                    "msgstr": "ELD continually fails to acquire valid position measurement. Applies to Malfunction."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_NONE",
+                    "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_POWERCOMPLIANCE",
-                    "msgstr": "Engine power status engages ELD within 1 minute. Applies to Malfunction or Diagnostic."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
+                    "msgstr": "ELD continually fails to acquire valid position measurement."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_SB",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
+                    "msgstr": "Engine power status engages ELD within 1 minute."
+                },
+                {
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_SB",
                     "msgstr": "Sleeper berth status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_SITUATIONALDRIVINGCLEAR",
-                    "msgstr": "YM, PC, or WT clearing event."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
+                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_TIMINGCOMPLIANCE",
-                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC. Applies to Malfunction."
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
+                    "msgstr": "More than 30 minutes of driving with unidentified driving."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_UNIDENTIFIEDDRIVINGCOMPLIANCE",
-                    "msgstr": "More than 30 minutes of driving with unidentified driving. Applies to Diagnostic."
-                },
-                {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_WT",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_DUTY_OFF_WT",
                     "msgstr": "Wait time oil well driver status."
                 },
                 {
-                    "origin": "Duty Status Log, status",
-                    "msgid":  "STATUS_YM",
+                    "origin": "Log Event, eventType",
+                    "msgid":  "EVENTTYPE_INDICATION_YM",
                     "msgstr": "Yard move driver status."
-                },
-                {
-                    "origin": "Duty Status Log, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_ACTIVE",
-                    "msgstr": "Active"
-                },
-                {
-                    "origin": "Duty Status Log, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGED",
-                    "msgstr": "Inactive -> Changed"
-                },
-                {
-                    "origin": "Duty Status Log, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGE_REQUESTED",
-                    "msgstr": "Inactive -> Change Requested"
-                },
-                {
-                    "origin": "Duty Status Log, eventRecordStatus",
-                    "msgid":  "RECORDSTATUS_INACTIVE_TO_CHANGE_REJECTED",
-                    "msgstr": "Inactive -> Change Rejected"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_CHANGE_DUTYSTATUS",
-                    "msgstr": "A change in driver's duty-status"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_INTERMEDIATE_LOG",
-                    "msgstr": "An intermediate log"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_CHANGE_PERSONAL_OR_YM",
-                    "msgstr": "A change in driver's indication of authorized personal use of CMV or yard moves"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_CERT_RECORDS",
-                    "msgstr": "A driver's certification/re-certification of records"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_LOGINOUT_ACTIVITY",
-                    "msgstr": "A driver's login/logout activity"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_CMV_POWERUPDOWN",
-                    "msgstr": "CMV's engine power up / shut down activity"
-                },
-                {
-                    "origin": "Duty Status Log, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_OR_DIAGNOSTIC",
-                    "msgstr": "A malfunction or data diagnostic detection"
                 },
                 {
                     "origin": "State of Health, status",
@@ -2887,17 +2768,17 @@ For the purposes of clearly detailing the data object types used by the API endp
 models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes;
 it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
-## Duty Status Log Object                                          [/api{version}/event_logs/{id}]
+## Log Event Object                                                [/api{version}/event_logs/{id}]
 
 + Parameters
     + version: `v1` (enum[string]) - API version
         + Members
             + `v1`
-    + id            (string) - ID of the Duty Status Log of interest
+    + id            (string) - ID of the Log Event of interest
 
-+ Attributes (Duty Status Log)
++ Attributes (Log Event)
 
-### Get a Duty Status Log by its ID [GET]
+### Get a Log Event by its ID [GET]
 
 **Access Controls**
 
@@ -2911,7 +2792,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Duty Status Log)
+    + Attributes (Log Event)
 
 + Response 401
     + Headers
