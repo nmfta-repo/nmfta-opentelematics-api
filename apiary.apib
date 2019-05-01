@@ -939,7 +939,7 @@ less than optimal operation.
 Clients can request the current service state of health. The response to this query will be a data structure indicating
 everything is good or showing some details as to why the service is not presently at 100%.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
@@ -961,12 +961,17 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+    
+            Retry-After: 60
+
 ## Check Past 30d State of Health                              [GET /v1.0/health/recents]
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
 status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
@@ -988,6 +993,11 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Data Export
 
