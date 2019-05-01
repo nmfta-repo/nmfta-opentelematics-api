@@ -926,7 +926,7 @@ less than optimal operation.
 Clients can request the current service status. The response to this query will be a data structure indicating
 everything is good or showing some details as to why the service is not presently at 100%.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
@@ -957,7 +957,7 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 Clients can request the recent history of all service statuses. The response to this query will return all service
 status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
