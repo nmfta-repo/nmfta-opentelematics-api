@@ -1094,7 +1094,7 @@ Only Complete Telematics Records Daily Export Format* for more details.
 ### Test if Complete Export Ready                              [GET]
 
 If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `204` return code will be returned.
+ready then a `202` return code will be returned.
 
 **Access Controls**
 
@@ -1112,7 +1112,7 @@ ready then a `204` return code will be returned.
     + Attributes (object)
         + location: `https://api.provider.com/v1.0/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
-+ Response 204
++ Response 202
 
 + Response 400 (text/plain)
 
@@ -1140,7 +1140,7 @@ ready then a `204` return code will be returned.
 ### Test if Vehicle-Only Export Ready                          [GET]
 
 If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `204` return code will be returned.
+ready then a `202` return code will be returned.
 
 **Access Controls**
 
@@ -1158,7 +1158,7 @@ ready then a `204` return code will be returned.
     + Attributes (object)
         + location: `https://api.provider.com/v1.0/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
-+ Response 204
++ Response 202
 
 + Response 400 (text/plain)
 
