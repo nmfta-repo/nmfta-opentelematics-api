@@ -44,6 +44,7 @@ their time and energy to make this a reality.
 |Bill Brown, SEFL | Geotab | Altaz Valani, Security Compass |
 | | Samsara Networks, Inc.| Stephen Raio, U.S. Army Combat Capabilities Development Command |
 | | | Andrew Smith, ISE Inc. |
+| | | Dr. Jeremy Daily, UTulsa |
 
 ![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png)
 
@@ -345,9 +346,9 @@ The Open Telematics API is ready to be used in locales other than the United Sta
 display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the
 descriptions of the enumerated constants in the API.
 
-The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does
-the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or
-comment fields.
+The localization does not apply to units of measure. With the exception of velocities where units of `km/h` are used,
+the Open Telematics API will use SI units. Nor does the localization apply to arbitrary strings in data objects of the
+API such as messages for display in vehicles or comment fields.
 
 Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
 Language: `. If no request header is present then `Accept-Language: en` will be assumed.
