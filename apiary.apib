@@ -952,6 +952,9 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
 ## Check Past 30d State of Health                              [GET /api{version}/health/recents]
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
@@ -983,6 +986,9 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
 
 # Group Use Case Data Export
 
