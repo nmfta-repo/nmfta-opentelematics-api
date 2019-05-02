@@ -356,7 +356,7 @@ Language: `. If no request header is present then `Accept-Language: en` will be 
 Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header
 specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response
 will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is
-provided below for convenience in the sample response to `GET /api{version}/i18n`.
+provided below for convenience in the sample response to `GET /v1.0/i18n`.
 
 # Telematics API Use Cases by Motor Freight Carriers
 
@@ -922,7 +922,7 @@ State of Health. They expect to receive either an 'all-clear' response indicatin
 issues with its services at the moment of query or some details describing the contributing factors that have led to
 less than optimal operation.
 
-## Check Current State of Health                               [GET /api{version}/health/current]
+## Check Current State of Health                               [GET /v1.0/health/current]
 
 Clients can request the current service status. The response to this query will be a data structure indicating
 everything is good or showing some details as to why the service is not presently at 100%.
@@ -935,11 +935,6 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -954,7 +949,7 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
             WWW-Authenticate: Basic realm="protected"
 
-## Check Past 30d State of Health                              [GET /api{version}/health/recents]
+## Check Past 30d State of Health                              [GET /v1.0/health/recents]
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
 status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
@@ -967,11 +962,6 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -1071,12 +1061,9 @@ Only Complete Telematics Records Daily Export Format* for more details.
 * Vehicle Fault Code Event
 * State of Health
 
-## Complete Telematics Records Daily Export Format [/api{version}/export/allrecords/status{?dayOf}]
+## Complete Telematics Records Daily Export Format [/v1.0/export/allrecords/status{?dayOf}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Complete Telematics Records)
@@ -1100,7 +1087,7 @@ ready then a `204` return code will be returned.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + location: `https://api.provider.com/api{version}/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+        + location: `https://api.provider.com/v1.0/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
 + Response 204
 
@@ -1115,12 +1102,9 @@ ready then a `204` return code will be returned.
 
 + Response 413
 
-## Vehicle-Only Complete Telematics Records Daily Export Format [/api{version}/export/vehiclerecords/status{?dayOf}]
+## Vehicle-Only Complete Telematics Records Daily Export Format [/v1.0/export/vehiclerecords/status{?dayOf}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Vehicle Only Complete Telematics Records)
@@ -1144,7 +1128,7 @@ ready then a `204` return code will be returned.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + location: `https://api.provider.com/api{version}/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+        + location: `https://api.provider.com/v1.0/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
 + Response 204
 
@@ -1202,7 +1186,7 @@ this their systems send data _to_ the TSPs.
 
 * Externally Triggered Duty Status Change
 
-## Retrieve Driver Availability Factors                        [GET /api{version}/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
+## Retrieve Driver Availability Factors                        [GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
 
 Clients can request all the factors contributing to driver availability for a given driver, over a given time period.
 
@@ -1214,9 +1198,6 @@ Clients can request all the factors contributing to driver availability for a gi
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1247,7 +1228,7 @@ Clients can request all the factors contributing to driver availability for a gi
 
 + Response 413
 
-## Check Break Rules and Waivers                               [GET /api{version}/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
+## Check Break Rules and Waivers                               [GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
 
 Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
 time period.
@@ -1260,9 +1241,6 @@ time period.
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1292,7 +1270,7 @@ time period.
 
 + Response 413
 
-## Send Custom-Integrated Duty Status Changes to the TSP     [PATCH /api{version}/drivers/{driverId}/duty_status]
+## Send Custom-Integrated Duty Status Changes to the TSP     [PATCH /v1.0/drivers/{driverId}/duty_status]
 
 Clients can trigger duty status changes for a given driver by pushing data to this endpoint.
 
@@ -1304,9 +1282,6 @@ Clients can trigger duty status changes for a given driver by pushing data to th
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | ALLOW      | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -1382,7 +1357,7 @@ TSP
 * Stop Geographic Details
 * Stop Details
 
-## Update Driver's Route Stop                                  [PUT /api{version}/vehicles/{vehicleId}/routes/{routeId}]
+## Update Driver's Route Stop                                  [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
 
 Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
 change the destination of the route, hence also changing the stopId associated with the route.
@@ -1395,9 +1370,6 @@ change the destination of the route, hence also changing the stopId associated w
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
 
@@ -1460,7 +1432,7 @@ change the destination of the route, hence also changing the stopId associated w
 
             WWW-Authenticate: Basic realm="protected"
 
-## Route Stop Geographic Details                                   [/api{version}/stops/{stopId}]
+## Route Stop Geographic Details                                   [/v1.0/stops/{stopId}]
 
 ## Retrieve Route Stop Geographic Details [GET]
 
@@ -1476,9 +1448,6 @@ truck should drive on approach).
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
 
 + Request
@@ -1518,9 +1487,6 @@ any other routes using this stop will also be updated.
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
 
 + Request
@@ -1594,7 +1560,7 @@ modifications to the route.
 
 * Externally Sourced Route Start Stop Details
 
-## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
+## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
 
 Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
 
@@ -1606,9 +1572,6 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1636,7 +1599,7 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
 + Response 413
 
-## Create a Route with Start and Stop Details                 [POST /api{version}/vehicles/{vehicleId}/routes]
+## Create a Route with Start and Stop Details                 [POST /v1.0/vehicles/{vehicleId}/routes]
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
 additional instructions in a *Externally Sourced Route Start Stop Details* object.
@@ -1649,9 +1612,6 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
 
 + Request
@@ -1753,7 +1713,7 @@ And mark trips completed based on the Log Event context; at the end of a trip th
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Feed Follow all Log Events                                  [GET /api{version}/event_logs/feed{?token}]
+## Feed Follow all Log Events                                  [GET /v1.0/event_logs/feed{?token}]
 
 Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -1766,9 +1726,6 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 |Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -1805,7 +1762,7 @@ vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Latest Vehicle Location Time History Objects   [GET /api{version}/fleet/locations/latest{?page,count}]
+## Retrieve All Latest Vehicle Location Time History Objects   [GET /v1.0/fleet/locations/latest{?page,count}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -1817,9 +1774,6 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1846,7 +1800,7 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             WWW-Authenticate: Basic realm="protected"
 
-## Send a Vehicle Display Message to a Vehicle                [POST /api{version}/vehicles/{vehicleId}/message]
+## Send a Vehicle Display Message to a Vehicle                [POST /v1.0/vehicles/{vehicleId}/message]
 
 **Access Controls**
 
@@ -1856,9 +1810,6 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
 
 + Request
@@ -1925,7 +1876,7 @@ period. They query the API for
 
 of all vehicles over a given time period.
 
-## Retrieve all Vehicle Location Time History objects          [GET /api{version}/fleet/locations/{?startTime,stopTime,page,count}]
+## Retrieve all Vehicle Location Time History objects          [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -1935,9 +1886,6 @@ of all vehicles over a given time period.
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
@@ -1998,7 +1946,7 @@ this their systems send data _to_ the TSPs:
 
 * Externally Sourced Driver Info
 
-## Update Driver with Externally Sourced Driver Info         [PATCH /api{version}/drivers/{driverId}]
+## Update Driver with Externally Sourced Driver Info         [PATCH /v1.0/drivers/{driverId}]
 
 Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
 
@@ -2010,9 +1958,6 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -2109,7 +2054,7 @@ They may also follow-up with queries of the hi-resolution time history of the fl
 
 (see *Retrieve All Vehicle Location Time Histories* above for more details.)
 
-## Retrieve Fleet Vehicle Info                                 [GET /api{version}/fleet/infos/{?startTime,stopTime}]
+## Retrieve Fleet Vehicle Info                                 [GET /v1.0/fleet/infos/{?startTime,stopTime}]
 
 Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
 
@@ -2121,9 +2066,6 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
@@ -2150,7 +2092,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 + Response 413
 
-## Feed Follow all Fleet Vehicle Info                          [GET /api{version}/fleet/infos/feed{?token}]
+## Feed Follow all Fleet Vehicle Info                          [GET /v1.0/fleet/infos/feed{?token}]
 
 Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
 system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
@@ -2164,9 +2106,6 @@ entries with each query in the polling.
 |Access:| **DENY**    | ALLOW        | **DENY***  | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -2208,7 +2147,7 @@ field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
 
-## Retrieve Driver Performance Summaries                       [GET /api{version}/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
+## Retrieve Driver Performance Summaries                       [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 
 Clients can request all driver performance summaries for a specific driver within a given period of time.
 
@@ -2220,9 +2159,6 @@ Clients can request all driver performance summaries for a specific driver withi
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -2251,7 +2187,7 @@ Clients can request all driver performance summaries for a specific driver withi
 
 + Response 413
 
-## Update TSP Portal User                                    [PATCH /api{version}/drivers/{driverId}/driverportaluser]
+## Update TSP Portal User                                    [PATCH /v1.0/drivers/{driverId}/driverportaluser]
 
 Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
 
@@ -2263,9 +2199,6 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -2326,7 +2259,7 @@ recent vehicle location
 
 * Vehicle Location Time History
 
-## Follow a Feed of All Vehicle Fault Code Events              [GET /api{version}/fleet/faults/feed?{token}]
+## Follow a Feed of All Vehicle Fault Code Events              [GET /v1.0/fleet/faults/feed?{token}]
 
 Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
 bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -2339,9 +2272,6 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 |Access:| **DENY***   | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -2365,7 +2295,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 413
 
-## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
+## Get Location of a Vehicle                                   [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
 
@@ -2375,9 +2305,6 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -2407,7 +2334,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 # Group Localization
 
-## Translation Table                                               [/api{version}/i18n]
+## Translation Table                                               [/v1.0/i18n]
 
 Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO
 files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented
@@ -2426,11 +2353,6 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -2793,12 +2715,9 @@ For the purposes of clearly detailing the data object types used by the API endp
 models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes;
 it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
-## Log Event Object                                                [/api{version}/event_logs/{id}]
+## Log Event Object                                                [/v1.0/event_logs/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Log Event of interest
 
 + Attributes (Log Event)
@@ -2825,12 +2744,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Object                                                   [/api{version}/drivers/{id}]
+## Driver Object                                                   [/v1.0/drivers/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of a Driver object
 
 + Attributes (Driver)
@@ -2857,12 +2773,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Object                                                  [/api{version}/vehicles/{id}]
+## Vehicle Object                                                  [/v1.0/vehicles/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of a Vehicle object
 
 + Attributes (Vehicle)
@@ -2890,16 +2803,13 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Breaks Rules Object                             [/api{version}/region_specific_breaks/{id}]
+## Region Specific Breaks Rules Object                             [/v1.0/region_specific_breaks/{id}]
 
 Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
 only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
 rules.
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Region Specific Breaks Rules of interest
 
 + Attributes (Region Specific Breaks Rules)
@@ -2926,15 +2836,12 @@ rules.
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Waivers Object                                  [/api{version}/region_specific_waivers/{id}]
+## Region Specific Waivers Object                                  [/v1.0/region_specific_waivers/{id}]
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
 available
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Region Specific Waivers of interest
 
 + Attributes (Region Specific Waivers)
@@ -2961,12 +2868,9 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Stop Geographic Details Object                                  [/api{version}/stops/{id}]
+## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Stop Geographic Details of interest
 
 + Attributes (Stop Geographic Details)
@@ -2993,12 +2897,9 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Location Time Object                                    [/api{version}/fleet/locations/{id}]
+## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Location Time of interest
 
 + Attributes (Vehicle Location Time)
@@ -3025,14 +2926,11 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Flagged Event Object                                    [/api{version}/fleet/flagged_events/{id}]
+## Vehicle Flagged Event Object                                    [/v1.0/fleet/flagged_events/{id}]
 
 The purpose of the flagged events is to flag potential saftey issues for motor freight carrier staff to validate
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Flagged Event of interest
 
 + Attributes (Vehicle Flagged Event)
@@ -3059,12 +2957,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Fault Code Event Object                                 [/api{version}/fleet/faults/{id}]
+## Vehicle Fault Code Event Object                                 [/v1.0/fleet/faults/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Fault Code Event of interest
 
 + Attributes (Vehicle Fault Code Event)
@@ -3091,12 +2986,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Performance Thresholds Object                                   [/api{version}/fleet/performance_thresholds/{id}]
+## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Performance Thresholds of interest
 
 + Attributes (Performance Thresholds)
@@ -3123,12 +3015,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Performance Event Object                                [/api{version}/fleet/performance_events/{id}]
+## Vehicle Performance Event Object                                [/v1.0/fleet/performance_events/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Performance Event of interest
 
 + Attributes (Vehicle Performance Event)
@@ -3155,14 +3044,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Performance Summary Object                               [/api{version}/driver_performance_summaries/{id}]
+## Driver Performance Summary Object                               [/v1.0/driver_performance_summaries/{id}]
 
 Summary statistics on performance of drivers.
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Driver Performance Summary of interest
 
 + Attributes (Driver Performance Summary)
