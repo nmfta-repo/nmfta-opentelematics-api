@@ -83,6 +83,7 @@ than one role**.
 TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
@@ -930,6 +931,7 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
@@ -960,6 +962,7 @@ status records (i.e. those returned via *Check Current State of Health*) from ov
 Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1085,6 +1088,7 @@ ready then a `204` return code will be returned.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -1127,6 +1131,7 @@ If the file is ready the response will include a URL where the complete file can
 ready then a `204` return code will be returned.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1203,6 +1208,7 @@ Clients can request all the factors contributing to driver availability for a gi
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -1248,6 +1254,7 @@ time period.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
@@ -1290,6 +1297,7 @@ time period.
 Clients can trigger duty status changes for a given driver by pushing data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1381,6 +1389,7 @@ change the destination of the route, hence also changing the stopId associated w
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
@@ -1461,6 +1470,7 @@ truck should drive on approach).
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
@@ -1501,6 +1511,7 @@ Sending data to this endpoint, using a previously returned `stopId` will update 
 any other routes using this stop will also be updated.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1589,6 +1600,7 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -1630,6 +1642,7 @@ Clients can request the creation of a new route for a given vehicle, providing s
 additional instructions in a *Externally Sourced Route Start Stop Details* object.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1747,6 +1760,7 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
@@ -1797,6 +1811,7 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
@@ -1834,6 +1849,7 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 ## Send a Vehicle Display Message to a Vehicle                [POST /api{version}/vehicles/{vehicleId}/message]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1913,6 +1929,7 @@ of all vehicles over a given time period.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -1986,6 +2003,7 @@ this their systems send data _to_ the TSPs:
 Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2097,6 +2115,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2138,6 +2157,7 @@ system; following is accomplished via polling an endpoint and providing a 'token
 entries with each query in the polling.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2194,6 +2214,7 @@ Clients can request all driver performance summaries for a specific driver withi
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
@@ -2235,6 +2256,7 @@ Clients can request all driver performance summaries for a specific driver withi
 Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2311,6 +2333,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY***   | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2345,6 +2368,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 ## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2397,6 +2421,7 @@ in API Blueprint's formal spec language.
 Clients can retrieve the current translation table for this TSP's Open Telematics API for given language (provided in the request headers.)
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2782,6 +2807,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2812,6 +2838,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 ### Get a Driver Object by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2844,6 +2871,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 ### Get a Vehicle Object by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2880,6 +2908,7 @@ rules.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2914,6 +2943,7 @@ available
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2945,6 +2975,7 @@ available
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -2975,6 +3006,7 @@ available
 ### Get a Vehicle Location Time by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3009,6 +3041,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -3039,6 +3072,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 ### Get a Vehicle Fault Code Event by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3071,6 +3105,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
@@ -3101,6 +3136,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 ### Get a Vehicle Performance Event by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3134,6 +3170,7 @@ Summary statistics on performance of drivers.
 ### Get a Driver Performance Summary by its ID [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
