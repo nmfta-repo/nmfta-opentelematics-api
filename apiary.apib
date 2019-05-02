@@ -2367,339 +2367,342 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
     + Body
 
             {
-              "data": [
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_AUTOMATIC",
-                    "msgstr": "Automatic recorded by device"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_MANUAL",
-                    "msgstr": "Manual entry by driver"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_OTHERUSER",
-                    "msgstr": "Other authenticated user"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_UNASSIGNED",
-                    "msgstr": "Unassigned driver"
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_ACTIVE",
-                    "msgstr": "The log is active and has been accepted by the driver."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_INACTIVE",
-                    "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_REJECTED",
-                    "msgstr": "The log is a rejected edit request from another user."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_REQUESTED",
-                    "msgstr": "The log is a pending edit request from another user."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
-                    "msgstr": "Adverse weather and driving conditions exemption."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_CERTIFICATION",
-                    "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DEVICE_CONNECTED",
-                    "msgstr": "System log for device power connection."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_D",
-                    "msgstr": "Drive status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
-                    "msgstr": "Storage capacity is reached, or missing data elements exist."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
-                    "msgstr": "Transfer of data fails to complete."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DEVICE_DISCONNECTED",
-                    "msgstr": "System log for device power disconnection."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_ENGINE_POWERUP",
-                    "msgstr": "Engine power up record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_ENGINE_SHUTDOWN",
-                    "msgstr": "Engine shutdown record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
-                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_16H",
-                    "msgstr": "Exemption 16 hour."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
-                    "msgstr": "Exemption off duty deferral."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INTERMEDIATE",
-                    "msgstr": "Intermediate Log Event."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DRIVER_LOGIN",
-                    "msgstr": "User login record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DRIVER_LOGOFF",
-                    "msgstr": "User logout record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
-                    "msgstr": "Missing data elements."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_POWERDATA",
-                    "msgstr": "Power data diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
-                    "msgstr": "Engine synchronization data diagnostic"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
-                    "msgstr": "Data transfer data diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_OTHER",
-                    "msgstr": "Other identified diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_NONE",
-                    "msgstr": "Clear previous instance of Diagnostic"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_OFF",
-                    "msgstr": "Off-duty status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_ON",
-                    "msgstr": "On-duty status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
-                    "msgstr": "Other instances of Malfunction."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_NONE",
-                    "msgstr": "Clear previous instances of Malfunction."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_PC",
-                    "msgstr": "Personal conveyance driver status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_NONE",
-                    "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
-                    "msgstr": "ELD continually fails to acquire valid position measurement."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
-                    "msgstr": "Engine power status engages ELD within 1 minute."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_SB",
-                    "msgstr": "Sleeper berth status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
-                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
-                    "msgstr": "More than 30 minutes of driving with unidentified driving."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_OFF_WT",
-                    "msgstr": "Wait time oil well driver status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_YM",
-                    "msgstr": "Yard move driver status."
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_OPERATIONAL",
-                    "msgstr": "the service is operational"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_DEGRADED_PERFORMANCE",
-                    "msgstr": "the service is operating, but with limitations"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_PARTIAL_OUTAGE",
-                    "msgstr": "there are aspects of the service which are not presently available"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_MAJOR_OUTAGE",
-                    "msgstr": "the service is unavailab"
-                }
-                {
-                    "origin": "Externally Trigger Duty Status Change, status",
-                    "msgid":  "EXTTRIG_STATUS_ON",
-                    "msgstr"  "The driver has changed status to on-duty"
-                },
-                {
-                    "origin": "Externally Trigger Duty Status Change, status",
-                    "msgid":  "EXTTRIG_STATUS_OFF",
-                    "msgstr"  "The driver has changed status to off-duty"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_ROLL_STABILITY",
-                    "msgstr": "Roll stability flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_SUDDEN_START",
-                    "msgstr": "Sudden start flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_SUDDEN_STOP",
-                    "msgstr": "Sudden stop flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_COLLISION",
-                    "msgstr": "Collision flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_ONBOARD_RECORDING",
-                    "msgstr": "onboard recording flagged event"
-                }
-                {   "origin": "Vehicle Flagged Event, gpsQuality",
-                    "msgid":  "GPSQUALITY_FINELOCK",
-                    "msgstr": "gps receiver had fine lock"
-                },
-                {   "origin": "Vehicle Flagged Event, gpsQuality",
-                    "msgid":  "GPSQUALITY_OTHER",
-                    "msgstr": "gps receiver had fix other than fine lock"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_REGEN_NEEDED",
-                    "msgstr":  "Filter regen needed"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_FORCED_REGEN_WILL_HAPPEN",
-                    "msgstr":  "Filter forced regen will happen"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_ACTIVE_REGEN_START",
-                    "msgstr":  "Filter active regen started"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_PASSIVE_REGEN_START",
-                    "msgstr":  "Filter passive regen started"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_ACTIVE_REGEN_END",
-                    "msgstr":  "Filter active regen ended"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_PASSIVE_REGEN_END",
-                    "msgstr":  "Filter passive regen ended"
-                }
-                {
-                    "origin":  "Vehicle Fault Code Event",
-                    "msgid":   "CLEARTYPE_BYSYSTEMS",
-                    "msgstr":  "cleared by systems"
-                },
-                {
-                    "origin":  "Vehicle Fault Code Event",
-                    "msgid":   "CLEARTYPE_MANUALLYBACKOFFICE",
-                    "msgstr":  "cleared manually in backoffice"
-                },
-                {
-                    "origin":   "Vehicle Fault Code Event, parameterOrSubsystemIdType",
-                    "msgid":    "PIDORSID_PID",
-                    "msgstr":   "This is a PID"
-                },
-                {
-                    "origin":   "Vehicle Fault Code Event, parameterOrSubsystemIdType",
-                    "msgid":    "PIDORSID_SID",
-                    "msgstr":   "This is a SID"
-                },
-                {   "origin":   "Vehicle Locatoin Time History",
-                    "msgid":    "TIMERESOLUTION_MAX",
-                    "msgstr":   "This is at the highest available time resolution"
-                },
-                {   "origin":   "Vehicle Locatoin Time History",
-                    "msgid":    "TIMERESOLUTION_NOT_MAX",
-                    "msgstr":   "This is not at the highest available time resolution"
-                }
-              ]
+                "data": [{
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_AUTOMATIC",
+                        "msgstr": "Automatic recorded by device"
+                    },
+                     {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_MANUAL",
+                        "msgstr": "Manual entry by driver"
+                    },
+                    {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_OTHERUSER",
+                        "msgstr": "Other authenticated user"
+                    },
+                    {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_UNASSIGNED",
+                        "msgstr": "Unassigned driver"
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_ACTIVE",
+                        "msgstr": "The log is active and has been accepted by the driver."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_INACTIVE",
+                        "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_REJECTED",
+                        "msgstr": "The log is a rejected edit request from another user."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_REQUESTED",
+                        "msgstr": "The log is a pending edit request from another user."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
+                        "msgstr": "Adverse weather and driving conditions exemption."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_CERTIFICATION",
+                        "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DEVICE_CONNECTED",
+                        "msgstr": "System log for device power connection."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_D",
+                        "msgstr": "Drive status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
+                        "msgstr": "Storage capacity is reached, or missing data elements exist."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
+                        "msgstr": "Transfer of data fails to complete."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DEVICE_DISCONNECTED",
+                        "msgstr": "System log for device power disconnection."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_ENGINE_POWERUP",
+                        "msgstr": "Engine power up record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_ENGINE_SHUTDOWN",
+                        "msgstr": "Engine shutdown record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
+                        "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_16H",
+                        "msgstr": "Exemption 16 hour."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
+                        "msgstr": "Exemption off duty deferral."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INTERMEDIATE",
+                        "msgstr": "Intermediate Log Event."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DRIVER_LOGIN",
+                        "msgstr": "User login record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DRIVER_LOGOFF",
+                        "msgstr": "User logout record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
+                        "msgstr": "Missing data elements."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_POWERDATA",
+                        "msgstr": "Power data diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
+                        "msgstr": "Engine synchronization data diagnostic"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
+                        "msgstr": "Data transfer data diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_OTHER",
+                        "msgstr": "Other identified diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_NONE",
+                        "msgstr": "Clear previous instance of Diagnostic"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_OFF",
+                        "msgstr": "Off-duty status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_ON",
+                        "msgstr": "On-duty status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
+                        "msgstr": "Other instances of Malfunction."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_NONE",
+                        "msgstr": "Clear previous instances of Malfunction."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_PC",
+                        "msgstr": "Personal conveyance driver status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_NONE",
+                        "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
+                        "msgstr": "ELD continually fails to acquire valid position measurement."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
+                        "msgstr": "Engine power status engages ELD within 1 minute."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_SB",
+                        "msgstr": "Sleeper berth status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
+                        "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
+                        "msgstr": "More than 30 minutes of driving with unidentified driving."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_OFF_WT",
+                        "msgstr": "Wait time oil well driver status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_YM",
+                        "msgstr": "Yard move driver status."
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_OPERATIONAL",
+                        "msgstr": "the service is operational"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_DEGRADED_PERFORMANCE",
+                        "msgstr": "the service is operating, but with limitations"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_PARTIAL_OUTAGE",
+                        "msgstr": "there are aspects of the service which are not presently available"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_MAJOR_OUTAGE",
+                        "msgstr": "the service is unavailab"
+                    },
+                    {
+                        "origin": "Externally Trigger Duty Status Change, status",
+                        "msgid": "EXTTRIG_STATUS_ON",
+                        "msgstr": "The driver has changed status to on-duty"
+                    },
+                    {
+                        "origin": "Externally Trigger Duty Status Change, status",
+                        "msgid": "EXTTRIG_STATUS_OFF",
+                        "msgstr": "The driver has changed status to off-duty"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_ROLL_STABILITY",
+                        "msgstr": "Roll stability flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_SUDDEN_START",
+                        "msgstr": "Sudden start flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_SUDDEN_STOP",
+                        "msgstr": "Sudden stop flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_COLLISION",
+                        "msgstr": "Collision flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_ONBOARD_RECORDING",
+                        "msgstr": "onboard recording flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, gpsQuality",
+                        "msgid": "GPSQUALITY_FINELOCK",
+                        "msgstr": "gps receiver had fine lock"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, gpsQuality",
+                        "msgid": "GPSQUALITY_OTHER",
+                        "msgstr": "gps receiver had fix other than fine lock"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_REGEN_NEEDED",
+                        "msgstr": "Filter regen needed"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_FORCED_REGEN_WILL_HAPPEN",
+                        "msgstr": "Filter forced regen will happen"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_ACTIVE_REGEN_START",
+                        "msgstr": "Filter active regen started"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_PASSIVE_REGEN_START",
+                        "msgstr": "Filter passive regen started"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_ACTIVE_REGEN_END",
+                        "msgstr": "Filter active regen ended"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_PASSIVE_REGEN_END",
+                        "msgstr": "Filter passive regen ended"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event",
+                        "msgid": "CLEARTYPE_BYSYSTEMS",
+                        "msgstr": "cleared by systems"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event",
+                        "msgid": "CLEARTYPE_MANUALLYBACKOFFICE",
+                        "msgstr": "cleared manually in backoffice"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
+                        "msgid": "PIDORSID_PID",
+                        "msgstr": "This is a PID"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
+                        "msgid": "PIDORSID_SID",
+                        "msgstr": "This is a SID"
+                    },
+                    {
+                        "origin": "Vehicle Locatoin Time History",
+                        "msgid": "TIMERESOLUTION_MAX",
+                        "msgstr": "This is at the highest available time resolution"
+                    },
+                    {
+                        "origin": "Vehicle Locatoin Time History",
+                        "msgid": "TIMERESOLUTION_NOT_MAX",
+                        "msgstr": "This is not at the highest available time resolution"
+                    }
+                ]
             }
 
 + Response 406
