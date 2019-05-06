@@ -744,7 +744,7 @@ Telematics Data Model* for object descriptions as well.
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
-+ occurences        :                                  1 (required, number) - the number of occurences of this fault
++ occurences        :                                  1 (required, number) - the number of occurences of this fault; OC from J1939
 + messageIdentifier                                      (required, number) - MID from J1939
 + parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID?
     + Members
