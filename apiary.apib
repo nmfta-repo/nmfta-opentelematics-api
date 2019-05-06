@@ -3001,6 +3001,35 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
+## Flagged Vehicle Performance Event Object                        [/v1.0/fleet/flagged_perf_events/{id}]
+
++ Parameters
+    + id            (string) - ID of the Flagged Vehicle Performance Event of interest
+
++ Attributes (Flagged Vehicle Performance Event)
+
+### Get a Flagged Vehicle Performance Event by its ID          [GET]
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Flagged Vehicle Performance Event)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
 ## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
 
 + Parameters
