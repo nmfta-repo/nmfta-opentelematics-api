@@ -775,7 +775,7 @@ Telematics Data Model* for object descriptions as well.
         + `CLEARTYPE_BYSYSTEMS` - cleared by systems
         + `CLEARTYPE_MANUALLYBACKOFFICE` - cleared manually in backoffice
 
-### Flagged Vehicle Performance Event (Vehicle Fault Code Event)
+### Flagged Vehicle Fault Code Event (Vehicle Fault Code Event)
 
 ### Driver (object)
 
@@ -838,7 +838,7 @@ Telematics Data Model* for object descriptions as well.
 + vehicleLocationTimeHistories                           (Vehicle Location Time History, fixed-type) - Any of the Vehicle Location Time History objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ flaggedVehiclePerformanceEvents                        (array[Flagged Vehicle Performance Event], fixed-type) - Any of the Flagged Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ flaggedVehicleFaultEvents                              (array[Flagged Vehicle Fault Code Event], fixed-type) - Any of the Flagged Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -2052,7 +2052,7 @@ Automated and semi-automated analysis and reporting systems want to get the over
 time period. They query the API for
 
 * Coarse Vehicle Location Time History
-* Flagged Vehicle Performance Event
+* Flagged Vehicle Fault Code Event
 * Vehicle Performance Event
 * Vehicle Fault Code Event
 
@@ -2089,7 +2089,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 + Response 200 (application/json)
     + Attributes (object)
         + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-        + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+        + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
         + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
         + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
 
@@ -2130,7 +2130,7 @@ entries with each query in the polling.
         + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
         + feed                                  (object) - the 'feed' of Fleet Vehicle Info
             + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-            + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+            + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
             + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
             + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
 
@@ -3001,14 +3001,14 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Flagged Vehicle Performance Event Object                        [/v1.0/fleet/flagged_perf_events/{id}]
+## Flagged Vehicle Fault Code Event Object                         [/v1.0/fleet/flagged_faults/{id}]
 
 + Parameters
-    + id            (string) - ID of the Flagged Vehicle Performance Event of interest
+    + id            (string) - ID of the Flagged Vehicle Fault Code Event of interest
 
-+ Attributes (Flagged Vehicle Performance Event)
++ Attributes (Flagged Vehicle Fault Code Event)
 
-### Get a Flagged Vehicle Performance Event by its ID          [GET]
+### Get a Flagged Vehicle Fault Code Event by its ID           [GET]
 
 **Access Controls**
 
@@ -3023,7 +3023,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Flagged Vehicle Performance Event)
+    + Attributes (Flagged Vehicle Fault Code Event)
 
 + Response 401
     + Headers
