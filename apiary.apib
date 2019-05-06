@@ -488,9 +488,10 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
-+ dateTime       :                `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
++ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + distanceLastValid :                                117 (required, number) - The distance in km traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
@@ -563,6 +564,7 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + stopName          :                 `pickup place 101` (required, string) - a name for this location
 + address           :                  `13 Sycamore Ave` (string) - an optional street address
 + comment                                                (string) - an optional comment
@@ -573,6 +575,7 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this Location Time
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - time
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
@@ -619,7 +622,8 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Flagged Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
@@ -649,7 +653,8 @@ Telematics Data Model* for object descriptions as well.
 ### Region Specific Breaks Rules (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific break rules.
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time the break rules take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string) - The date and time the break rules stop taking effect, if left blank then the rules apply in perpetuity
@@ -659,7 +664,8 @@ Telematics Data Model* for object descriptions as well.
 ### Region Specific Waivers (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific waiver.
 + country           :                               `CA` (string) - short code for the country of the region dictating the specific waiver
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory dictating the specific waiver
@@ -668,7 +674,8 @@ Telematics Data Model* for object descriptions as well.
 ### Performance Thresholds (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time these thresholds take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
 + rpmOverValue                                           (number)           - the configured RPM threshold, above which engine RPM readings are considered 'over', in revolutions per minute
@@ -680,7 +687,8 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Performance Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event (engine start)
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
@@ -738,7 +746,8 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Fault Code Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
@@ -771,7 +780,8 @@ Telematics Data Model* for object descriptions as well.
 ### Driver (object)
 
 + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + username                                               (required, string) - a username of this driver
 + driverLicenseNumber                                    (required, string) - the driver's license number
 + country           :                               `CA` (required, string) - short code for the country of the region dictating the specific break rules
@@ -781,7 +791,8 @@ Telematics Data Model* for object descriptions as well.
 ### Driver Performance Summary (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of this driver performance summary
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of this driver performance summary
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for this performance summary
@@ -795,7 +806,8 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle (object)
 
 + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + name                                                   (string) - Vehicle name
 + cmvVIN                                                 (required, string) - the CMV VIN
 + licensePlate                                           (required, string) - the vehicle license plate
@@ -815,7 +827,7 @@ Telematics Data Model* for object descriptions as well.
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status
++ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status (this is 'serverTime')
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
 
 ### Vehicle Only Complete Telematics Records (object)
