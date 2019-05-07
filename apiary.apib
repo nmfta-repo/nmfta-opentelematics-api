@@ -145,7 +145,8 @@ to filter incoming requests before any additional processing.
 Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API
 requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user,
 e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics
-API implementations to rates below what is offered through their other API services for telematics data.
+API implementations to rates below what is offered through their other API services for telematics data. Rate-limiting
+response must be implemented using response 429 and headers as detailed in this document.
 
 **Prevent Brute-Forcing**
 
@@ -963,8 +964,8 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
 
 + Response 429
     + Headers
-    
-            Retry-After: 60
+
+            Retry-After: {implementation-defined}
 
 ## Check Past 30d State of Health                              [GET /v1.0/health/recents]
 
@@ -1124,6 +1125,11 @@ ready then a `204` return code will be returned.
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Vehicle-Only Telematics Export Format                           [/v1.0/export/vehiclerecords/status{?dayOf}]
 
 + Parameters
@@ -1164,6 +1170,11 @@ ready then a `204` return code will be returned.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Generate Records of Duty Status for Compliance
 
@@ -1250,6 +1261,11 @@ Clients can request all the factors contributing to driver availability for a gi
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Get Driver Breaks and Waivers                               [GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
 
 Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
@@ -1291,6 +1307,11 @@ time period.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Update Driver's Duty Status                               [PATCH /v1.0/drivers/{driverId}/duty_status]
 
@@ -1360,6 +1381,11 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Driver Route & Directions Communication
 
@@ -1454,6 +1480,11 @@ change the destination of the route, hence also changing the stopId associated w
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Route Stop Geographic Details                                   [/v1.0/stops/{stopId}]
 
 ### Get Stop Geographic Details                                [GET]
@@ -1491,6 +1522,11 @@ truck should drive on approach).
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ### Update Stop Geographic Details                           [PATCH]
 
@@ -1563,6 +1599,11 @@ any other routes using this stop will also be updated.
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Route & Directions Start
 
 Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab
@@ -1620,6 +1661,11 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Create a Vehicle's Route                                   [POST /v1.0/vehicles/{vehicleId}/routes]
 
@@ -1717,6 +1763,11 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Route and Directions Done
 
 Motor freight carriers receive notifications when Drivers have completed their trip.
@@ -1768,6 +1819,11 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Driver Messaging by Geo-Location
 
@@ -1822,6 +1878,11 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
 
 **Access Controls**
@@ -1874,6 +1935,11 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Driver Messaging by Vehicle
 
@@ -1938,6 +2004,11 @@ of all vehicles over a given time period.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Human Resources Process: Payroll
 
@@ -2042,6 +2113,11 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Human Resources Process: Accident Report
 
 Motor freight carriers use telematics systems to monitor their fleets for accidents.
@@ -2114,6 +2190,11 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Follow Fleet Vehicle Info                                   [GET /v1.0/fleet/infos/feed{?token}]
 
 Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
@@ -2154,6 +2235,11 @@ entries with each query in the polling.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Compliance and Safety Monitoring
 
@@ -2208,6 +2294,11 @@ Clients can request all driver performance summaries for a specific driver withi
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Update Driver's TSP Portal Account                        [PATCH /v1.0/drivers/{driverId}/driverportaluser]
 
@@ -2267,6 +2358,11 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case In-Field Maintenance & Repair
 
 Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
@@ -2317,6 +2413,11 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Get Vehicle's Location History                              [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
@@ -2353,6 +2454,11 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Localization
 
@@ -2734,6 +2840,11 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Open Telematics Data Model
 
 For the purposes of clearly detailing the data object types used by the API endpoints above, we include the object
@@ -2769,6 +2880,11 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Driver Object                                                   [/v1.0/drivers/{id}]
 
 + Parameters
@@ -2797,6 +2913,11 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Vehicle Object                                                  [/v1.0/vehicles/{id}]
 
@@ -2827,6 +2948,11 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Region Specific Breaks Rules Object                             [/v1.0/region_specific_breaks/{id}]
 
@@ -2861,6 +2987,11 @@ rules.
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Region Specific Waivers Object                                  [/v1.0/region_specific_waivers/{id}]
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
@@ -2893,6 +3024,11 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 
 + Parameters
@@ -2922,6 +3058,11 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
 
 + Parameters
@@ -2950,6 +3091,11 @@ available
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Vehicle Flagged Event Object                                    [/v1.0/fleet/flagged_events/{id}]
 
@@ -2982,6 +3128,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Vehicle Fault Code Event Object                                 [/v1.0/fleet/faults/{id}]
 
 + Parameters
@@ -3010,6 +3161,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Flagged Vehicle Fault Code Event Object                         [/v1.0/fleet/flagged_faults/{id}]
 
@@ -3040,6 +3196,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
 
 + Parameters
@@ -3069,6 +3230,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 ## Vehicle Performance Event Object                                [/v1.0/fleet/performance_events/{id}]
 
 + Parameters
@@ -3097,6 +3263,11 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 ## Driver Performance Summary Object                               [/v1.0/driver_performance_summaries/{id}]
 
@@ -3128,3 +3299,8 @@ Summary statistics on performance of drivers.
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
