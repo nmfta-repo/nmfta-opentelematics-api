@@ -1,13 +1,14 @@
 FORMAT: 1A
 
-# Introduction
+# Open Telematics API
+
+A project to enable business resiliency for motor freight carriers with tight integrations into Telematics Service Providers (TSPs).
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
 This document is written using [api-blueprint](https://apiblueprint.org/) and available online at both
 [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io/#) (for browsable document) and
-https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com
-/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
+https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
 
 If a telematics system provider (TSP) suddenly goes out of business
 (have had two examples of this in 2018) any commercial fleet relying on
@@ -45,6 +46,7 @@ their time and energy to make this a reality.
 | Bill Brown, SEFL   | Geotab                   | Altaz Valani, Security Compass                                  |
 |Penske Truck Leasing| Samsara Networks, Inc.   | Stephen Raio, U.S. Army Combat Capabilities Development Command |
 |                    | Omnitracs                | Andrew Smith, ISE Inc.                                          |
+|                    |                          | Dr. Jeremy Daily, UTulsa                                        |
 
 ![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png) ![Omnitracs](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/Omnitracs_logo_2015_CMYK_no_tagline.jpg)
 
@@ -83,6 +85,7 @@ than one role**.
 
 TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -145,7 +148,8 @@ to filter incoming requests before any additional processing.
 Since every request to the Open Telematics API must be authenticated it is possible to rate-limit Open Telematics API
 requests per authenticated user. Vendors should implement rate limits on overall API requests per authenticated user,
 e.g. to avoid one user exhausting server resources of others; however, vendor must not rate-limit any Open Telematics
-API implementations to rates below what is offered through their other API services for telematics data.
+API implementations to rates below what is offered through their other API services for telematics data. Rate-limiting
+response must be implemented using response 429 and headers as detailed in this document.
 
 **Prevent Brute-Forcing**
 
@@ -197,7 +201,7 @@ savings times are accounted for correctly.
 
 # Working with Time-Based Queries
 
-There are many API endpoints which support searches of data based on a time range. In all cases, the time rage specified
+There are many API endpoints which support searches of data based on a time range. In all cases, the time range specified
 by a pair of `start` and `stop` parameters represents an inclusive-exclusive time range. i.e. a time period which
 includes the moment in time given by `start` and all times up-to but not including the moment in time given by `stop.`
 
@@ -346,9 +350,9 @@ The Open Telematics API is ready to be used in locales other than the United Sta
 display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the
 descriptions of the enumerated constants in the API.
 
-The localization does not apply to units of measure. In all cases the Open Telematics API will use SI units. Nor does
-the localization apply to arbitrary strings in data objects of the API such as messages for display in vehicles or
-comment fields.
+The localization does not apply to units of measure. With the exception of velocities where units of `km/h` are used,
+the Open Telematics API will use SI units. Nor does the localization apply to arbitrary strings in data objects of the
+API such as messages for display in vehicles or comment fields.
 
 Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
 Language: `. If no request header is present then `Accept-Language: en` will be assumed.
@@ -356,7 +360,7 @@ Language: `. If no request header is present then `Accept-Language: en` will be 
 Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header
 specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response
 will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is
-provided below for convenience in the sample response to `GET /api{version}/i18n`.
+provided below for convenience in the sample response to `GET /v1.0/i18n`.
 
 # Telematics API Use Cases by Motor Freight Carriers
 
@@ -488,9 +492,10 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
-+ dateTime       :                `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
++ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
 + distanceLastValid :                                117 (required, number) - The distance in km traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate
@@ -563,6 +568,7 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + stopName          :                 `pickup place 101` (required, string) - a name for this location
 + address           :                  `13 Sycamore Ave` (string) - an optional street address
 + comment                                                (string) - an optional comment
@@ -573,6 +579,7 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this Location Time
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - time
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
@@ -607,7 +614,7 @@ Telematics Data Model* for object descriptions as well.
 + ccResumeSwitch    :                             false  (required, boolean) - cruise control resume switch status at time of event
 + ccAccelerationSwitch:                           false  (required, boolean) - cruise control acceleration switch status at time of event
 + ccBrakeSwitch     :                             false  (required, boolean) - cruise control brake switch status at time of event
-+ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in m/s
++ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in km/h
 
 ### Ignition Status (object)
 
@@ -619,7 +626,8 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Flagged Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
@@ -631,25 +639,26 @@ Telematics Data Model* for object descriptions as well.
         + `FLAGGEDTYPE_SUDDEN_STOP` - Sudden stop flagged event
         + `FLAGGEDTYPE_COLLISION` - Collision flagged event
         + `FLAGGEDTYPE_ONBOARD_RECORDING` - onboard recording flagged event
-+ gpsSpeed                                               (number) - speed of vehicle at time of event, in m/s
++ gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
-+ ecmSpeed                                               (required, number) - speed of vehicle at time of event, in m/s
-+ engineRPM                                              (required, number) - engine RPMs at time of event, in revolutions per minute
++ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
++ engineRPM                                              (required, number) - engine speed at time of event, in revolutions per minute (RPM)
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
 + cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
-+ parkingBreak      :                             false  (optional, boolean) - parking break status at time of event
++ parkingBrake      :                             false  (optional, boolean) - parking brake status at time of event
 + ignitionStatus                                         (required, Ignition Status) - the ignition status at the time of the event
-+ forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in m/s
++ forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in km/h
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
 + forwardVehicleElapsed:                              2  (required, number) - vehicle forward travel elapsed time, in s
-+ odometer                                               (required, number) - Odometer reading at time of event, in m
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 
-### Region Specific Breaks Rules (object)
+### Region Specific Break Rules (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific break rules.
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time the break rules take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string) - The date and time the break rules stop taking effect, if left blank then the rules apply in perpetuity
@@ -659,7 +668,8 @@ Telematics Data Model* for object descriptions as well.
 ### Region Specific Waivers (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver with the region specific waiver.
 + country           :                               `CA` (string) - short code for the country of the region dictating the specific waiver
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory dictating the specific waiver
@@ -668,24 +678,26 @@ Telematics Data Model* for object descriptions as well.
 ### Performance Thresholds (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time these thresholds take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
 + rpmOverValue                                           (number)           - the configured RPM threshold, above which engine RPM readings are considered 'over', in revolutions per minute
-+ overSpeedValue                                         (number)           - the configured speed threshold, above which speed readings are considered 'over', in m/s
-+ excessSpeedValue                                       (number)           - the configured speed threshold, above which the speed readings are considered 'excess', in m/s
++ overSpeedValue                                         (number)           - the configured speed threshold, above which speed readings are considered 'over', in km/h
++ excessSpeedValue                                       (number)           - the configured speed threshold, above which the speed readings are considered 'excess', in km/h
 + longIdleValue     :                                300 (number)           - the configured time threshold, beyond which time spent in idle will be considered 'long', in seconds
 + hiThrottleValue                                        (number)           - the configured throttle threshold, above which throttle values are considered 'hi'
 
 ### Vehicle Performance Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of the event (engine start)
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `performance event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ hours             :                                  6 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
++ hours             :                                6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
 + thresholds                                             (required, Performance Thresholds) - the thresholds that were active during this event
 + odometerStart                                          (required, number) - the vehicle odometer reading at the start of this event, in m
 + odometerEnd                                            (required, number) - the vehicle odometer reading at the end of this event, in m
@@ -697,7 +709,7 @@ Telematics Data Model* for object descriptions as well.
 + engineLoadStopped                                      (required, number) - the average engine load while the vehicle was stopped during this event, in percent
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
 + headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
-+ speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in m/s
++ speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in km/h
 + overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
 + overSpeedTime                                          (number)           - the total amount of time spent over the speed threshold during this event, in seconds
 + excessSpeedTime                                        (number)           - the total amount of time spent over the excess speed threshold, in seconds
@@ -710,7 +722,7 @@ Telematics Data Model* for object descriptions as well.
 + cruiseTime                                             (number)           - the total amount of time spent in cruise during this event, in seconds
 + cruiseFuel                                             (number)           - the total amount of fuel consumed in cruise during this event, in seconds
 + cruiseDistance                                         (number)           - the total distance covered in cruise during this event, in meters
-+ topGearValue                                           (number)           - this vehicle's particular top gear
++ topGearValue                                           (number)           - this vehicle's particular top gear ratio including the transmission and axle
 + topGearTime                                            (number)           - the total amount of time spent while in top gear during this event, in seconds
 + topGearFuel                                            (number)           - the total amount of fuel consumed while in top gear during this event, in litres
 + topGearDistance                                        (number)           - the total distance covered while in top gear during this event, in meters
@@ -726,38 +738,39 @@ Telematics Data Model* for object descriptions as well.
         + `FILTERSTATUS_ACTIVE_REGEN_END' - Filter active regen ended
         + `FILTERSTATUS_PASSIVE_REGEN_END' - Filter passive regen ended
 + exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
-+ overspeedLowThrottle                                   (boolean)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
-+ overspeedHiThrottle                                    (boolean)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
-+ overrpmLowThrottle                                     (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
-+ overrpmHiThrottle                                      (boolean)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
++ overspeedLowThrottle                                   (number)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
++ overspeedHiThrottle                                    (number)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
++ overrpmLowThrottle                                     (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
++ overrpmHiThrottle                                      (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
 + lkaActive                                              (boolean)          - Lane Keep Assist active status
-+ lkaDisable                                             (boolean)          - Lake Keep Assist disable switch status
++ lkaDisable                                             (boolean)          - Lane Keep Assist disable switch status
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
-+ ldwDisable                                             (boolean)          - Lane Departure Warning disabel switch status
++ ldwDisable                                             (boolean)          - Lane Departure Warning disable switch status
 
 ### Vehicle Fault Code Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + location          :         ` 37.4224764 -122.0842499` (required, string) - location
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
-+ occurences        :                                  1 (required, number) - the number of occurences of this fault
-+ messageIdentifier                                      (required, number) - MID from J1939
-+ parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID?
++ occurences        :                                  1 (required, number) - the number of occurences of this fault; OC from J1939
++ messageIdentifier :                 128                (number) - MID from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
++ parameterOrSubsystemIdType                             (enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID as defined in SAE J1587?
     + Members
         + `PIDORSID_PID` - This is a PID
         + `PIDORSID_SID` - This is a SID
-+ faultCodeParameterorSubsystemId                        (required, number) - either the PID or SID , as in J1939
-+ sourceAddress                                          (required, number) - SA from J1939
-+ suspectParameterNumber                                 (required, number) - SPN from J1939
-+ failureModeIdentifier                                  (required, number) - FMI from J1939
++ faultCodeParameterorSubsystemId                        (number) - either the PID or SID, as in SAE J1587
++ sourceAddress                                          (required, number) - SA from SAE J1939
++ suspectParameterNumber                                 (required, number) - SPN from SAE J1939
++ failureModeIdentifier                                  (required, number) - FMI from SAE J1939
 + urgentFlag        :                              false (required, boolean) - is the fault urgent?
-+ odometer                                               (required, number) - Odometer reading at time of event, in m
-+ engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute
-+ ecmSpeed                                               (required, number) - speed of vehicle at time of event, in m/s
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
++ engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
++ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
 + cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
 + ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
@@ -766,12 +779,13 @@ Telematics Data Model* for object descriptions as well.
         + `CLEARTYPE_BYSYSTEMS` - cleared by systems
         + `CLEARTYPE_MANUALLYBACKOFFICE` - cleared manually in backoffice
 
-### Flagged Vehicle Performance Event (Vehicle Fault Code Event)
+### Flagged Vehicle Fault Code Event (Vehicle Fault Code Event)
 
 ### Driver (object)
 
 + id                : `A87FF679A2F3E71D9181A67B7542122C` (required, string) - The id of this Driver object
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + username                                               (required, string) - a username of this driver
 + driverLicenseNumber                                    (required, string) - the driver's license number
 + country           :                               `CA` (required, string) - short code for the country of the region dictating the specific break rules
@@ -781,7 +795,8 @@ Telematics Data Model* for object descriptions as well.
 ### Driver Performance Summary (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + eventStart        :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the start of this driver performance summary
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of this driver performance summary
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for this performance summary
@@ -790,12 +805,13 @@ Telematics Data Model* for object descriptions as well.
 + cruiseTime                                             (number) - the total time spent with cruise control engaged during this event, in seconds
 + engineLoadPercent                                      (number) - the average engine load percent during this event
 + overRpmTime                                            (number) - the total time the driver's vehicles spent moving while above rpm threshold, in seconds
-+ brakeEvents                                            (number) - the number of break events during this event
++ brakeEvents                                            (number) - the number of brake events during this event
 
 ### Vehicle (object)
 
 + id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Driver object
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + name                                                   (string) - Vehicle name
 + cmvVIN                                                 (required, string) - the CMV VIN
 + licensePlate                                           (required, string) - the vehicle license plate
@@ -815,7 +831,7 @@ Telematics Data Model* for object descriptions as well.
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status
++ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status (this is 'serverTime')
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
 
 ### Vehicle Only Complete Telematics Records (object)
@@ -826,7 +842,7 @@ Telematics Data Model* for object descriptions as well.
 + vehicleLocationTimeHistories                           (Vehicle Location Time History, fixed-type) - Any of the Vehicle Location Time History objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ flaggedVehiclePerformanceEvents                        (array[Flagged Vehicle Performance Event], fixed-type) - Any of the Flagged Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ flaggedVehicleFaultEvents                              (array[Flagged Vehicle Fault Code Event], fixed-type) - Any of the Flagged Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -835,7 +851,7 @@ Telematics Data Model* for object descriptions as well.
 + drivers                                                (array[Driver], fixed-type) - All of the Driver objects known to the TSP at the time of the request
 + annotationLogs                                         (array[Annotation Log], fixed-type) - Any of the Annotation Log objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + logEvents                                              (array[Log Event], fixed-type) - Any of the Log Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
-+ regionSpecificBreaksRules                              (array[Region Specific Breaks Rules], fixed-type) - Any of the Region Specific Breaks Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ regionSpecificBreakRules                               (array[Region Specific Break Rules], fixed-type) - Any of the Region Specific Break Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -912,7 +928,7 @@ data type defined below. If you change one you should probably also change the o
 + password                                               (string) - user password
 + enabled           :                             `true` (boolean) - this user is enabled or disabled
 
-# Group Use Case Check Provider's State of Health
+# Group Use Case Check Provider State of Health
 
 Users of telematics that is highly integrated into their operations need assurances of the state of health of the
 Provider's services.
@@ -922,23 +938,19 @@ State of Health. They expect to receive either an 'all-clear' response indicatin
 issues with its services at the moment of query or some details describing the contributing factors that have led to
 less than optimal operation.
 
-## Check Current State of Health                               [GET /api{version}/health/current]
+## Check Current State of Health                               [GET /v1.0/health/current]
 
-Clients can request the current service status. The response to this query will be a data structure indicating
+Clients can request the current service state of health. The response to this query will be a data structure indicating
 everything is good or showing some details as to why the service is not presently at 100%.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -953,23 +965,24 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
 
             WWW-Authenticate: Basic realm="protected"
 
-## Check Past 30d State of Health                              [GET /api{version}/health/recents]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Check Past 30d State of Health                              [GET /v1.0/health/recents]
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
 status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
 
-Clients must treat any response other than code 200 and code 401 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -984,6 +997,11 @@ Clients must treat any response other than code 200 and code 401 as equivalent t
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Data Export
 
@@ -1050,7 +1068,7 @@ Daily Export Format* below for more details.
 * Vehicle Fault Code Event
 * Driver
 * Log Event
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 * Driver Performance Summary
 * State of Health
@@ -1069,22 +1087,20 @@ Only Complete Telematics Records Daily Export Format* for more details.
 * Vehicle Fault Code Event
 * State of Health
 
-## Complete Telematics Records Daily Export Format [/api{version}/export/allrecords/status{?dayOf}]
+## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Complete Telematics Records)
 
-### Poll for Availability of Daily Complete Telematics Records [GET]
+### Test if Complete Export Ready                              [GET]
 
 If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `204` return code will be returned.
+ready then a `202` return code will be returned.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1097,9 +1113,9 @@ ready then a `204` return code will be returned.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + location: `https://api.provider.com/api{version}/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+        + location: `https://api.provider.com/v1.0/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
-+ Response 204
++ Response 202
 
 + Response 400 (text/plain)
 
@@ -1112,22 +1128,25 @@ ready then a `204` return code will be returned.
 
 + Response 413
 
-## Vehicle-Only Complete Telematics Records Daily Export Format [/api{version}/export/vehiclerecords/status{?dayOf}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle-Only Telematics Export Format                           [/v1.0/export/vehiclerecords/status{?dayOf}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
 
 + Attributes (Vehicle Only Complete Telematics Records)
 
-### Poll for Availability of Daily Complete Telematics Records [GET]
+### Test if Vehicle-Only Export Ready                          [GET]
 
 If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `204` return code will be returned.
+ready then a `202` return code will be returned.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -1140,9 +1159,9 @@ ready then a `204` return code will be returned.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + location: `https://api.provider.com/api{version}/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+        + location: `https://api.provider.com/v1.0/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
 
-+ Response 204
++ Response 202
 
 + Response 400 (text/plain)
 
@@ -1154,6 +1173,11 @@ ready then a `204` return code will be returned.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Generate Records of Duty Status for Compliance
 
@@ -1190,7 +1214,7 @@ current moment, from which the current driver availability can be calculated.
 The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if
 they operate in regions with specific break rules or waivers.
 
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
@@ -1198,20 +1222,18 @@ this their systems send data _to_ the TSPs.
 
 * Externally Triggered Duty Status Change
 
-## Retrieve Driver Availability Factors                        [GET /api{version}/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
+## Get Driver Availability Factors                             [GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
 
 Clients can request all the factors contributing to driver availability for a given driver, over a given time period.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1242,21 +1264,24 @@ Clients can request all the factors contributing to driver availability for a gi
 
 + Response 413
 
-## Check Break Rules and Waivers                               [GET /api{version}/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Driver Breaks and Waivers                               [GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}]
 
 Clients can request any region-specific waivers and break-rules for a given driver that are applicable within a given
 time period.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1268,7 +1293,7 @@ time period.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + breakRules                                             (required, array[Region Specific Breaks Rules], fixed-type) - the Region Specific Breaks Rules for this driver for the requested time period
+        + breakRules                                             (required, array[Region Specific Break Rules], fixed-type) - the Region Specific Break Rules for this driver for the requested time period
         + waivers                                                (required, array[Region Specific Waivers], fixed-type) - the Region Specific Waivers for this driver for the requested time period
 
 + Response 400 (text/plain)
@@ -1286,20 +1311,23 @@ time period.
 
 + Response 413
 
-## Send Custom-Integrated Duty Status Changes to the TSP     [PATCH /api{version}/drivers/{driverId}/duty_status]
++ Response 429
+    + Headers
 
-Clients can trigger duty status changes for a given driver by pushing data to this endpoint.
+            Retry-After: {implementation-defined}
+
+## Update Driver Duty Status                                 [PATCH /v1.0/drivers/{driverId}/duty_status]
+
+Clients can send custom-integrated duty status changes to the TSP to trigger duty status changes for a given driver by pushing data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | ALLOW      | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -1357,6 +1385,11 @@ Clients can trigger duty status changes for a given driver by pushing data to th
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Route & Directions Communication
 
 Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to
@@ -1375,21 +1408,19 @@ TSP
 * Stop Geographic Details
 * Stop Details
 
-## Update Driver's Route Stop                                  [PUT /api{version}/vehicles/{vehicleId}/routes/{routeId}]
+## Update Driver Route Stop                                    [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
 
 Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
 change the destination of the route, hence also changing the stopId associated with the route.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
 
@@ -1452,9 +1483,14 @@ change the destination of the route, hence also changing the stopId associated w
 
             WWW-Authenticate: Basic realm="protected"
 
-## Route Stop Geographic Details                                   [/api{version}/stops/{stopId}]
++ Response 429
+    + Headers
 
-## Retrieve Route Stop Geographic Details [GET]
+            Retry-After: {implementation-defined}
+
+## Route Stop Geographic Details                                   [/v1.0/stops/{stopId}]
+
+### Get Stop Geographic Details                                [GET]
 
 Clients can retrieve the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
 truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
@@ -1462,14 +1498,12 @@ truck should drive on approach).
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
 
 + Request
@@ -1492,7 +1526,12 @@ truck should drive on approach).
 
             WWW-Authenticate: Basic realm="protected"
 
-### Update Route Stop Geographic Details [PATCH]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+### Update Stop Geographic Details                           [PATCH]
 
 Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
 truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
@@ -1503,14 +1542,12 @@ any other routes using this stop will also be updated.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
 
 + Request
@@ -1565,6 +1602,11 @@ any other routes using this stop will also be updated.
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Route & Directions Start
 
 Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab
@@ -1584,20 +1626,18 @@ modifications to the route.
 
 * Externally Sourced Route Start Stop Details
 
-## Retrieve All Vehicle Flagged Events for a Given Time Period [GET /api{version}/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
+## Get Vehicle Flagged Events                                  [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
 
 Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -1625,21 +1665,24 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
 + Response 413
 
-## Create a Route with Start and Stop Details                 [POST /api{version}/vehicles/{vehicleId}/routes]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Create a Vehicle Route                                     [POST /v1.0/vehicles/{vehicleId}/routes]
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
 additional instructions in a *Externally Sourced Route Start Stop Details* object.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
 
 + Request
@@ -1723,6 +1766,11 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Route and Directions Done
 
 Motor freight carriers receive notifications when Drivers have completed their trip.
@@ -1741,21 +1789,19 @@ And mark trips completed based on the Log Event context; at the end of a trip th
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Feed Follow all Log Events                                  [GET /api{version}/event_logs/feed{?token}]
+## Follow Fleet Log Events                                     [GET /v1.0/event_logs/feed{?token}]
 
 Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -1777,6 +1823,11 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Messaging by Geo-Location
 
 Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to
@@ -1792,20 +1843,18 @@ vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Retrieve All Latest Vehicle Location Time History Objects   [GET /api{version}/fleet/locations/latest{?page,count}]
+## Get Fleet Latest Locations                                  [GET /v1.0/fleet/locations/latest{?page,count}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + page                             (optional, number) - the page to select for paginated response
         + Default: 1
     + count                            (optional, number) - the number of items to return
@@ -1832,18 +1881,21 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             WWW-Authenticate: Basic realm="protected"
 
-## Send a Vehicle Display Message to a Vehicle                [POST /api{version}/vehicles/{vehicleId}/message]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
 
 + Request
@@ -1887,6 +1939,11 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Driver Messaging by Vehicle
 
 Motor freight carriers also message their drivers by sending messages directly to a vehicle.
@@ -1910,18 +1967,16 @@ period. They query the API for
 
 of all vehicles over a given time period.
 
-## Retrieve all Vehicle Location Time History objects          [GET /api{version}/fleet/locations/{?startTime,stopTime,page,count}]
+## Get Fleet Location History                                  [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
     + page                             (optional, number) - the page to select for paginated response
@@ -1953,6 +2008,11 @@ of all vehicles over a given time period.
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Human Resources Process: Payroll
 
 Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
@@ -1966,7 +2026,7 @@ this they follow a feed of:
 (see *Follow a Feed of Log Events* above for more details) and they query for breaks and exemption rules for
 (drivers in those logs:
 
-* Region Specific Breaks Rules
+* Region Specific Break Rules
 * Region Specific Waivers
 
 (see *Check Break Rules and Waivers* above for more details.)
@@ -1982,20 +2042,18 @@ this their systems send data _to_ the TSPs:
 
 * Externally Sourced Driver Info
 
-## Update Driver with Externally Sourced Driver Info         [PATCH /api{version}/drivers/{driverId}]
+## Update Driver Info                                        [PATCH /v1.0/drivers/{driverId}]
 
 Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -2058,6 +2116,11 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case Human Resources Process: Accident Report
 
 Motor freight carriers use telematics systems to monitor their fleets for accidents.
@@ -2078,7 +2141,7 @@ Automated and semi-automated analysis and reporting systems want to get the over
 time period. They query the API for
 
 * Coarse Vehicle Location Time History
-* Flagged Vehicle Performance Event
+* Flagged Vehicle Fault Code Event
 * Vehicle Performance Event
 * Vehicle Fault Code Event
 
@@ -2092,20 +2155,18 @@ They may also follow-up with queries of the hi-resolution time history of the fl
 
 (see *Retrieve All Vehicle Location Time Histories* above for more details.)
 
-## Retrieve Fleet Vehicle Info                                 [GET /api{version}/fleet/infos/{?startTime,stopTime}]
+## Get Fleet Vehicle Info                                      [GET /v1.0/fleet/infos/{?startTime,stopTime}]
 
 Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
@@ -2117,7 +2178,7 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 + Response 200 (application/json)
     + Attributes (object)
         + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-        + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+        + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
         + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
         + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
 
@@ -2132,7 +2193,12 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 
 + Response 413
 
-## Feed Follow all Fleet Vehicle Info                          [GET /api{version}/fleet/infos/feed{?token}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Follow Fleet Vehicle Info                                   [GET /v1.0/fleet/infos/feed{?token}]
 
 Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
 system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
@@ -2140,14 +2206,12 @@ entries with each query in the polling.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | ALLOW        | **DENY***  | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -2160,7 +2224,7 @@ entries with each query in the polling.
         + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
         + feed                                  (object) - the 'feed' of Fleet Vehicle Info
             + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-            + flaggedVehiclePerformanceEvents                    (required, array[Flagged Vehicle Performance Event], fixed-type) - all flagged vehicle performance events for all vehicles in the requested time period
+            + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
             + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
             + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
 
@@ -2174,6 +2238,11 @@ entries with each query in the polling.
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group Use Case Compliance and Safety Monitoring
 
@@ -2189,20 +2258,18 @@ field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
 
-## Retrieve Driver Performance Summaries                       [GET /api{version}/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
+## Get Driver Performance Summaries                            [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 
 Clients can request all driver performance summaries for a specific driver within a given period of time.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -2231,20 +2298,23 @@ Clients can request all driver performance summaries for a specific driver withi
 
 + Response 413
 
-## Update TSP Portal User                                    [PATCH /api{version}/drivers/{driverId}/driverportaluser]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Update Driver TSP Portal Account                          [PATCH /v1.0/drivers/{driverId}/driverportaluser]
 
 Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
 
 + Request
@@ -2291,6 +2361,11 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Use Case In-Field Maintenance & Repair
 
 Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
@@ -2305,21 +2380,19 @@ recent vehicle location
 
 * Vehicle Location Time History
 
-## Follow a Feed of All Vehicle Fault Code Events              [GET /api{version}/fleet/faults/feed?{token}]
+## Follow Fleet Fault Code Events                              [GET /v1.0/fleet/faults/feed{?token}]
 
 Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
 bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY***   | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
@@ -2343,18 +2416,21 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 413
 
-## Get Location of a Vehicle                                   [GET /api{version}/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Vehicle Location History                                [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
     + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
@@ -2382,9 +2458,14 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 413
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Localization
 
-## Translation Table                                               [/api{version}/i18n]
+## Translation Table                                               [/v1.0/i18n]
 
 Based on [LinguiJS formats](https://lingui.js.org/ref/catalog-formats.html); where the preferred format is gettext PO
 files, which are closely represented here. Unfortunately the Lingui JS raw format and JSON formats cannot be represented
@@ -2393,20 +2474,16 @@ in API Blueprint's formal spec language.
 + Attributes (object)
     + data (array[Token Translation], fixed-type)
 
-### Retrieve a Translation Table [GET]
+### Get a Translation Table                                    [GET]
 
 Clients can retrieve the current translation table for this TSP's Open Telematics API for given language (provided in the request headers.)
 
 **Access Controls**
 
+
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
 |Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
 
 + Request
     + Headers
@@ -2421,339 +2498,342 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
     + Body
 
             {
-              "data": [
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_AUTOMATIC",
-                    "msgstr": "Automatic recorded by device"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_MANUAL",
-                    "msgstr": "Manual entry by driver"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_OTHERUSER",
-                    "msgstr": "Other authenticated user"
-                },
-                {
-                    "origin": "Log Event, origin",
-                    "msgid":  "ORIGIN_UNASSIGNED",
-                    "msgstr": "Unassigned driver"
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_ACTIVE",
-                    "msgstr": "The log is active and has been accepted by the driver."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_INACTIVE",
-                    "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_REJECTED",
-                    "msgstr": "The log is a rejected edit request from another user."
-                },
-                {
-                    "origin": "Log Event, state",
-                    "msgid":  "STATE_REQUESTED",
-                    "msgstr": "The log is a pending edit request from another user."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
-                    "msgstr": "Adverse weather and driving conditions exemption."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_CERTIFICATION",
-                    "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DEVICE_CONNECTED",
-                    "msgstr": "System log for device power connection."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_D",
-                    "msgstr": "Drive status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
-                    "msgstr": "Storage capacity is reached, or missing data elements exist."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
-                    "msgstr": "Transfer of data fails to complete."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DEVICE_DISCONNECTED",
-                    "msgstr": "System log for device power disconnection."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_ENGINE_POWERUP",
-                    "msgstr": "Engine power up record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_ENGINE_SHUTDOWN",
-                    "msgstr": "Engine shutdown record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
-                    "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_16H",
-                    "msgstr": "Exemption 16 hour."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
-                    "msgstr": "Exemption off duty deferral."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INTERMEDIATE",
-                    "msgstr": "Intermediate Log Event."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DRIVER_LOGIN",
-                    "msgstr": "User login record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DRIVER_LOGOFF",
-                    "msgstr": "User logout record."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
-                    "msgstr": "Missing data elements."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_POWERDATA",
-                    "msgstr": "Power data diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
-                    "msgstr": "Engine synchronization data diagnostic"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
-                    "msgstr": "Data transfer data diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_OTHER",
-                    "msgstr": "Other identified diagnostic event"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_NONE",
-                    "msgstr": "Clear previous instance of Diagnostic"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_OFF",
-                    "msgstr": "Off-duty status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_ON",
-                    "msgstr": "On-duty status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
-                    "msgstr": "Other instances of Malfunction."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_NONE",
-                    "msgstr": "Clear previous instances of Malfunction."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_PC",
-                    "msgstr": "Personal conveyance driver status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_NONE",
-                    "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
-                    "msgstr": "ELD continually fails to acquire valid position measurement."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
-                    "msgstr": "Engine power status engages ELD within 1 minute."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_SB",
-                    "msgstr": "Sleeper berth status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
-                    "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
-                    "msgstr": "More than 30 minutes of driving with unidentified driving."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_DUTY_OFF_WT",
-                    "msgstr": "Wait time oil well driver status."
-                },
-                {
-                    "origin": "Log Event, eventType",
-                    "msgid":  "EVENTTYPE_INDICATION_YM",
-                    "msgstr": "Yard move driver status."
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_OPERATIONAL",
-                    "msgstr": "the service is operational"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_DEGRADED_PERFORMANCE",
-                    "msgstr": "the service is operating, but with limitations"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_PARTIAL_OUTAGE",
-                    "msgstr": "there are aspects of the service which are not presently available"
-                },
-                {
-                    "origin": "State of Health, status",
-                    "msgid":  "SERVICESTATUS_MAJOR_OUTAGE",
-                    "msgstr": "the service is unavailab"
-                }
-                {
-                    "origin": "Externally Trigger Duty Status Change, status",
-                    "msgid":  "EXTTRIG_STATUS_ON",
-                    "msgstr"  "The driver has changed status to on-duty"
-                },
-                {
-                    "origin": "Externally Trigger Duty Status Change, status",
-                    "msgid":  "EXTTRIG_STATUS_OFF",
-                    "msgstr"  "The driver has changed status to off-duty"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_ROLL_STABILITY",
-                    "msgstr": "Roll stability flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_SUDDEN_START",
-                    "msgstr": "Sudden start flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_SUDDEN_STOP",
-                    "msgstr": "Sudden stop flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_COLLISION",
-                    "msgstr": "Collision flagged event"
-                },
-                {
-                    "origin": "Vehicle Flagged Event, trigger",
-                    "msgid":  "FLAGGEDTYPE_ONBOARD_RECORDING",
-                    "msgstr": "onboard recording flagged event"
-                }
-                {   "origin": "Vehicle Flagged Event, gpsQuality",
-                    "msgid":  "GPSQUALITY_FINELOCK",
-                    "msgstr": "gps receiver had fine lock"
-                },
-                {   "origin": "Vehicle Flagged Event, gpsQuality",
-                    "msgid":  "GPSQUALITY_OTHER",
-                    "msgstr": "gps receiver had fix other than fine lock"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_REGEN_NEEDED",
-                    "msgstr":  "Filter regen needed"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_FORCED_REGEN_WILL_HAPPEN",
-                    "msgstr":  "Filter forced regen will happen"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_ACTIVE_REGEN_START",
-                    "msgstr":  "Filter active regen started"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_PASSIVE_REGEN_START",
-                    "msgstr":  "Filter passive regen started"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_ACTIVE_REGEN_END",
-                    "msgstr":  "Filter active regen ended"
-                },
-                {
-                    "origin":  "Vehicle Performance Event, particulateFilterStatus",
-                    "msgid":   "FILTERSTATUS_PASSIVE_REGEN_END",
-                    "msgstr":  "Filter passive regen ended"
-                }
-                {
-                    "origin":  "Vehicle Fault Code Event",
-                    "msgid":   "CLEARTYPE_BYSYSTEMS",
-                    "msgstr":  "cleared by systems"
-                },
-                {
-                    "origin":  "Vehicle Fault Code Event",
-                    "msgid":   "CLEARTYPE_MANUALLYBACKOFFICE",
-                    "msgstr":  "cleared manually in backoffice"
-                },
-                {
-                    "origin":   "Vehicle Fault Code Event, parameterOrSubsystemIdType",
-                    "msgid":    "PIDORSID_PID",
-                    "msgstr":   "This is a PID"
-                },
-                {
-                    "origin":   "Vehicle Fault Code Event, parameterOrSubsystemIdType",
-                    "msgid":    "PIDORSID_SID",
-                    "msgstr":   "This is a SID"
-                },
-                {   "origin":   "Vehicle Locatoin Time History",
-                    "msgid":    "TIMERESOLUTION_MAX",
-                    "msgstr":   "This is at the highest available time resolution"
-                },
-                {   "origin":   "Vehicle Locatoin Time History",
-                    "msgid":    "TIMERESOLUTION_NOT_MAX",
-                    "msgstr":   "This is not at the highest available time resolution"
-                }
-              ]
+                "data": [{
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_AUTOMATIC",
+                        "msgstr": "Automatic recorded by device"
+                    },
+                     {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_MANUAL",
+                        "msgstr": "Manual entry by driver"
+                    },
+                    {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_OTHERUSER",
+                        "msgstr": "Other authenticated user"
+                    },
+                    {
+                        "origin": "Log Event, origin",
+                        "msgid": "ORIGIN_UNASSIGNED",
+                        "msgstr": "Unassigned driver"
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_ACTIVE",
+                        "msgstr": "The log is active and has been accepted by the driver."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_INACTIVE",
+                        "msgstr": "The log is inactive. It has been removed or it is the modification history of a log."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_REJECTED",
+                        "msgstr": "The log is a rejected edit request from another user."
+                    },
+                    {
+                        "origin": "Log Event, state",
+                        "msgid": "STATE_REQUESTED",
+                        "msgstr": "The log is a pending edit request from another user."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_ADVERSEWEATHER",
+                        "msgstr": "Adverse weather and driving conditions exemption."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_CERTIFICATION",
+                        "msgstr": "Driver certification event, can be multiple -- see `certificationCount`"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DEVICE_CONNECTED",
+                        "msgstr": "System log for device power connection."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_D",
+                        "msgstr": "Drive status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_DATARECORDINGCOMPLIANCE",
+                        "msgstr": "Storage capacity is reached, or missing data elements exist."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_DATATRANSFERCOMPLIANCE",
+                        "msgstr": "Transfer of data fails to complete."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DEVICE_DISCONNECTED",
+                        "msgstr": "System log for device power disconnection."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_ENGINE_POWERUP",
+                        "msgstr": "Engine power up record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_ENGINE_SHUTDOWN",
+                        "msgstr": "Engine shutdown record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_ENGINESYNCCOMPLIANCE",
+                        "msgstr": "Occurs when engine information (power, motion, km, and hours) cannot be obtained by ELD."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_16H",
+                        "msgstr": "Exemption 16 hour."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_EXEMPTION_OFFDUTYDEFERRAL",
+                        "msgstr": "Exemption off duty deferral."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INTERMEDIATE",
+                        "msgstr": "Intermediate Log Event."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DRIVER_LOGIN",
+                        "msgstr": "User login record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DRIVER_LOGOFF",
+                        "msgstr": "User logout record."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_MISSINGELEMENT",
+                        "msgstr": "Missing data elements."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_POWERDATA",
+                        "msgstr": "Power data diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_ENGINESYNCDATA",
+                        "msgstr": "Engine synchronization data diagnostic"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_DATATRANSFERDATA",
+                        "msgstr": "Data transfer data diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_OTHER",
+                        "msgstr": "Other identified diagnostic event"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_NONE",
+                        "msgstr": "Clear previous instance of Diagnostic"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_OFF",
+                        "msgstr": "Off-duty status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_ON",
+                        "msgstr": "On-duty status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_OTHERCOMPLIANCE",
+                        "msgstr": "Other instances of Malfunction."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_NONE",
+                        "msgstr": "Clear previous instances of Malfunction."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_PC",
+                        "msgstr": "Personal conveyance driver status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_NONE",
+                        "msgstr": "Cleared indication (e.g. no YM or PC or any other indication)"
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_POSITIONINGCOMPLIANCE",
+                        "msgstr": "ELD continually fails to acquire valid position measurement."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_POWERCOMPLIANCE",
+                        "msgstr": "Engine power status engages ELD within 1 minute."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_SB",
+                        "msgstr": "Sleeper berth status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_MALFUNCTION_TIMINGCOMPLIANCE",
+                        "msgstr": "When ELD date and time exceeds 10 minute offset from UTC."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DIAGNOSTIC_UNIDENTIFIEDDRIVINGRECORDS",
+                        "msgstr": "More than 30 minutes of driving with unidentified driving."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_DUTY_OFF_WT",
+                        "msgstr": "Wait time oil well driver status."
+                    },
+                    {
+                        "origin": "Log Event, eventType",
+                        "msgid": "EVENTTYPE_INDICATION_YM",
+                        "msgstr": "Yard move driver status."
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_OPERATIONAL",
+                        "msgstr": "the service is operational"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_DEGRADED_PERFORMANCE",
+                        "msgstr": "the service is operating, but with limitations"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_PARTIAL_OUTAGE",
+                        "msgstr": "there are aspects of the service which are not presently available"
+                    },
+                    {
+                        "origin": "State of Health, status",
+                        "msgid": "SERVICESTATUS_MAJOR_OUTAGE",
+                        "msgstr": "the service is unavailab"
+                    },
+                    {
+                        "origin": "Externally Trigger Duty Status Change, status",
+                        "msgid": "EXTTRIG_STATUS_ON",
+                        "msgstr": "The driver has changed status to on-duty"
+                    },
+                    {
+                        "origin": "Externally Trigger Duty Status Change, status",
+                        "msgid": "EXTTRIG_STATUS_OFF",
+                        "msgstr": "The driver has changed status to off-duty"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_ROLL_STABILITY",
+                        "msgstr": "Roll stability flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_SUDDEN_START",
+                        "msgstr": "Sudden start flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_SUDDEN_STOP",
+                        "msgstr": "Sudden stop flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_COLLISION",
+                        "msgstr": "Collision flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, trigger",
+                        "msgid": "FLAGGEDTYPE_ONBOARD_RECORDING",
+                        "msgstr": "onboard recording flagged event"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, gpsQuality",
+                        "msgid": "GPSQUALITY_FINELOCK",
+                        "msgstr": "gps receiver had fine lock"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, gpsQuality",
+                        "msgid": "GPSQUALITY_OTHER",
+                        "msgstr": "gps receiver had fix other than fine lock"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_REGEN_NEEDED",
+                        "msgstr": "Filter regen needed"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_FORCED_REGEN_WILL_HAPPEN",
+                        "msgstr": "Filter forced regen will happen"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_ACTIVE_REGEN_START",
+                        "msgstr": "Filter active regen started"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_PASSIVE_REGEN_START",
+                        "msgstr": "Filter passive regen started"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_ACTIVE_REGEN_END",
+                        "msgstr": "Filter active regen ended"
+                    },
+                    {
+                        "origin": "Vehicle Performance Event, particulateFilterStatus",
+                        "msgid": "FILTERSTATUS_PASSIVE_REGEN_END",
+                        "msgstr": "Filter passive regen ended"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event",
+                        "msgid": "CLEARTYPE_BYSYSTEMS",
+                        "msgstr": "cleared by systems"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event",
+                        "msgid": "CLEARTYPE_MANUALLYBACKOFFICE",
+                        "msgstr": "cleared manually in backoffice"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
+                        "msgid": "PIDORSID_PID",
+                        "msgstr": "This is a PID as defined in SAE J1587"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
+                        "msgid": "PIDORSID_SID",
+                        "msgstr": "This is a SID as defined in SAE J1587"
+                    },
+                    {
+                        "origin": "Vehicle Locatoin Time History",
+                        "msgid": "TIMERESOLUTION_MAX",
+                        "msgstr": "This is at the highest available time resolution"
+                    },
+                    {
+                        "origin": "Vehicle Locatoin Time History",
+                        "msgid": "TIMERESOLUTION_NOT_MAX",
+                        "msgstr": "This is not at the highest available time resolution"
+                    }
+                ]
             }
 
 + Response 406
@@ -2763,25 +2843,28 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 
             WWW-Authenticate: Basic realm="protected"
 
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group Open Telematics Data Model
 
 For the purposes of clearly detailing the data object types used by the API endpoints above, we include the object
 models here along with simple 'get by id' APIs. These simple APIs could be useful for debugging and inspection purposes;
 it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
-## Log Event Object                                                [/api{version}/event_logs/{id}]
+## Log Event Object                                                [/v1.0/event_logs/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Log Event of interest
 
 + Attributes (Log Event)
 
-### Get a Log Event by its ID [GET]
+### Get a Log Event by its ID                                  [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2800,19 +2883,22 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Object                                                   [/api{version}/drivers/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Driver Object                                                   [/v1.0/drivers/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of a Driver object
 
 + Attributes (Driver)
 
-### Get a Driver Object by its ID [GET]
+### Get a Driver Object by its ID                              [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2831,20 +2917,23 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Object                                                  [/api{version}/vehicles/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Object                                                  [/v1.0/vehicles/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of a Vehicle object
 
 + Attributes (Vehicle)
 
 
-### Get a Vehicle Object by its ID [GET]
+### Get a Vehicle Object by its ID                             [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2863,23 +2952,26 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Breaks Rules Object                             [/api{version}/region_specific_breaks/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Region Specific Break Rules Object                              [/v1.0/region_specific_breaks/{id}]
 
 Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
 only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
 rules.
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
-    + id            (string) - ID of the Region Specific Breaks Rules of interest
+    + id            (string) - ID of the Region Specific Break Rules of interest
 
-+ Attributes (Region Specific Breaks Rules)
++ Attributes (Region Specific Break Rules)
 
-### Get a Region Specific Breaks Rules by its ID [GET]
+### Get a Region Specific Break Rules by its ID                [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2891,29 +2983,32 @@ rules.
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Region Specific Breaks Rules)
+    + Attributes (Region Specific Break Rules)
 
 + Response 401
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
-## Region Specific Waivers Object                                  [/api{version}/region_specific_waivers/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Region Specific Waivers Object                                  [/v1.0/region_specific_waivers/{id}]
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
 available
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Region Specific Waivers of interest
 
 + Attributes (Region Specific Waivers)
 
-### Get a Region Specific Waivers by its ID [GET]
+### Get a Region Specific Waivers by its ID                    [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2932,19 +3027,22 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Stop Geographic Details Object                                  [/api{version}/stops/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Stop Geographic Details of interest
 
 + Attributes (Stop Geographic Details)
 
-### Get a Stop Geographic Details by its ID [GET]
+### Get a Stop Geographic Details by its ID                    [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2963,19 +3061,22 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Location Time Object                                    [/api{version}/fleet/locations/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Location Time of interest
 
 + Attributes (Vehicle Location Time)
 
-### Get a Vehicle Location Time by its ID [GET]
+### Get a Vehicle Location Time by its ID                      [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -2994,21 +3095,24 @@ available
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Flagged Event Object                                    [/api{version}/fleet/flagged_events/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Flagged Event Object                                    [/v1.0/fleet/flagged_events/{id}]
 
 The purpose of the flagged events is to flag potential saftey issues for motor freight carrier staff to validate
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Flagged Event of interest
 
 + Attributes (Vehicle Flagged Event)
 
-### Get a Vehicle Flagged Event by its ID [GET]
+### Get a Vehicle Flagged Event by its ID                      [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3027,19 +3131,22 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Fault Code Event Object                                 [/api{version}/fleet/faults/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Fault Code Event Object                                 [/v1.0/fleet/faults/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Fault Code Event of interest
 
 + Attributes (Vehicle Fault Code Event)
 
-### Get a Vehicle Fault Code Event by its ID [GET]
+### Get a Vehicle Fault Code Event by its ID                   [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3058,19 +3165,56 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Performance Thresholds Object                                   [/api{version}/fleet/performance_thresholds/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Flagged Vehicle Fault Code Event Object                         [/v1.0/fleet/flagged_faults/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
+    + id            (string) - ID of the Flagged Vehicle Fault Code Event of interest
+
++ Attributes (Flagged Vehicle Fault Code Event)
+
+### Get a Flagged Vehicle Fault Code Event by its ID           [GET]
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Flagged Vehicle Fault Code Event)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
+
++ Parameters
     + id            (string) - ID of the Performance Thresholds of interest
 
 + Attributes (Performance Thresholds)
 
-### Get a Performance Thresholds by its ID [GET]
+### Get a Performance Thresholds by its ID                     [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3089,19 +3233,22 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Vehicle Performance Event Object                                [/api{version}/fleet/performance_events/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Performance Event Object                                [/v1.0/fleet/performance_events/{id}]
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Vehicle Performance Event of interest
 
 + Attributes (Vehicle Performance Event)
 
-### Get a Vehicle Performance Event by its ID [GET]
+### Get a Vehicle Performance Event by its ID                  [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3120,21 +3267,24 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             WWW-Authenticate: Basic realm="protected"
 
-## Driver Performance Summary Object                               [/api{version}/driver_performance_summaries/{id}]
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Driver Performance Summary Object                               [/v1.0/driver_performance_summaries/{id}]
 
 Summary statistics on performance of drivers.
 
 + Parameters
-    + version: `v1` (enum[string]) - API version
-        + Members
-            + `v1`
     + id            (string) - ID of the Driver Performance Summary of interest
 
 + Attributes (Driver Performance Summary)
 
-### Get a Driver Performance Summary by its ID [GET]
+### Get a Driver Performance Summary by its ID                 [GET]
 
 **Access Controls**
+
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
@@ -3152,3 +3302,8 @@ Summary statistics on performance of drivers.
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
