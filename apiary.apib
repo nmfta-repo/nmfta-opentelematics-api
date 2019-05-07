@@ -1314,7 +1314,7 @@ time period.
 
             Retry-After: {implementation-defined}
 
-## Update Driver's Duty Status                               [PATCH /v1.0/drivers/{driverId}/duty_status]
+## Update Driver Duty Status                                 [PATCH /v1.0/drivers/{driverId}/duty_status]
 
 Clients can send custom-integrated duty status changes to the TSP to trigger duty status changes for a given driver by pushing data to this endpoint.
 
@@ -1406,7 +1406,7 @@ TSP
 * Stop Geographic Details
 * Stop Details
 
-## Update Driver's Route Stop                                  [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
+## Update Driver Route Stop                                    [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
 
 Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
 change the destination of the route, hence also changing the stopId associated with the route.
@@ -1624,7 +1624,7 @@ modifications to the route.
 
 * Externally Sourced Route Start Stop Details
 
-## Get Vehicle's Flagged Events                                [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
+## Get Vehicle Flagged Events                                  [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
 
 Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
 
@@ -1668,7 +1668,7 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 
             Retry-After: {implementation-defined}
 
-## Create a Vehicle's Route                                   [POST /v1.0/vehicles/{vehicleId}/routes]
+## Create a Vehicle Route                                     [POST /v1.0/vehicles/{vehicleId}/routes]
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
 additional instructions in a *Externally Sourced Route Start Stop Details* object.
@@ -1787,7 +1787,7 @@ And mark trips completed based on the Log Event context; at the end of a trip th
 to receive updates on changes to gates, access, repairs etc at the destination (see *Retrieve Route Stop Geographic
 Details* above for more details.)
 
-## Follow Fleet's Log Events                                   [GET /v1.0/event_logs/feed{?token}]
+## Follow Fleet Log Events                                     [GET /v1.0/event_logs/feed{?token}]
 
 Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
 polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -1841,7 +1841,7 @@ vehicle by sending data _to_ the TSP:
 
 * Externally Sourced Vehicle Display Messages
 
-## Get Fleet's Latest Locations                                [GET /v1.0/fleet/locations/latest{?page,count}]
+## Get Fleet Latest Locations                                  [GET /v1.0/fleet/locations/latest{?page,count}]
 
 Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
 
@@ -1965,7 +1965,7 @@ period. They query the API for
 
 of all vehicles over a given time period.
 
-## Get Fleet's Location History                                [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
+## Get Fleet Location History                                  [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
 
 **Access Controls**
 
@@ -2256,7 +2256,7 @@ field. They send data _to_ the TSP:
 
 * External TSP Portal User Management
 
-## Get Driver's Performance Summaries                          [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
+## Get Driver Performance Summaries                            [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 
 Clients can request all driver performance summaries for a specific driver within a given period of time.
 
@@ -2301,7 +2301,7 @@ Clients can request all driver performance summaries for a specific driver withi
 
             Retry-After: {implementation-defined}
 
-## Update Driver's TSP Portal Account                        [PATCH /v1.0/drivers/{driverId}/driverportaluser]
+## Update Driver TSP Portal Account                          [PATCH /v1.0/drivers/{driverId}/driverportaluser]
 
 Clients can request updates to the TSP's portal user accounts for drivers by sending data to this endpoint.
 
@@ -2378,7 +2378,7 @@ recent vehicle location
 
 * Vehicle Location Time History
 
-## Follow Fleet's Fault Code Events                            [GET /v1.0/fleet/faults/feed{?token}]
+## Follow Fleet Fault Code Events                              [GET /v1.0/fleet/faults/feed{?token}]
 
 Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
 bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
@@ -2419,7 +2419,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
             Retry-After: {implementation-defined}
 
-## Get Vehicle's Location History                              [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
+## Get Vehicle Location History                                [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
 
 **Access Controls**
 
