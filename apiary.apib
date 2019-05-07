@@ -816,6 +816,17 @@ Telematics Data Model* for object descriptions as well.
 + cmvVIN                                                 (required, string) - the CMV VIN
 + licensePlate                                           (required, string) - the vehicle license plate
 
+### Message Receipt (object)
+
++ id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Message receipt object
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message receipt was last updated in the TSP
++ subject                                                (string) - the 'subject-line' of the delivered message
++ message                                                (required, string) - the message delivered
++ sentTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was sent to the vehicle
++ deliveredTime     :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was delivered to the vehicle
++ readTime          :             `2019-04-05T02:04:16Z` (string) - Date and time when the message was displayed to driver
+
 ### Token Translation (object)
 
 + origin :                `Log Event, malfunction` (string) - optional note of origin of token to be translated
@@ -854,6 +865,7 @@ Telematics Data Model* for object descriptions as well.
 + regionSpecificBreakRules                               (array[Region Specific Break Rules], fixed-type) - Any of the Region Specific Break Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ displayMessageReceipts                                 (array[Message Receipt], fixed-type) - Any of the Message Receipt objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
 ## Data Structures
 
@@ -1927,6 +1939,8 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
             }
 
 + Response 201 (application/json)
+    + Attributes (object)
+        + messageReceiptId:   `FC5E038D38A57032085441E7FE7010B0` (required, string) - the id of the Message Receipt object that will track the delivery- and option display-timestamps of this message
 
 + Response 204
 
@@ -2956,6 +2970,42 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Headers
 
             Retry-After: {implementation-defined}
+
+## Message Receipt Object                                          [/v1.0/message_receipts/{id}]
+
++ Parameters
+    + id            (string) - ID of a Message Receipt object
+
++ Attributes (Vehicle)
+
+
+### Get a Message Receipt by its ID                            [GET]
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Message Receipt)
+
++ Response 401
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 
 ## Region Specific Break Rules Object                              [/v1.0/region_specific_breaks/{id}]
 
