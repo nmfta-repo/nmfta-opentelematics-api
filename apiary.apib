@@ -689,9 +689,6 @@ Telematics Data Model* for object descriptions as well.
 
 ### Performance Thresholds (object)
 
-+ id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
-+ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
-+ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + activeFrom        :             `2019-04-05T02:04:16Z` (required, string) - The date and time these thresholds take effect
 + activeTo          :             `2019-04-05T02:04:16Z` (string)           - The date and time these thresholds stop taking effect, if left blank then the rules apply in perpetuity
 + rpmOverValue                                           (number)           - the configured RPM threshold, above which engine RPM readings are considered 'over', in revolutions per minute
@@ -860,7 +857,6 @@ Telematics Data Model* for object descriptions as well.
 ### Vehicle Only Complete Telematics Records (object)
 
 + stopGeographicDetails                                  (array[Stop Geographic Details], fixed-type) - All of the Stop Geographic Details objects known to the TSP at the time of the request
-+ performanceThresholds                                  (array[Performance Thresholds], fixed-type) - All of the Performance Thresholds objects known to the TSP at the time of the request
 + vehicles                                               (array[Vehicle], fixed-type) - All of the Vehicle objects known to the TSP at the time of the request
 + vehicleLocationTimeHistories                           (Vehicle Location Time History, fixed-type) - Any of the Vehicle Location Time History objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
@@ -1087,7 +1083,6 @@ Daily Export Format* below for more details.
 * Vehicle Location Time History
 * Vehicle Flagged Event
 * Vehicle Performance Event
-* Performance Thresholds
 * Stop Geographic Details
 * Vehicle Fault Code Event
 * Driver
@@ -1103,7 +1098,6 @@ The *Vehicle Only Complete Telematics Records* objects will contain only the fol
 Only Complete Telematics Records Daily Export Format* for more details.
 
 * Stop Geographic Details
-* Performance Thresholds
 * Vehicle
 * Vehicle Location Time History
 * Vehicle Flagged Event
@@ -3265,40 +3259,6 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 + Response 200 (application/json)
     + Attributes (Flagged Vehicle Fault Code Event)
-
-+ Response 401
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
-
-+ Parameters
-    + id            (string) - ID of the Performance Thresholds of interest
-
-+ Attributes (Performance Thresholds)
-
-### Get a Performance Thresholds by its ID                     [GET]
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (Performance Thresholds)
 
 + Response 401
     + Headers
