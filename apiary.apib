@@ -981,11 +981,17 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
     + Attributes (State of Health)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1014,11 +1020,17 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
         + data (array[State of Health], fixed-type)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1135,18 +1147,28 @@ ready then a `202` return code will be returned.
 
 + Response 202
 
+        File not yet ready for download
+
 + Response 400 (text/plain)
 
         Error: dayOf parameter invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1181,18 +1203,28 @@ ready then a `202` return code will be returned.
 
 + Response 202
 
+        File not yet ready for download
+
 + Response 400 (text/plain)
 
         Error: dayOf parameter invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1276,13 +1308,21 @@ Clients can request all the factors contributing to driver availability for a gi
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1323,13 +1363,21 @@ time period.
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1399,11 +1447,17 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1497,11 +1551,17 @@ change the destination of the route, hence also changing the stopId associated w
         Error: vehicleId or routeId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1540,11 +1600,17 @@ truck should drive on approach).
         Error: stopId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1616,11 +1682,17 @@ any other routes using this stop will also be updated.
         Error: stopId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1677,13 +1749,21 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
         Error: vehicleId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1780,11 +1860,17 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
         Error: vehicleId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1837,11 +1923,17 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
         Error: token parameter invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1895,11 +1987,17 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
         Error: page or count parameters invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -1955,11 +2053,17 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
         Error: vehicleId not found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2022,13 +2126,21 @@ of all vehicles over a given time period.
         Error: startTime, stopTime, page or count parameters invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2132,11 +2244,17 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2207,13 +2325,21 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
         Error: startTime or stopTime parameters invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2253,13 +2379,21 @@ entries with each query in the polling.
         Error: token parameter invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2312,13 +2446,21 @@ Clients can request all driver performance summaries for a specific driver withi
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2377,11 +2519,17 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
         Error: driverId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2430,13 +2578,21 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
         Error: token parameters invalid
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2472,13 +2628,21 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
         Error: vehicleId Not Found
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 413
 
+        Requested entity is too large
+
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2496,7 +2660,8 @@ in API Blueprint's formal spec language.
 
 ### Get a Translation Table                                    [GET]
 
-Clients can retrieve the current translation table for this TSP's Open Telematics API for given language (provided in the request headers.)
+Clients can retrieve the current translation table for this TSP's Open Telematics API for given language (provided in
+the request headers.)
 
 **Access Controls**
 
@@ -2868,12 +3033,20 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 
 + Response 406
 
+        Language requested in Accept-Language header is unavailable
+
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2909,11 +3082,17 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Attributes (Log Event)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2943,11 +3122,17 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Attributes (Driver)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -2978,11 +3163,17 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Attributes (Vehicle)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3013,11 +3204,17 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Attributes (Message Receipt)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3052,11 +3249,17 @@ rules.
     + Attributes (Region Specific Break Rules)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3089,11 +3292,17 @@ available
     + Attributes (Region Specific Waivers)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3123,11 +3332,17 @@ available
     + Attributes (Stop Geographic Details)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3157,11 +3372,17 @@ available
     + Attributes (Vehicle Location Time)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3193,11 +3414,17 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Attributes (Vehicle Flagged Event)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3227,11 +3454,17 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Attributes (Vehicle Fault Code Event)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3261,11 +3494,17 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Attributes (Flagged Vehicle Fault Code Event)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3295,11 +3534,17 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Attributes (Vehicle Performance Event)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
@@ -3331,11 +3576,17 @@ Summary statistics on performance of drivers.
     + Attributes (Driver Performance Summary)
 
 + Response 401
+    + Body
+
+            Authentication Required
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
 
 + Response 429
+    + Body
+
+            Too Many Requests
     + Headers
 
             Retry-After: {implementation-defined}
