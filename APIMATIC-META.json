@@ -13,7 +13,7 @@
     "ModelSerializationScheme": "Json",
     "ArraySerialization": "Indexed",
     "Nullify404": false,
-    "UseHttpMethodPrefix": true,
+    "UseHttpMethodPrefix": false,
     "UseModelPrefix": false,
     "UseExceptionPrefix": true,
     "UseEnumPrefix": true,
