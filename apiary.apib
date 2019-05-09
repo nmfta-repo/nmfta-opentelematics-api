@@ -596,7 +596,7 @@ They mark trips completed based on matching a [Log Event object](#log_event_obje
 
 At the end of trips they also query for any updates on changes to gates, access, repairs etc at the destination using
 
-* [Get Stop Geographic Details](#get_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+* [Get Stop Geographic Details by its ID](#get_a_region_specific_waivers_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Driver Messaging by Geo-Location
 
@@ -1708,57 +1708,7 @@ change the destination of the route, hence also changing the stopId associated w
 
             Retry-After: {implementation-defined}
 
-## Route Stop Geographic Details                                   [/v1.0/stops/{stopId}]
-
-### Get Stop Geographic Details                                [GET]
-<a id="get_stop_geographic_details"></a>
-
-Clients can retrieve the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
-truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
-truck should drive on approach).
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-
-    + Attributes (Stop Geographic Details)
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: stopId Not Found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-### Update Stop Geographic Details                           [PATCH]
+## Update Stop Geographic Details                           [PATCH /v1.0/stops/{stopId}]
 <a id="update_stop_geographic_details"></a>
 
 Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
@@ -3335,6 +3285,9 @@ available
 ## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 <a id="stop_geographic_details_object"></a>
 
+*Stop Geographic Details* are the specific location for the truck and trailer to park and a polygon of geographic points
+indicating the entryway onto a facility (i.e. where the truck should drive on approach).
+
 + Parameters
     + id            (string) - ID of the Stop Geographic Details of interest
 
@@ -3357,6 +3310,10 @@ available
 
 + Response 200 (application/json)
     + Attributes (Stop Geographic Details)
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 + Response 401
     + Body
