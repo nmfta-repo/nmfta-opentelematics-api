@@ -193,6 +193,7 @@ All clients must implement certificate pinning. i.e. All client implementations 
 certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
 
 # Working With Dates
+<a id="working_with_dates"></a>
 
 When exchanging dates as parameters to API methods or in responses from the API, you must ensure that
 they are formatted properly as an ISO 8601 string (format
@@ -335,7 +336,7 @@ specification.
 
 Addition of fields to the objects must be done such that it is not possible for the new extension fields to collide with
 other extensions or with future versions of the API; therefore, all fields added as extensions must be prefixed with
-`x_providerid_` where `providerid` is the provider ID (see [Provider Identifiers](#provider_identifiers) above for more
+`x_providerid_` where `providerid` is the provider ID (see [Provider Identifiers](#provider_identifiers) for more
 details).
 
 * Adding addional field/members to the data objects, when the data is needed by a motor freight carrier IS a valid extension to the OTAPI
@@ -373,12 +374,12 @@ interest of ensuring that the APIs are _useful_ to their intended users (motor f
 organize -- the API by these use cases. See the sections below for the API endpoints in those categories. For ease of
 reference, we summarize the use cases here:
 
-***Check Provider's State of Health***
+## Check Provider's State of Health
 
 Users of telematics that is highly integrated into their operations need assurances of the state of health of the
 Provider's services.
 
-***Data Export***
+## Data Export
 
 Motor freight carriers want to export all data from a TSP for a given time period. Where 'all data' for the purposes of
 this specification is all the data specified here and does not include any other proprietary data structures designed
@@ -386,7 +387,7 @@ and employed by the TSP. These data exports could be used by carriers to complet
 TSP outage or for research purposes offline or to restore data -- although this last potential use is _not_ a use case
 we aim to support here please see below on 'data import.'
 
-***Generate Records of Duty Status for Compliance***
+## Generate Records of Duty Status for Compliance
 
 Motor freight carriers use telematics systems to maintain Record of Duty Status (RODS) compliance. The TSP to the
 carrier will supply compliant records directly, without the need for the carrier to use the OTAPI. The carrier may use
@@ -399,12 +400,12 @@ used by regulators used truncated timestamps and the higher-resolution available
 events being out-of-order in the view of the regulators without special handling by the TSP. This is an example of the
 kinds of nuances that are handled by TPSs in their service offering and OTAPI is not meant to replace that service.
 
-***Driver Availability***
+## Driver Availability
 
 Motor freight carriers need to understand the availability of their drivers -- within the current regulatory context of
 those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
 
-***Driver Route & Directions Communication***
+## Driver Route & Directions Communication
 
 Motor freight carriers update their Driver's destination and route during their trip. This allows them to react to
 changing conditions in weather, the needs of regulatory restrictions on hours, optimizing follow-on activities after a
@@ -412,52 +413,52 @@ trip, etc.
 
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-***Driver Route & Directions Start***
+## Driver Route & Directions Start
 
 Motor freight carriers plan destinations and routes for their drivers and inform the drivers of the plan via the in-cab
 components of a telematics system.
 
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-***Driver Route and Directions Done***
+## Driver Route and Directions Done
 
 Motor freight carriers receive notifications when Drivers have completed their trip.
 
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
-***Driver Messaging by Geo-Location***
+## Driver Messaging by Geo-Location
 
 Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to
 notify the drivers of dangerous weather conditions in their area.
 
-***Driver Messaging by Vehicle***
+## Driver Messaging by Vehicle
 
 Motor freight carriers also message their drivers by sending messages directly to a vehicle.
 
-***Vehicle Location Time History Tracking***
+## Vehicle Location Time History Tracking
 
 Motor freight carriers use telematics fleet Location Time History for multiple 'fleet dynamics modeling' use cases such
 as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
 
-***Human Resources Process: Payroll***
+## Human Resources Process: Payroll
 
 Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
 are important to modern motor freight carrier operations.
 
-***Human Resources Process: Accident Report***
+## Human Resources Process: Accident Report
 
 Motor freight carriers use telematics systems to monitor their fleets for accidents.
 
-***Carrier Custom Business Intelligence***
+## Carrier Custom Business Intelligence
 
 Motor freight carriers use telematics systems for multiple, custom, business intelligence purposes where the overall
 health of their fleet is considered and fed into their own proprietary models.
 
-***Compliance and Safety Monitoring***
+## Compliance and Safety Monitoring
 
 Motor freight carriers use telematics systems to monitor compliance and safety for their operations.
 
-***In-Field Maintenance & Repair***
+## In-Field Maintenance & Repair
 
 Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
 
@@ -848,13 +849,15 @@ Telematics Data Model* for object descriptions as well.
 
 ### State of Health (object)
 
++ id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Message receipt object
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status (this is 'serverTime')
 + serviceStatus:        `SERVICESTATUS_OPERATIONAL`      (required, enum[string]) - the current status of the service
     + Members
         + `SERVICESTATUS_OPERATIONAL` - the service is operational
         + `SERVICESTATUS_DEGRADED_PERFORMANCE` - the service is operating, but with limitations
         + `SERVICESTATUS_PARTIAL_OUTAGE` - there are aspects of the service which are not presently available
         + `SERVICESTATUS_MAJOR_OUTAGE` - the service is unavailable
-+ dateTime:    `2019-04-05T02:04:16Z`                    (required, string) - Date and time of this service status (this is 'serverTime')
 + factors: `upstream server operational`, `authentication service operational` (array[string], fixed-type) - a list of contributing factors to the current service status. Providers may use this to communicate details about loss of service
 
 ### Vehicle Only Complete Telematics Records (object)
@@ -961,6 +964,14 @@ State of Health. They expect to receive either an 'all-clear' response indicatin
 issues with its services at the moment of query or some details describing the contributing factors that have led to
 less than optimal operation.
 
+To check the current state of health of the service they use
+
+* [Check Current State of Health](#check_current_state_of_health)
+
+To check the past 30 days worth of states of health they use
+
+* [Check Past 30d State of Health](#check_past_30d_state_of_health)
+
 ## Check Current State of Health                               [GET /v1.0/health/current]
 <a id="check_current_state_of_health"></a>
 
@@ -1004,7 +1015,8 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
 <a id="check_past_30d_state_of_health"></a>
 
 Clients can request the recent history of all service statuses. The response to this query will return all service
-status records (i.e. those returned via *Check Current State of Health*) from over the past 30 days.
+status records (i.e. those returned via [Check Current State of Health](#check_current_state_of_health)) from over th
+past 30 days.
 
 Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
@@ -1056,10 +1068,10 @@ data structures such that any TSP wanting to implement _import_ is enabled to do
 ***PII Separation***
 
 The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
-above. OTAPI implementations must provide for export of both *Vehicle Only Complete Telematics Records* and *Complete
-Telematics Records* objects so that systems which must be separated from PII can download the *Vehicle Only Complete
-Telematics Records* type. As is noted in the access controls below, requests for these data types
-deny access by the *Vehicle X* roles.
+above. OTAPI implementations must provide for export of both [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
+and [Complete Telematics Export Format](#complete_telematics_export_format) objects so that systems which must be separated
+from PII can download the [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) type. As is
+noted in the access controls below, requests for these data types deny access by the *Vehicle X* roles.
 
 ***Polling for Daily Files***
 
@@ -1079,7 +1091,7 @@ Note that the data export files will include both time-varying objects (those th
 also those that do not.
 
 * For time-varying objects: the files will only include whose associated time periods have an intesection with the
-requested time period (as per the details of the *Working With Dates* section above);
+requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
 
 * For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
 regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
@@ -1093,32 +1105,33 @@ the daily export files.
 
 ***Complete Data Export***
 
-The *Complete Data Export* objects will contain all of the following object embedded, see [Complete Telematics Export Format](#complete_telematics_export_format) below for more details.
+The *Complete* objects will contain sets of all of the following objects embedded, see [Complete Telematics Export Format](#complete_telematics_export_format) for more details.
 
-* Vehicle
-* Vehicle Location Time History
-* Vehicle Flagged Event
-* Vehicle Performance Event
-* Stop Geographic Details
-* Vehicle Fault Code Event
-* Driver
-* Log Event
-* Region Specific Break Rules
-* Region Specific Waivers
-* Driver Performance Summary
-* State of Health
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [Driver](#driver_object)
+* [Log Event](#log_event_object)
+* [Region Specific Break Rules](#region_specific_break_rules_object)
+* [Region Specific Waivers](#region_specific_waivers_object)
+* [Driver Performance Summary](#driver_performance_summary_object)
+* [Message Receipt](#message_receipts)
+* [State of Health](#state_of_health_object)
 
 ***Vehicle-Only Data Export***
 
-The *Vehicle Only Complete Telematics Records* objects will contain only the following embedded objects, see [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) for more details.
+The *Vehicle-Only* objects will contain sets of all of the following objects embedded, see [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) for more details.
 
-* Stop Geographic Details
-* Vehicle
-* Vehicle Location Time History
-* Vehicle Flagged Event
-* Vehicle Performance Event
-* Vehicle Fault Code Event
-* State of Health
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [State of Health](#state_of_health_object)
 
 ## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
 <a id="complete_telematics_export_format"></a>
@@ -1252,8 +1265,8 @@ kinds of nuances that are handled by TPSs in their service offering and OTAPI is
 Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
 event a TSP is no longer available.
 
-See [Complete Telematics Export Format](#complete_telematics_export_format) above for more details on the file format
-which should contain sufficient data for this use case in the array of *Log Event* objects.
+See [Complete Telematics Export Format](#complete_telematics_export_format) for more details on the file format
+which should contain sufficient data for this use case in the array of [Log Event objects](#log_event_object).
 
 # Group Use Case Driver Availability
 
@@ -1261,23 +1274,24 @@ Motor freight carriers need to understand the availability of their drivers -- w
 those drivers -- so that the carrier can ensure regulatory compliance and, more importantly, driver safety.
 
 Both personnel and semi-automated systems responsible for planning and assigning driver routes want to model the current
-availability of a Driver; they retrieve all of the following 'driver availability factors' from that time up until the
-current moment, from which the current driver availability can be calculated.
+availability of a Driver. They have
 
-* Coarse Vehicle Location Time History
-* Vehicle Flagged Event
-* Log Event
+* a [Driver object id](#driver_object) for a given driver
 
-The same personnel and semi-automated systems will need to for breaks and exemption rules for drivers in those logs if
-they operate in regions with specific break rules or waivers.
+To calculate the current driver availablity they retrieve 'driver availability factors' from which the current driver
+availability can be calculated using
 
-* Region Specific Break Rules
-* Region Specific Waivers
+* [Get Driver Availability Factors](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
+
+To consider also the breaks and exemption rules for driver in those logs (if they operate in regions with specific break
+rules or waivers) they use
+
+* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) a given [Driver object id](#driver_object) over a given period of time
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
-this their systems send data _to_ the TSPs.
+this their systems send duty status changes to the TSP using
 
-* Externally Triggered Duty Status Change
+* [Update Driver Duty Status](#update_driver_duty_status) for a given [Driver object id](#driver_object).
 
 ## Get Driver Availability Factors                             [GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
 <a id="get_driver_availability_factors"></a>
@@ -1481,15 +1495,26 @@ trip, etc.
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
 Both personnel and semi-automated systems responsible for planning and assigning driver routes want to update the
-Driver's destination and route during a trip. They retrieve the driver availability factors for the time period from the
-driver's start of route up until the present (see [Get Driver Availability Factors](#get_driver_availability_factors)
-above for more details.)
+Driver's destination and route during a trip. They have
 
-In the process of updating the Driver's destination and route, the motor freight carrier sends the following _to_ the
-TSP
+* a [Driver object id](#driver_object) for a given driver
+* a [Vehicle object id](#vehicle_object) for a given vehicle
+* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) they have both
+    * a *Vehicle Route object id* and
+    * a [Stop Geographic Details object id](#stop_geographic_details_object).
 
-* Stop Geographic Details
-* Stop Details
+To confirm that the given driver is still available to complete the route they retrieve the driver availability factors
+for the time period from the driver's start of route up until the present by using
+
+* [Get Driver Availability Factors](#get_driver_availability_factors) endpoint for a given [Driver object id](#driver_object) over a given period of time
+
+To change the route they use
+
+* [Update Driver Route Stop](#update_driver_route_stop) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
+
+To update details (entry points, notes) of the route stop they use
+
+* [Update Stop Geographic Details](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Update Driver Route Stop                                    [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
 <a id="update_driver_route_stop"></a>
@@ -1506,7 +1531,7 @@ change the destination of the route, hence also changing the stopId associated w
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
+    + routeId           : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
 
 + Request
     + Headers
@@ -1719,16 +1744,21 @@ components of a telematics system.
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
 Both personnel and semi-automated systems responsible for planning and assigning driver routes want to inform their
-drivers about their planned route before the driver starts the trip. Given the vehicle that the Driver will take on the
-route, they first check the vehicle for any faults or alarms in the past 24h by querying this endpoint.
+drivers about their planned route before the driver starts the trip. They have
 
-* Vehicle Flagged Event
+* a [Vehicle object id](#vehicle_object) for a given vehicle
 
-Then the trip start and stop destination is sent to the driver along with any other instructions (such as which trailers
-to take). A successful creation of a route will yield a response indicating the routeId to use in further updates or
-modifications to the route.
+To first check the vehicle for any faults or alarms in the past 24h they use
 
-* Externally Sourced Route Start Stop Details
+* [Get Vehicle Flagged Events](#get_vehicle_flagged_events) for a given [Vehicle object id](#vehicle_object) over a given period of time
+
+Assuming the vehicle is good to go, then they send trip start and stop destinations to the driver along with any other
+instructions (such as which trailers to take) using
+
+* [Create a Vehicle Route](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
+
+A successful creation of a route will yield a *Route object id* in the response to use in further updates or modifications
+to the route.
 
 ## Get Vehicle Flagged Events                                  [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
 <a id="get_vehicle_flagged_events"></a>
@@ -1898,15 +1928,25 @@ Motor freight carriers receive notifications when Drivers have completed their t
 This feature is heavily used but also is commonly offered as an add-on to the TSP service from another party.
 
 Both personnel and semi-automated systems responsible for planning and assigning driver routes want to be notified of a
-completed trip, along with the driver information about duty on the trip. They follow the feed of:
+completed trip, along with the driver information about duty on the trip. They have
 
-* Log Event
+* a [Driver object id](#driver_object) for a given driver
+* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) and may have optionally
+[updated the driver's Route Stop](#update_driver_route_stop) or [updated the *Stop Geographic Details*](#update_stop_geographic_details)
+they hence have both
+    * a *Vehicle Route object id* and
+    * a [Stop Geographic Details object id](#stop_geographic_details_object).
 
-And mark trips completed based on the Log Event context; at the end of a trip they also query for the most recent
+So that they can react to the route completing in 'real-time' they are following the feed of [Log Events](#log_event_object) using
 
-* Stop Geographic Details
+* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
 
-to receive updates on changes to gates, access, repairs etc at the destination (see [Get Stop Geographic Details](#get_stop_geographic_details) above for more details.)
+They mark trips completed based on matching a [Log Event object](#log_event_object) in the feed which matches a given
+[Driver object id](#driver_object) and also has a status indicating that the route is complete.
+
+At the end of trips they also query for any updates on changes to gates, access, repairs etc at the destination using
+
+* [Get Stop Geographic Details](#get_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Follow Fleet Log Events                                     [GET /v1.0/event_logs/feed{?token}]
 <a id="follow_fleet_log_events"></a>
@@ -1960,14 +2000,18 @@ Motor freight carriers use telematics systems to message their drivers for vario
 notify the drivers of dangerous weather conditions in their area.
 
 Personnel responsible for planning and assigning driver routes want to send messages to drivers in a particular
-geographic region. They query the API for the most recent
+geographic region. They have
 
-* Vehicle Location Time History
+* a target geographic area, to which they want to send messages
 
-of all vehicles; then filtering-out all vehicles outside the particular geographic region, then send messages to each
-vehicle by sending data _to_ the TSP:
+To determine which vehicles presently lie within the geographic area they get the current location of all fleet vehicles
+using
 
-* Externally Sourced Vehicle Display Messages
+* [Get Fleet Latest Locations](#get_fleet_latest_locations)
+
+Then, for each [Vehicle object id](#vehicle_object) which lies within the geographic area they send it a message using
+
+* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
 
 ## Get Fleet Latest Locations                                  [GET /v1.0/fleet/locations/latest{?page,count}]
 <a id="get_fleet_latest_locations"></a>
@@ -2086,28 +2130,30 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 
             Retry-After: {implementation-defined}
 
+
 # Group Use Case Driver Messaging by Vehicle
 
 Motor freight carriers also message their drivers by sending messages directly to a vehicle.
 
-Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They send
-data _to_ the TSP for a given vehicle:
+Personnel responsible for planning and assigning driver routes want to send a message to a driver's vehicle. They have
 
-* Externally Sourced Vehicle Display Messages
+* a [Vehicle object id](#vehicle_object) to which they wish to send a message
 
-(see [Send Message to a Vehicle](#send_message_to_a_vehicle) above for more details.)
+they send the vehicle a message using
 
-# Group Use Case Vehicle Location Time History Tracking
+* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
+
+
+# Group Use Case Vehicle Location Time History Processing
 
 Motor freight carriers use telematics fleet Location Time History for multiple 'fleet dynamics modeling' use cases such
-as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning.
+as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet Maintenance Planning. They have
 
-Autonomous analysis and reporting systems want to get the Location Time History of the fleet over a particular time
-period. They query the API for
+* a target time period, over which they want to perform an analysis of fleet location time history
 
-* Vehicle Location Time History
+To perform the analysis on fleet location time history they use
 
-of all vehicles over a given time period.
+* [Get Fleet Location History](#get_fleet_location_history) for a given time period
 
 ## Get Fleet Location History                                  [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
 <a id="get_fleet_location_history"></a>
@@ -2169,29 +2215,28 @@ of all vehicles over a given time period.
 Motor freight carriers use telematics systems to assist in payroll processing. This enables efficiencies at scale that
 are important to modern motor freight carrier operations.
 
-Automated payroll/HR systems want to receive Log Events and convert these into payroll tracking entries. To do
-this they follow a feed of:
+Automated payroll/HR systems want to receive Log Events and convert these into payroll tracking entries.
 
-* Log Event
+To do create payroll tracking entries in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-(see [Follow Fleet Log Events](#follow_fleet_log_events) above for more details) and they query for breaks and exemption
-rules for drivers in those logs:
+* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
 
-* Region Specific Break Rules
-* Region Specific Waivers
+furthermore -- if they operate in regions with specific break rules or waivers are applicable -- they use
 
-(see [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) above for more details.)
+* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) for each [Driver object id](#driver_object) in the
+feed for the times of interest to the payroll tracking entries
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
-this their systems send data _to_ the TSPs:
+this their systems send data _to_ the TSPs using
 
-* Externally Triggered Duty Status Change
+* [Update Driver Duty Status](#update_driver_duty_status) endpoint for a given [Driver object id](#driver_object).
 
-(see [Update Driver Duty Status](#update_driver_duty_status) above for more details.) HR staff want to associate their
-Driver's with metadata for use by the TSP. e.g. the region of governance for duty breaks and exemptions. To do this
-their systems send data _to_ the TSPs:
+and the duty status changes are reflected in the [Follow Fleet Log Events](#follow_fleet_log_events) endpoint.
 
-* Externally Sourced Driver Info
+To associate their Driver's with metadata for use by the TSP (e.g. the region of governance for duty breaks and
+exemptions) they use
+
+* [Update Driver Info](#update_driver_info) for a given [Driver object id](#driver_object).
 
 ## Update Driver Info                                        [PATCH /v1.0/drivers/{driverId}]
 <a id="update_driver_info"></a>
@@ -2284,11 +2329,11 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
 Motor freight carriers use telematics systems to monitor their fleets for accidents.
 
 Semi-automated systems want to receive notification of any accidents in their fleet and handle accident reports
-internally according to their own processes. To do this they follow a feed of:
+internally according to their own processes.
 
-* Log Event
+To do respond to accidents in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-(see [Follow Fleed Log Events](#follow_fleet_log_events) above for more details.)
+* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
 
 # Group Use Case Carrier Custom Business Intelligence
 
@@ -2296,22 +2341,19 @@ Motor freight carriers use telematics systems for multiple, custom, business int
 health of their fleet is considered and fed into their own proprietary models.
 
 Automated and semi-automated analysis and reporting systems want to get the overall fleet health status for a particular
-time period. They query the API for
+time period.
 
-* Coarse Vehicle Location Time History
-* Flagged Vehicle Fault Code Event
-* Vehicle Performance Event
-* Vehicle Fault Code Event
+To process the fleet state over a target time period they use
 
-of all vehicles over a given time period.
+* [Get Fleet Vehicle Info](#get_fleet_vehicle_info) for a given time period
 
-For certain use cases, they may opt to *follow* a feed of the above objects instead. See [Follow Fleet Vehicle Info](#follow_fleet_vehicle_info) below.
+To process and respond to fleet status in 'real-time' they follow a feed using
 
-They may also follow-up with queries of the hi-resolution time history of the fleet for a given time period:
+* [Follow Fleet Vehicle Info](#follow_fleet_vehicle_info) for all vehicles
 
-* Vehicle Location Time History
+To follow-up with queries of the hi-resolution time history of the fleet for a given time period they use
 
-(see [Get Fleet Location History](#get_fleet_location_history) above for more details.)
+* [Get Fleet Location History](#get_fleet_location_history) for a given time period.
 
 ## Get Fleet Vehicle Info                                      [GET /v1.0/fleet/infos/{?startTime,stopTime}]
 <a id="get_fleet_vehicle_info"></a>
@@ -2424,15 +2466,19 @@ entries with each query in the polling.
 
 Motor freight carriers use telematics systems to monitor compliance and safety for their operations.
 
-Personnel responsible for safety and compliance want to review the safety and compliance of their drivers. For a given
-driver they retrieve from the TSP:
+Personnel responsible for safety and compliance want to review the safety and compliance of their drivers. They have:
 
-* Driver Performance Summary
+* a [Driver object id](#driver_object) for a given driver
+* a time period of interest
 
-Motor freight carriers want to create, delete and modify driver login credentials that the drivers will use in the
-field. They send data _to_ the TSP:
+To obtain the information necessary to review for safety and compliance they use
 
-* External TSP Portal User Management
+* [Get Driver Performance Summaries](#get_driver_performance_summaries) for a given [Driver object id](#driver_object) and for a given time period
+
+To create, delete and modify driver login credentials that the drivers will use in the
+field and to which the [Driver Performance Summary objects](#driver_performance_summary_object) are associate they use
+
+* [Update Driver TSP Portal Account](#update_driver_tsp_portal_account) for a given [Driver object id](#driver_object)
 
 ## Get Driver Performance Summaries                            [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 <a id="get_driver_performance_summaries"></a>
@@ -2563,14 +2609,15 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 Motor freight carriers use telematics systems to plan (and react to) maintenance needs of their fleets.
 
 Automated back-end systems at the motor freight carrier want to be notified of any vehicle issues requiring maintenance.
-The systems determine which events require maintenance by following a feed of:
 
-* Vehicle Fault Code Event
+To determine which events require maintenance in 'real-time' they follow a feed using
 
-In the event that an issue requiring maintenance must be resolved in the field, the system will query to get the most
-recent vehicle location
+* [Follow Fleet Fault Code Events](#follow_fleet_fault_code_events) for all fleet vehicles
 
-* Vehicle Location Time History
+To dispatch assitance to the location of a given [Vehicle object id](#vehicle_object) -- in the event that an issue
+requiring maintenance must be resolved in the field -- they obtain the most recent vehicle location using
+
+* [Get Vehicle Location History](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
 
 ## Follow Fleet Fault Code Events                              [GET /v1.0/fleet/faults/feed{?token}]
 <a id="follow_fleet_fault_code_events"></a>
@@ -3085,6 +3132,7 @@ models here along with simple 'get by id' APIs. These simple APIs could be usefu
 it is expected that the 'use case based' API endpoints defined above will be of more use in integration than these.
 
 ## Log Event Object                                                [/v1.0/event_logs/{id}]
+<a id="log_event_object"></a>
 
 + Parameters
     + id            (string) - ID of the Log Event of interest
@@ -3126,6 +3174,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
             Retry-After: {implementation-defined}
 
 ## Driver Object                                                   [/v1.0/drivers/{id}]
+<a id="driver_object"></a>
 
 + Parameters
     + id            (string) - ID of a Driver object
@@ -3167,6 +3216,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
             Retry-After: {implementation-defined}
 
 ## Vehicle Object                                                  [/v1.0/vehicles/{id}]
+<a id="vehicle_object"></a>
 
 + Parameters
     + id            (string) - ID of a Vehicle object
@@ -3209,6 +3259,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
             Retry-After: {implementation-defined}
 
 ## Message Receipt Object                                          [/v1.0/message_receipts/{id}]
+<a id="message_receipt_object"></a>
 
 + Parameters
     + id            (string) - ID of a Message Receipt object
@@ -3252,6 +3303,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
 
 ## Region Specific Break Rules Object                              [/v1.0/region_specific_breaks/{id}]
+<a id="region_specific_break_rules_object"></a>
 
 Rules governing driver brakes for the specific region of governance of the driver in question. The rules are defined
 only by the region that is dictating the rules, clients are expected to interpret the region to realize specific break
@@ -3297,6 +3349,7 @@ rules.
             Retry-After: {implementation-defined}
 
 ## Region Specific Waivers Object                                  [/v1.0/region_specific_waivers/{id}]
+<a id="region_specific_waivers_object"></a>
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
 available
@@ -3341,6 +3394,7 @@ available
             Retry-After: {implementation-defined}
 
 ## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
+<a id="stop_geographic_details_object"></a>
 
 + Parameters
     + id            (string) - ID of the Stop Geographic Details of interest
@@ -3382,6 +3436,7 @@ available
             Retry-After: {implementation-defined}
 
 ## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
+<a id="vehicle_location_time_object"></a>
 
 + Parameters
     + id            (string) - ID of the Vehicle Location Time of interest
@@ -3423,6 +3478,7 @@ available
             Retry-After: {implementation-defined}
 
 ## Vehicle Flagged Event Object                                    [/v1.0/fleet/flagged_events/{id}]
+<a id="vehicle_flagged_event_object"></a>
 
 The purpose of the flagged events is to flag potential saftey issues for motor freight carrier staff to validate
 
@@ -3466,6 +3522,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
             Retry-After: {implementation-defined}
 
 ## Vehicle Fault Code Event Object                                 [/v1.0/fleet/faults/{id}]
+<a id="vehicle_fault_code_event_object"></a>
 
 + Parameters
     + id            (string) - ID of the Vehicle Fault Code Event of interest
@@ -3507,6 +3564,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
             Retry-After: {implementation-defined}
 
 ## Flagged Vehicle Fault Code Event Object                         [/v1.0/fleet/flagged_faults/{id}]
+<a id="flagged_vehicle_fault_code_event_object"></a>
 
 + Parameters
     + id            (string) - ID of the Flagged Vehicle Fault Code Event of interest
@@ -3548,6 +3606,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
             Retry-After: {implementation-defined}
 
 ## Vehicle Performance Event Object                                [/v1.0/fleet/performance_events/{id}]
+<a id="vehicle_performance_event_object"></a>
 
 + Parameters
     + id            (string) - ID of the Vehicle Performance Event of interest
@@ -3589,6 +3648,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
             Retry-After: {implementation-defined}
 
 ## Driver Performance Summary Object                               [/v1.0/driver_performance_summaries/{id}]
+<a id="driver_performance_summary_object"></a>
 
 Summary statistics on performance of drivers.
 
@@ -3614,6 +3674,48 @@ Summary statistics on performance of drivers.
 
 + Response 200 (application/json)
     + Attributes (Driver Performance Summary)
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## State of Health Object                                          [/v1.0/health/{id}]
+<a id="state_of_health_object"></a>
+
++ Parameters
+    + id            (string) - ID of the State of Health object of interest
+
++ Attributes (State of Health)
+
+### Get a State of Health by its ID                 [GET]
+<a id="get_a_state_of_health_by_its_id"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (State of Health)
 
 + Response 401
     + Body
