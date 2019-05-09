@@ -905,8 +905,8 @@ Telematics Data Model* for object descriptions as well.
 
 ### Flagged Event Thresholds (object)
 
-+ suddenThreshold:                           `3.13` (number) - the speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
-+ collisionThreshold:                        `12.2` (number) - the speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_COLLISION` is created, in m/s/s
++ suddenThreshold:                           `3.13` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
++ collisionThreshold:                        `12.2` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_COLLISION` is created, in m/s/s
 
 ### Vehicle Flagged Event (object)
 
@@ -917,7 +917,7 @@ Telematics Data Model* for object descriptions as well.
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ thresholds                                             (Flagged Event Thresholds) - the thresholds that were active during this event
++ thresholds                                             (Flagged Event Thresholds) - the thresholds that were active and against which ECU speed was compared during this event
 + trigger                                                (required, enum[string]) - type flagged event
     + Members
         + `FLAGGEDTYPE_ROLL_STABILITY` - Roll stability flagged event
