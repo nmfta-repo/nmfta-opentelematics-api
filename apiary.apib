@@ -541,7 +541,7 @@ for the time period from the driver's start of route up until the present by usi
 
 To change the route they use
 
-* [Update Driver Route Stop](#update_driver_route_stop) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
+* [Update Vehicle Route](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
 
 To update details (entry points, notes) of the route stop they use
 
@@ -582,7 +582,7 @@ completed trip, along with the driver information about duty on the trip. They h
 
 * a [Driver object id](#driver_object) for a given driver
 * and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) and may have optionally
-[updated the driver's Route Stop](#update_driver_route_stop) or [updated the *Stop Geographic Details*](#update_stop_geographic_details)
+[updated the driver's Route Stop](#update_vehicle_route) or [updated the *Stop Geographic Details*](#update_stop_geographic_details)
 they hence have both
     * a *Vehicle Route object id* and
     * a [Stop Geographic Details object id](#stop_geographic_details_object).
@@ -1224,110 +1224,370 @@ data type defined below. If you change one you should probably also change the o
 + password                                               (string) - user password
 + enabled           :                             `true` (boolean) - this user is enabled or disabled
 
-# Group Use Case Check Provider State of Health
 
-## Check Current State of Health                               [GET /v1.0/health/current]
-<a id="check_current_state_of_health"></a>
+# Group Vehicle
 
-Clients can request the current service state of health. The response to this query will be a data structure indicating
-everything is good or showing some details as to why the service is not presently at 100%.
+## Create a Vehicle Route                                     [POST /v1.0/vehicles/{vehicleId}/routes]
+<a id="create_a_vehicle_route"></a>
 
-Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (State of Health)
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Check Past 30d State of Health                              [GET /v1.0/health/recents]
-<a id="check_past_30d_state_of_health"></a>
-
-Clients can request the recent history of all service statuses. The response to this query will return all service
-status records (i.e. those returned via [Check Current State of Health](#check_current_state_of_health)) from over th
-past 30 days.
-
-Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
+Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
+additional instructions in a *Externally Sourced Route Start Stop Details* object.
 
 **Access Controls**
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (object)
-        + data (array[State of Health], fixed-type)
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Data Export
-
-## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
-<a id="complete_telematics_export_format"></a>
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
 
-+ Attributes (Complete Telematics Records)
++ Request
+    + Headers
 
-### Test if Complete Export Ready                              [GET]
-<a id="test_if_complete_export_ready"></a>
+            Authorization: Basic YWRtaW46YWRtaW4=
 
-If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `202` return code will be returned.
+    + Attributes (Externally Sourced Route Start Stop Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedRouteStartStopDetails",
+                "required": [
+                  "startName",
+                  "startLocation",
+                  "stopName",
+                  "stopLocation"
+                ],
+                "type": "object",
+                "properties": {
+                  "startName": {
+                    "type": "string",
+                    "description": "a name for the start location",
+                    "example": "start place 202"
+                  },
+                  "startAddress": {
+                    "type": "string",
+                    "description": "an optional street address of the start",
+                    "example": "11 Elm Street"
+                  },
+                  "startLocation": {
+                    "type": "string",
+                    "description": "the location of the start",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "routeAddInstructions": {
+                    "type": "string",
+                    "description": "an optional comment with details about the route",
+                    "example": "take trailers XXX and YYY"
+                  },
+                  "stopName": {
+                    "type": "string",
+                    "description": "a name for the stop location",
+                    "example": "pickup place 101"
+                  },
+                  "stopAddress": {
+                    "type": "string",
+                    "description": "an optional street address",
+                    "example": "13 Sycamore Ave"
+                  },
+                  "stopLocation": {
+                    "type": "string",
+                    "description": "the location of the stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "stopDeadline": {
+                    "type": "string",
+                    "description": "optional time and date when the stop must be arrived at",
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
+                    "example": "2019-04-05T02:04:16Z"
+                  }
+                }
+            }
+
++ Response 201 (application/json)
+
+    + Attributes (object)
+        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Update Vehicle Route                                        [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
+<a id="update_vehicle_route"></a>
+
+Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
+change the destination of the route, hence also changing the stopId associated with the route.
 
 **Access Controls**
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + routeId           : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Route Stop Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedRouteStopDetails",
+                "required": [
+                  "stopName",
+                  "stopLocation"
+                ],
+                "type": "object",
+                "properties": {
+                  "stopName": {
+                    "type": "string",
+                    "description": "a name for the stop location",
+                    "example": "pickup place 101"
+                  },
+                  "stopAddress": {
+                    "type": "string",
+                    "description": "an optional street address",
+                    "example": "13 Sycamore Ave"
+                  },
+                  "stopLocation": {
+                    "type": "string",
+                    "description": "the location of the stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "stopDeadline": {
+                    "type": "string",
+                    "description": "optional time and date when the stop must be arrived at",
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
+                    "example": "2019-04-05T02:04:16Z"
+                  }
+                }
+              }
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the updated route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId or routeId Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Update Stop Geographic Details                           [PATCH /v1.0/stops/{stopId}]
+<a id="update_stop_geographic_details"></a>
+
+Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
+truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
+truck should drive on approach).
+
+Sending data to this endpoint, using a previously returned `stopId` will update the geograhic details of the stop and
+any other routes using this stop will also be updated.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Stop Geographic Details)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedStopGeographicDetails",
+                "required": [
+                  "location"
+                ],
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "description": "an optional comment"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "the location of the delivery date at this stop",
+                    "example": "37.4224764 -122.0842499"
+                  },
+                  "entryArea": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "optional geographic location polygon detailing the entryway area for this stop"
+                  }
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geograhic Details
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: stopId Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
+<a id="send_message_to_a_vehicle"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
+    + Attributes (Externally Sourced Vehicle Display Messages)
+
+    + Schema
+
+            {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "title": "ExternallySourcedVehicleDisplayMessages",
+                "required": [
+                  "message"
+                ],
+                "type": "object",
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "description": "a brief 'subject-line' for this message"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "the message to be displayed to the driver"
+                  }
+                }
+            }
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + messageReceiptId:   `FC5E038D38A57032085441E7FE7010B0` (required, string) - the id of the Message Receipt object that will track the delivery- and option display-timestamps of this message
+
++ Response 204
+
++ Response 404 (text/plain)
+
+        Error: vehicleId not found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Vehicle Flagged Events                                  [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
+<a id="get_vehicle_flagged_events"></a>
+
+Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1335,16 +1595,15 @@ ready then a `202` return code will be returned.
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (object)
-        + location: `https://api.provider.com/v1.0/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
-
-+ Response 202
-
-        File not yet ready for download
+    + Attributes (Vehicle Flagged Event)
 
 + Response 400 (text/plain)
 
-        Error: dayOf parameter invalid
+        Error: startTime or stopTime parameters invalid
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
 
 + Response 401
     + Body
@@ -1366,26 +1625,20 @@ ready then a `202` return code will be returned.
 
             Retry-After: {implementation-defined}
 
-## Vehicle-Only Telematics Export Format                           [/v1.0/export/vehiclerecords/status{?dayOf}]
-<a id="vehicle_only_telematics_export_format"></a>
-
-+ Parameters
-    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
-
-+ Attributes (Vehicle Only Complete Telematics Records)
-
-### Test if Vehicle-Only Export Ready                          [GET]
-<a id="test_if_vehicle_only_export_ready"></a>
-
-If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
-ready then a `202` return code will be returned.
+## Get Vehicle Location History                                [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
+<a id="get_vehicle_location_history"></a>
 
 **Access Controls**
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
 
 + Request
     + Headers
@@ -1393,16 +1646,15 @@ ready then a `202` return code will be returned.
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (object)
-        + location: `https://api.provider.com/v1.0/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
-
-+ Response 202
-
-        File not yet ready for download
+    + Attributes (Vehicle Location Time History)
 
 + Response 400 (text/plain)
 
-        Error: dayOf parameter invalid
+        Error: startTime or stopTime parameters invalid
+
++ Response 404 (text/plain)
+
+        Error: vehicleId Not Found
 
 + Response 401
     + Body
@@ -1424,7 +1676,317 @@ ready then a `202` return code will be returned.
 
             Retry-After: {implementation-defined}
 
-# Group Use Case Driver Availability
+# Group Fleet
+
+## Follow Fleet Log Events                                     [GET /v1.0/event_logs/feed{?token}]
+<a id="follow_fleet_log_events"></a>
+
+Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + feed                                  (array[Log Event], fixed-type) - the 'feed' of Log Events
+
++ Response 400 (text/plain)
+
+        Error: token parameter invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Fleet Latest Locations                                  [GET /v1.0/fleet/locations/latest{?page,count}]
+<a id="get_fleet_latest_locations"></a>
+
+Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (Vehicle Location Time History)
+
++ Response 400 (text/plain)
+
+        Error: page or count parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Fleet Location History                                  [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
+<a id="get_fleet_location_history"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+    + page                             (optional, number) - the page to select for paginated response
+        + Default: 1
+    + count                            (optional, number) - the number of items to return
+        + Default: 50
+
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Headers
+
+            X-Total-Count: {+totalCount}
+
+    + Attributes (Vehicle Location Time History)
+
++ Response 400 (text/plain)
+
+        Error: startTime, stopTime, page or count parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Get Fleet Vehicle Info                                      [GET /v1.0/fleet/infos/{?startTime,stopTime}]
+<a id="get_fleet_vehicle_info"></a>
+
+Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
+    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
+        + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
+        + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
+        + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
+
++ Response 400 (text/plain)
+
+        Error: startTime or stopTime parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Follow Fleet Vehicle Info                                   [GET /v1.0/fleet/infos/feed{?token}]
+<a id="follow_fleet_vehicle_info"></a>
+
+Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
+system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
+entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + feed                                  (object) - the 'feed' of Fleet Vehicle Info
+            + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
+            + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
+            + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
+            + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
+
++ Response 400 (text/plain)
+
+        Error: token parameter invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Follow Fleet Fault Code Events                              [GET /v1.0/fleet/faults/feed{?token}]
+<a id="follow_fleet_fault_code_events"></a>
+
+Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
+bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Log Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+# Group Driver
 
 ## Get Driver Availability Factors                             [GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
 <a id="get_driver_availability_factors"></a>
@@ -1619,570 +2181,6 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
 
             Retry-After: {implementation-defined}
 
-# Group Use Case Driver Route & Directions Communication
-
-## Update Driver Route Stop                                    [PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}]
-<a id="update_driver_route_stop"></a>
-
-Clients can update a Driver's destination; sending data to this endpoint, using a previously obtained `routeId` will
-change the destination of the route, hence also changing the stopId associated with the route.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + routeId           : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-    + Attributes (Externally Sourced Route Stop Details)
-
-    + Schema
-
-            {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStopDetails",
-                "required": [
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101"
-                  },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
-                  }
-                }
-              }
-
-+ Response 200 (application/json)
-
-    + Attributes (object)
-        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the updated route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: vehicleId or routeId Not Found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Update Stop Geographic Details                           [PATCH /v1.0/stops/{stopId}]
-<a id="update_stop_geographic_details"></a>
-
-Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
-truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
-truck should drive on approach).
-
-Sending data to this endpoint, using a previously returned `stopId` will update the geograhic details of the stop and
-any other routes using this stop will also be updated.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-    + Attributes (Externally Sourced Stop Geographic Details)
-
-    + Schema
-
-            {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedStopGeographicDetails",
-                "required": [
-                  "location"
-                ],
-                "type": "object",
-                "properties": {
-                  "comment": {
-                    "type": "string",
-                    "description": "an optional comment"
-                  },
-                  "location": {
-                    "type": "string",
-                    "description": "the location of the delivery date at this stop",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "entryArea": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "optional geographic location polygon detailing the entryway area for this stop"
-                  }
-                }
-            }
-
-+ Response 200 (application/json)
-
-    + Attributes (object)
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geograhic Details
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: stopId Not Found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Driver Route & Directions Start
-
-## Get Vehicle Flagged Events                                  [GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}]
-<a id="get_vehicle_flagged_events"></a>
-
-Clients can retrieve all the flagged vehicle events of a given vehicle over a given period of time.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (Vehicle Flagged Event)
-
-+ Response 400 (text/plain)
-
-        Error: startTime or stopTime parameters invalid
-
-+ Response 404 (text/plain)
-
-        Error: vehicleId Not Found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Create a Vehicle Route                                     [POST /v1.0/vehicles/{vehicleId}/routes]
-<a id="create_a_vehicle_route"></a>
-
-Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
-additional instructions in a *Externally Sourced Route Start Stop Details* object.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-    + Attributes (Externally Sourced Route Start Stop Details)
-
-    + Schema
-
-            {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStartStopDetails",
-                "required": [
-                  "startName",
-                  "startLocation",
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "startName": {
-                    "type": "string",
-                    "description": "a name for the start location",
-                    "example": "start place 202"
-                  },
-                  "startAddress": {
-                    "type": "string",
-                    "description": "an optional street address of the start",
-                    "example": "11 Elm Street"
-                  },
-                  "startLocation": {
-                    "type": "string",
-                    "description": "the location of the start",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "routeAddInstructions": {
-                    "type": "string",
-                    "description": "an optional comment with details about the route",
-                    "example": "take trailers XXX and YYY"
-                  },
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101"
-                  },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
-                  }
-                }
-            }
-
-+ Response 201 (application/json)
-
-    + Attributes (object)
-        + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: vehicleId Not Found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Driver Route and Directions Done
-
-## Follow Fleet Log Events                                     [GET /v1.0/event_logs/feed{?token}]
-<a id="follow_fleet_log_events"></a>
-
-Clients can follow a feed of Log Event entries as they are added to the TSP system; following is accomplished via
-polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
-
-+ Parameters
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
-        + feed                                  (array[Log Event], fixed-type) - the 'feed' of Log Events
-
-+ Response 400 (text/plain)
-
-        Error: token parameter invalid
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Driver Messaging by Geo-Location
-
-## Get Fleet Latest Locations                                  [GET /v1.0/fleet/locations/latest{?page,count}]
-<a id="get_fleet_latest_locations"></a>
-
-Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a given time period.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + page                             (optional, number) - the page to select for paginated response
-        + Default: 1
-    + count                            (optional, number) - the number of items to return
-        + Default: 50
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Headers
-
-            X-Total-Count: {+totalCount}
-
-    + Attributes (Vehicle Location Time History)
-
-+ Response 400 (text/plain)
-
-        Error: page or count parameters invalid
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
-<a id="send_message_to_a_vehicle"></a>
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-    + Attributes (Externally Sourced Vehicle Display Messages)
-
-    + Schema
-
-            {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedVehicleDisplayMessages",
-                "required": [
-                  "message"
-                ],
-                "type": "object",
-                "properties": {
-                  "subject": {
-                    "type": "string",
-                    "description": "a brief 'subject-line' for this message"
-                  },
-                  "message": {
-                    "type": "string",
-                    "description": "the message to be displayed to the driver"
-                  }
-                }
-            }
-
-+ Response 201 (application/json)
-    + Attributes (object)
-        + messageReceiptId:   `FC5E038D38A57032085441E7FE7010B0` (required, string) - the id of the Message Receipt object that will track the delivery- and option display-timestamps of this message
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: vehicleId not found
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-
-# Group Use Case Driver Messaging by Vehicle
-
-# Group Use Case Vehicle Location Time History Processing
-
-## Get Fleet Location History                                  [GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}]
-<a id="get_fleet_location_history"></a>
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
-    + page                             (optional, number) - the page to select for paginated response
-        + Default: 1
-    + count                            (optional, number) - the number of items to return
-        + Default: 50
-
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Headers
-
-            X-Total-Count: {+totalCount}
-
-    + Attributes (Vehicle Location Time History)
-
-+ Response 400 (text/plain)
-
-        Error: startTime, stopTime, page or count parameters invalid
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Human Resources Process: Payroll
-
 ## Update Driver Info                                        [PATCH /v1.0/drivers/{driverId}]
 <a id="update_driver_info"></a>
 
@@ -2268,119 +2266,6 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
     + Headers
 
             Retry-After: {implementation-defined}
-
-# Group Use Case Human Resources Process: Accident Report
-
-# Group Use Case Carrier Custom Business Intelligence
-
-## Get Fleet Vehicle Info                                      [GET /v1.0/fleet/infos/{?startTime,stopTime}]
-<a id="get_fleet_vehicle_info"></a>
-
-Clients can retrieve a combination of all vehicle information for all vehicles over a given time period.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (object)
-        + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-        + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
-        + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
-        + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
-
-+ Response 400 (text/plain)
-
-        Error: startTime or stopTime parameters invalid
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-## Follow Fleet Vehicle Info                                   [GET /v1.0/fleet/infos/feed{?token}]
-<a id="follow_fleet_vehicle_info"></a>
-
-Clients can follow a feed of a combination of all vehicle information for all vehicles as they are added to the TSP
-system; following is accomplished via polling an endpoint and providing a 'token' which evolves the window of new
-entries with each query in the polling.
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-    + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
-        + feed                                  (object) - the 'feed' of Fleet Vehicle Info
-            + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
-            + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
-            + vehiclePerformanceEvents                           (required, array[Vehicle Performance Event], fixed-type) - all vehicle performance events for all vehicles in the requested time period
-            + vehicleFaultCodeEvents                             (required, array[Vehicle Fault Code Event], fixed-type) - all vehicle fault code events for all vehicles in the requested time period
-
-+ Response 400 (text/plain)
-
-        Error: token parameter invalid
-
-+ Response 401
-    + Body
-
-            Authentication Required
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
-
-+ Response 429
-    + Body
-
-            Too Many Requests
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-# Group Use Case Compliance and Safety Monitoring
 
 ## Get Driver Performance Summaries                            [GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}]
 <a id="get_driver_performance_summaries"></a>
@@ -2506,23 +2391,22 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 
             Retry-After: {implementation-defined}
 
-# Group Use Case In-Field Maintenance & Repair
+# Group State of Health
 
-## Follow Fleet Fault Code Events                              [GET /v1.0/fleet/faults/feed{?token}]
-<a id="follow_fleet_fault_code_events"></a>
+## Check Current State of Health                               [GET /v1.0/health/current]
+<a id="check_current_state_of_health"></a>
 
-Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
-bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+Clients can request the current service state of health. The response to this query will be a data structure indicating
+everything is good or showing some details as to why the service is not presently at 100%.
+
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -2530,13 +2414,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
-        + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Log Events
-
-+ Response 400 (text/plain)
-
-        Error: token parameters invalid
+    + Attributes (State of Health)
 
 + Response 401
     + Body
@@ -2545,10 +2423,6 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
 
 + Response 429
     + Body
@@ -2558,20 +2432,21 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
             Retry-After: {implementation-defined}
 
-## Get Vehicle Location History                                [GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}]
-<a id="get_vehicle_location_history"></a>
+## Check Past 30d State of Health                              [GET /v1.0/health/recents]
+<a id="check_past_30d_state_of_health"></a>
+
+Clients can request the recent history of all service statuses. The response to this query will return all service
+status records (i.e. those returned via [Check Current State of Health](#check_current_state_of_health)) from over th
+past 30 days.
+
+Clients must treat any response other than code 200, code 401, or code 429 as equivalent to `SERVICESTATUS_MAJOR_OUTAGE`.
 
 **Access Controls**
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
-    + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
-    + stopTime: `2019-04-05T02:04:16Z` (required, string) - the stop-date of the search
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -2579,15 +2454,8 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
             Authorization: Basic YWRtaW46YWRtaW4=
 
 + Response 200 (application/json)
-    + Attributes (Vehicle Location Time History)
-
-+ Response 400 (text/plain)
-
-        Error: startTime or stopTime parameters invalid
-
-+ Response 404 (text/plain)
-
-        Error: vehicleId Not Found
+    + Attributes (object)
+        + data (array[State of Health], fixed-type)
 
 + Response 401
     + Body
@@ -2596,10 +2464,6 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
-
-+ Response 413
-
-        Requested entity is too large
 
 + Response 429
     + Body
@@ -3009,6 +2873,124 @@ the request headers.)
     + Headers
 
             WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+# Group Data Export
+
+## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
+<a id="complete_telematics_export_format"></a>
+
++ Parameters
+    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
+
++ Attributes (Complete Telematics Records)
+
+### Test if Complete Export Ready                              [GET]
+<a id="test_if_complete_export_ready"></a>
+
+If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
+ready then a `202` return code will be returned.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + location: `https://api.provider.com/v1.0/export/allrecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+
++ Response 202
+
+        File not yet ready for download
+
++ Response 400 (text/plain)
+
+        Error: dayOf parameter invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle-Only Telematics Export Format                           [/v1.0/export/vehiclerecords/status{?dayOf}]
+<a id="vehicle_only_telematics_export_format"></a>
+
++ Parameters
+    + dayOf:    `2019-04-05T02:04:16Z` (required, string) - the day of interest, specified by any timestamp within that day, including 0000h
+
++ Attributes (Vehicle Only Complete Telematics Records)
+
+### Test if Vehicle-Only Export Ready                          [GET]
+<a id="test_if_vehicle_only_export_ready"></a>
+
+If the file is ready the response will include a URL where the complete file can be fetched; if the file is not yet
+ready then a `202` return code will be returned.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + location: `https://api.provider.com/v1.0/export/vehiclerecords/files/d8603741fd48a71cbf8546b04c9bc9f8` (required, string) - a URL where the complete file can be retrieved. If it is under that of the OTAPI endpoints then the same authentication and authorization schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible without any authentication or authorization and the client is expected to be configured with the appropriate credentials for download independently of responses from the OTAPI server.
+
++ Response 202
+
+        File not yet ready for download
+
++ Response 400 (text/plain)
+
+        Error: dayOf parameter invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
 
 + Response 429
     + Body
