@@ -6,15 +6,23 @@ A project to enable business resiliency for motor freight carriers with tight in
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
-This document is written using [api-blueprint](https://apiblueprint.org/) and available online at both
-[opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io/#) (for browsable document) and
-https://github.com/nmfta-repo/nmfta-opentelematics-api for the API blueprint source. Please use https://github.com/nmfta-repo/nmfta-opentelematics-api to raise issues and suggest changes to the API.
+This document is written in [API Blueprint format 1A](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
 
-If a telematics system provider (TSP) suddenly goes out of business
-(have had two examples of this in 2018) any commercial fleet relying on
-their service will need to find a new provider. Due to the lack of a
-standardized telematics data format, a commercial fleet manager will
-have to reintegrate an alternate telematics provider's data format into
+The draft specification is pubished in various forms:
+
+* at [github.com/nmfta-repo/nmfta-opentelematics-api](https://github.com/nmfta-repo/nmfta-opentelematics-api)
+* here, [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io), as:
+    * Interactive documentation
+    * A mock server
+* at [apimatic/.../nmfta-opentelematics-api](https://www.apimatic.io/apidocs/nmfta-opentelematics-api) as:
+    * Exportable API specifications in multiple formats including: Open API 3.0, RAML 1.0, and Swagger 2.0
+    * Downloadable (client) SDKs in .NET and Python
+
+# Motivation
+
+If a telematics system provider (TSP) suddenly goes out of business (have had two examples of this in 2018) any
+commercial fleet relying on their service will need to find a new provider. Due to the lack of a standardized telematics
+data format, a commercial fleet manager will have to reintegrate an alternate telematics provider's data format into
 their existing system reporting.
 
 The Open Telematics API (OTAPI) is intended to make the TSP-Carrier interface the same across multiple TSPs. It is not
