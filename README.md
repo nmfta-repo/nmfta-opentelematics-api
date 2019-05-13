@@ -4,7 +4,7 @@ A project to enable business resiliency for motor freight carriers with tight in
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
 
-This repository hosts the `v0.1-rc.5` draft formal specification of the Open Telematics API; in [API Blueprint format 1A](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
+This repository hosts the `v1.0-rc.0` draft formal specification of the Open Telematics API; in [API Blueprint format 1A](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
 
 The draft specification is pubished in various forms:
 
