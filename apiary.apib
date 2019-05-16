@@ -2805,6 +2805,10 @@ Clients can retrieve the current translation table for this TSP's Open Telematic
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 # Group Open Telematics Data Model
 
 For the purposes of clearly detailing the data object types used by the API endpoints above, we include the object
@@ -2845,6 +2849,10 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Driver Object                                                   [/v1.0/drivers/{id}]
 
 + Parameters
@@ -2878,6 +2886,10 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Vehicle Object                                                  [/v1.0/vehicles/{id}]
 
@@ -2913,6 +2925,10 @@ it is expected that the 'use case based' API endpoints defined above will be of 
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Region Specific Break Rules Object                              [/v1.0/region_specific_breaks/{id}]
 
@@ -2952,6 +2968,10 @@ rules.
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Region Specific Waivers Object                                  [/v1.0/region_specific_waivers/{id}]
 
 Waivers and exceptions for the specific region of governance of the driver in question. One entity per day of a waiver
@@ -2988,6 +3008,10 @@ available
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 
@@ -3030,6 +3054,10 @@ indicating the entryway onto a facility (i.e. where the truck should drive on ap
 
         Error: id Not Found
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
 
 + Parameters
@@ -3063,6 +3091,10 @@ indicating the entryway onto a facility (i.e. where the truck should drive on ap
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Vehicle Flagged Event Object                                    [/v1.0/fleet/flagged_events/{id}]
 
@@ -3100,6 +3132,10 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Vehicle Fault Code Event Object                                 [/v1.0/fleet/faults/{id}]
 
 + Parameters
@@ -3133,6 +3169,10 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Flagged Vehicle Fault Code Event Object                         [/v1.0/fleet/flagged_faults/{id}]
 
@@ -3168,6 +3208,10 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Performance Thresholds Object                                   [/v1.0/fleet/performance_thresholds/{id}]
 
 + Parameters
@@ -3202,6 +3246,10 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             Retry-After: {implementation-defined}
 
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
 ## Vehicle Performance Event Object                                [/v1.0/fleet/performance_events/{id}]
 
 + Parameters
@@ -3235,6 +3283,10 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Driver Performance Summary Object                               [/v1.0/driver_performance_summaries/{id}]
 
@@ -3271,3 +3323,7 @@ Summary statistics on performance of drivers.
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
