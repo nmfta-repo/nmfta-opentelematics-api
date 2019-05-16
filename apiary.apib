@@ -1488,50 +1488,7 @@ change the destination of the route, hence also changing the stopId associated w
 
             Retry-After: {implementation-defined}
 
-## Route Stop Geographic Details                                   [/v1.0/stops/{stopId}]
-
-### Get Stop Geographic Details                                [GET]
-
-Clients can retrieve the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
-truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
-truck should drive on approach).
-
-**Access Controls**
-
-
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
-
-+ Parameters
-    + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
-
-+ Request
-    + Headers
-
-            Authorization: Basic YWRtaW46YWRtaW4=
-
-+ Response 200 (application/json)
-
-    + Attributes (Stop Geographic Details)
-
-+ Response 204
-
-+ Response 404 (text/plain)
-
-        Error: stopId Not Found
-
-+ Response 401
-    + Headers
-
-            WWW-Authenticate: Basic realm="protected"
-
-+ Response 429
-    + Headers
-
-            Retry-After: {implementation-defined}
-
-### Update Stop Geographic Details                           [PATCH]
+### Update Stop Geographic Details                           [PATCH /v1.0/stops/{stopId}]
 
 Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
 truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
@@ -3034,6 +2991,9 @@ available
 
 ## Stop Geographic Details Object                                  [/v1.0/stops/{id}]
 
+*Stop Geographic Details* are the specific location for the truck and trailer to park and a polygon of geographic points
+indicating the entryway onto a facility (i.e. where the truck should drive on approach).
+
 + Parameters
     + id            (string) - ID of the Stop Geographic Details of interest
 
@@ -3065,6 +3025,10 @@ available
     + Headers
 
             Retry-After: {implementation-defined}
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
 
 ## Vehicle Location Time Object                                    [/v1.0/fleet/locations/{id}]
 
