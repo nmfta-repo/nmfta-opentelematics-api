@@ -677,6 +677,15 @@ requiring maintenance must be resolved in the field -- they obtain the most rece
 
 * [Get Vehicle Location History](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
 
+## Machine-Readable Data Quality
+
+Motor freight carriers rely on data quality properties of the service provided by TSPs and need to be able to adapt
+their back-end systems depending on the various data quality propoerties of a given TSP's service.
+
+To determine what the expected data qualities of the service are, they use
+
+* [Get Data Qualities Statement](#get_data_qualities_statement).
+
 ## Data Structures
 
 ### Open Telematics Data Model Objects (object)
@@ -1062,6 +1071,17 @@ Telematics Data Model* for object descriptions as well.
 + comment : `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
 + msgid :                             `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
 + msgstr :                                  `Diagnostic` (required, string) - The locale's representation (translation) of the token
+
+### Data Qualities (object)
+
++ providerId        :                 `api.provider.com` (required, string) - the unique 'Provider ID' of the TSP
++ locationPrecision :                                 20 (required, string) - the location precision in meters of radius of precision
++ samplingMethod    :                `SAMPLING_PERIODIC` (required, enum[string]) - the sampling method of the TSP; either regular/periodic sampling or change/event based sampling
+    + Members
+        + `SAMPLING_PERIODIC` - regular/periodic sampling
+        + `SAMPLING_CHANGE` - change/event based sampling
++ sampleRate        :                                100 (number) - the sample rate (in the case of `SAMPLING_PERIODIC`) in Hz
++ latency           :                                 30 (required, number) - the expected latency of delivery of an event/object from the telematics device to the motor freight carrier via OTAPI
 
 ### State of Health (object)
 
@@ -2340,6 +2360,45 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
     + Headers
 
             Retry-After: {implementation-defined}
+# Group Data Qualities
+
+## Get Data Qualities Statement                                [GET /v1.0/dataquality]
+<a id="get_data_qualities_statement"></a>
+
+Clients can request details on the expected latencies, sample rate, sampling method, precisions and other data qualities
+of this service. Implementors are free to return difference values for different customer accounts; however, it is
+expected that the response to requests on this endpoint does not vary with time.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Data Qualities)
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
 
 # Group State of Health
 
@@ -2796,14 +2855,24 @@ the request headers.)
                         "msgstr": "This is a SID as defined in SAE J1587"
                     },
                     {
-                        "origin": "Vehicle Locatoin Time History",
+                        "origin": "Vehicle Location Time History",
                         "msgid": "TIMERESOLUTION_MAX",
                         "msgstr": "This is at the highest available time resolution"
                     },
                     {
-                        "origin": "Vehicle Locatoin Time History",
+                        "origin": "Vehicle Location Time History",
                         "msgid": "TIMERESOLUTION_NOT_MAX",
                         "msgstr": "This is not at the highest available time resolution"
+                    },
+                    {
+                        "origin": "Data Qualities, samplingMethod",
+                        "msgid": "SAMPLING_PERIODIC",
+                        "msgstr": "regular/periodic sampling"
+                    },
+                    {
+                        "origin": "Data Qualities, samplingMethod",
+                        "msgid": "SAMPLING_CHANGE",
+                        "msgstr": "change/event based sampling"
                     }
                 ]
             }
