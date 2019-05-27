@@ -718,6 +718,24 @@ single role and no further permissions. For this, the leasing companies also use
 
 * [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
 
+## Monitor Fleet Battery Status
+
+Motor freight carriers need to monitor the battery voltage of their fleet of vehicles.
+
+To monitor these battery voltages in 'real time' they follow a feed using
+
+* [Follow Fleet Performance Events](#follow_fleet_performance_events) for all fleet vehicles
+
+Alternatively, the motor freight carriers may follow a feed using
+
+* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+
+However, the latter may require special configuration for allowing the appropriate raw CAN frames to be sent via the
+[Follow Fleet Status Events](#follow_fleet_status_events) endpoint. Furthermore, the [Follow Fleet Status Events](#follow_fleet_status_events)
+endpoint may not produce data in as many ignition states as [Follow Fleet Performance Events](#follow_fleet_performance_events)
+and the [Follow Fleet Performance Events](#follow_fleet_performance_events) may offer higher resolution on battery
+voltage than [Follow Fleet Status Events](#follow_fleet_status_events).
+
 ## Data Structures
 
 ### Open Telematics Data Model Objects (object)
@@ -2057,6 +2075,58 @@ configure/agree-to the set of raw data via some other mechanism.
     + Headers
 
             Retry-After: {implementation-defined}
+
+
+## Follow Fleet Performance Events                              [GET /v1.0/fleet/performanceevents/feed{?token}]
+<a id="follow_fleet_performance_events"></a>
+
+Clients can follow a feed of Vehicle Performance Events as they are added to the TSP system; following is accomplished bia
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Performance Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Performance Events
+        + feed                                  (array[Vehicle Status Event], fixed-type) - the 'feed' of Performance Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 
 
 # Group Driver
