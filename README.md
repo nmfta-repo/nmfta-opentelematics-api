@@ -16,6 +16,8 @@ The draft specification is pubished in various forms:
 	* Exportable API specifications in multiple formats including: Open API 3.0, RAML 1.0, and Swagger 2.0
 	* Downloadable (client) SDKs in .NET and Python
 
+There is also a prototype implementation of version [0.1rc4](https://github.com/nmfta-repo/nmfta-opentelematics-api/releases/tag/proto-0.1rc4) of this specificiation available at [github.com/nmfta-repo/nmfta-opentelematics-prototype](https://github.com/nmfta-repo/nmfta-opentelematics-prototype).
+
 # Contributors
 
 This Open Telematics API was made possible through the generous contributions of thought leadership and technical expertise
