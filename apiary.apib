@@ -61,6 +61,7 @@ their time and energy to make this a reality.
 ![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png) ![Omnitracs](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/Omnitracs_logo_2015_CMYK_no_tagline.jpg) ![Zonar Systems](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/zonar-logo-RGB-750.png)
 
 # Authentication
+<a id="authentication"></a>
 
 **All requests** to Open Telematics API endpoints **require authentication**.
 
@@ -115,6 +116,44 @@ are assigned `DENY/ALLOW` such that:
 * the *Driver Dispatch* role is allowed to update route info and send messages to drivers
 * the *Driver Duty* role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)
 * the *HR* role is allowed to update Driver information and TSP portal user accounts
+
+# Security Manifest
+
+The Open Telematics has been design with security up-front. Here we capture some NIST 800-53 controls which are satisfied
+by the present design of OTAPI and how. The intent of this section is to give some assurance of security-by-design in the
+OTAPI.
+
+***NIST 800-53 SC-6: Resource Availability / URL size should not exceed 2000 characters***
+
+None of the URLs in any of the endpoints of OTAPI will exceed a maximum of 220 characters. The longest resource path is
+`/v1.0/drivers/{driverId}/availability_factors/` which would be 104 characters long if a 68 character `driverId` were
+used. The endpoints have between 1 and 3 query string parameters, most are dates which are expressed in ISO 8601 format,
+24 characters long the others are opaque IDs which could be up to 68 characters long. Worst case URL lenght is 104 + 24
++ 24 + 68 (220) characters.
+
+***NIST 800-53 SC-6: Resource Availability / HTTP request size should not exceed 1MB limit***
+
+All `POST`, `PUT` and `PATCH` methods in the OTAPI are specific with JSON Schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
+4K.
+
+***NIST 800-53 SI-10: Information Input Validation / All file references should be indirect***
+
+There are no direct file references in OTAPI; all objects are referred to by opaque identifiers and furthermore the data export API returns a URL for dereferencing and not a file.
+
+***NIST 800-53 AC-3: Access Enforcement / Considerations: Grant privileges directly to users***
+
+The OTAPI is designed for machine to machine communications; as such the privileges for access to OTAPI information is
+granted to the motor freight carrier backend systems which intergrate with OTAPI services. The privileges assigned
+can be minimized, however -- see sections [Authentication](#authentication) and [Authorization](#authorization).
+
+***NIST 800-53 AC-24: Access Control Decisions / Considerations: Security controls assigned to each request***
+
+OTAPI requires valid authorization with each request; see section [Authentication](#authentication).
+
+***NIST 800-53 AU-6: Audit Review, Analysis, and Reporting / Considerations: Grant privileges to specific users***
+
+OTAPI is designed with segmented privileges and separated user roles so that privileges are granted to specific roles
+and no more privilege is used than is needed. See section [Authorization](#authorization).
 
 # Security Requirements for Implementors
 <a id="security_requirements_for_implementors"></a>
