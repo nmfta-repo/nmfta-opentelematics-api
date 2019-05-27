@@ -414,79 +414,9 @@ this specification is all the data specified here and does not include any other
 and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of
 TSP outage or to restore data -- although this last potential use is _not_ a use case we aim to support in OTAPI.
 
-***Data Import***
+To obtain a complete data export (including driver information) they use [Complete Telematics Export Format](#complete_telematics_export_format).
 
-The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
-same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
-data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
-
-***PII Separation***
-
-The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
-above. OTAPI implementations must provide for export of both [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
-and [Complete Telematics Export Format](#complete_telematics_export_format) objects so that systems which must be separated
-from PII can download the [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) type. As is
-noted in the access controls below, requests for these data types deny access by the *Vehicle X* roles.
-
-***Polling for Daily Files***
-
-The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
-server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
-not yet ready, or respond with a redirect to a location serving the complete file (statically).
-
-Implementors are free to make the files available for download from any service they choose. If the service hosting the
-files for download exposes endpoints under that of the OTAPI endpoints then the same authentication and authorization
-schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible
-without any authentication or authorization and the client is expected to be configured with the appropriate credentials
-for download independently of responses from the OTAPI server.
-
-***Time-base for Data Export***
-
-Note that the data export files will include both time-varying objects (those that have time associated with them) and
-also those that do not.
-
-* For time-varying objects: the files will only include whose associated time periods have an intesection with the
-requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
-
-* For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
-API consistency under `/export/...`)
-
-Furthermore, the event and object times considered in the time queries for data export use *received times* (as opposed
-the default policy of relying on *creation times*). These are the times when the event or object was received, recorded
-and/or made available by the OTAPI server. This could pose problems for processing exported data for RODS compliance as
-multiple files may need to be processed in high-latency situations; however, the alternative is allow for data loss in
-the daily export files.
-
-***Complete Data Export***
-
-The *Complete* objects will contain sets of all of the following objects embedded, see [Complete Telematics Export Format](#complete_telematics_export_format) for more details.
-
-* [Vehicle](#vehicle_object)
-* [Vehicle Location Time](#vehicle_location_time_object)
-* [Vehicle Flagged Event](#vehicle_flagged_event_object)
-* [Vehicle Performance Event](#vehicle_performance_event_object)
-* [Stop Geographic Details](#stop_geographic_details_object)
-* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
-* [Driver](#driver_object)
-* [Log Event](#log_event_object)
-* [Region Specific Break Rules](#region_specific_break_rules_object)
-* [Region Specific Waivers](#region_specific_waivers_object)
-* [Driver Performance Summary](#driver_performance_summary_object)
-* [Message Receipt](#message_receipts)
-* [State of Health](#state_of_health_object)
-
-***Vehicle-Only Data Export***
-
-The *Vehicle-Only* objects will contain sets of all of the following objects embedded, see [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) for more details.
-
-* [Vehicle](#vehicle_object)
-* [Vehicle Location Time](#vehicle_location_time_object)
-* [Vehicle Flagged Event](#vehicle_flagged_event_object)
-* [Vehicle Performance Event](#vehicle_performance_event_object)
-* [Stop Geographic Details](#stop_geographic_details_object)
-* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
-* [State of Health](#state_of_health_object)
+To obtain a data export with vehicle information only (intended to be free of PII) they use [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format).
 
 ## Generate Records of Duty Status for Compliance
 
@@ -2899,6 +2829,80 @@ the request headers.)
             Retry-After: {implementation-defined}
 
 # Group Data Export
+
+***On Data Import***
+
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
+same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
+data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
+***PII Separation***
+
+The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
+above. OTAPI implementations must provide for export of both [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
+and [Complete Telematics Export Format](#complete_telematics_export_format) objects so that systems which must be separated
+from PII can download the [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) type. As is
+noted in the access controls below, requests for these data types deny access by the *Vehicle X* roles.
+
+***Polling for Daily Files***
+
+The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
+server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
+not yet ready, or respond with a redirect to a location serving the complete file (statically).
+
+Implementors are free to make the files available for download from any service they choose. If the service hosting the
+files for download exposes endpoints under that of the OTAPI endpoints then the same authentication and authorization
+schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible
+without any authentication or authorization and the client is expected to be configured with the appropriate credentials
+for download independently of responses from the OTAPI server.
+
+***Time-base for Data Export***
+
+Note that the data export files will include both time-varying objects (those that have time associated with them) and
+also those that do not.
+
+* For time-varying objects: the files will only include whose associated time periods have an intesection with the
+requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
+
+* For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
+API consistency under `/export/...`)
+
+Furthermore, the event and object times considered in the time queries for data export use *received times* (as opposed
+the default policy of relying on *creation times*). These are the times when the event or object was received, recorded
+and/or made available by the OTAPI server. This could pose problems for processing exported data for RODS compliance as
+multiple files may need to be processed in high-latency situations; however, the alternative is allow for data loss in
+the daily export files.
+
+***Complete Data Export***
+
+The *Complete* objects will contain sets of all of the following objects embedded.
+
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [Driver](#driver_object)
+* [Log Event](#log_event_object)
+* [Region Specific Break Rules](#region_specific_break_rules_object)
+* [Region Specific Waivers](#region_specific_waivers_object)
+* [Driver Performance Summary](#driver_performance_summary_object)
+* [Message Receipt](#message_receipts)
+* [State of Health](#state_of_health_object)
+
+***Vehicle-Only Data Export***
+
+The *Vehicle-Only* objects will contain sets of all of the following objects embedded.
+
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [State of Health](#state_of_health_object)
 
 ## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
 <a id="complete_telematics_export_format"></a>
