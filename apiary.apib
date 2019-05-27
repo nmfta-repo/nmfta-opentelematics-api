@@ -702,6 +702,22 @@ To gain these estimates they post-process either the complete or vehicle only re
 For example, estimates of received data latency can be obtained by processing downloads from either of the above and
 summarizing the difference between the created timestamps and server timestamps.
 
+## Monitor Vehicle Status Events
+
+Motor freight carriers need access to raw J1939 vehicle frames for various custom fleet management tasks. To process the raw frames in 'real-time' they follow a feed using
+
+* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+
+NB: These vehicle status events are largely *raw* J1939 data. Open Telematics API makes no requirements on how the TSP
+determines what raw frames to send via this interface. It is expected that the motor freight carrier and the TSP
+configure/agree-to the set of raw data via some other mechanism.
+
+Furthermore, truck leasing companies need to have access to this raw vehicle status data via single-purpose accounts at
+the motor freight carrier's TSP. i.e. the truck leasing company does not require access to any other information so the account has a
+single role and no further permissions. For this, the leasing companies also use
+
+* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+
 ## Data Structures
 
 ### Open Telematics Data Model Objects (object)
@@ -1001,13 +1017,28 @@ Telematics Data Model* for object descriptions as well.
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
 + ldwDisable                                             (boolean)          - Lane Departure Warning disable switch status
 
+### Vehicle Status Event (object)
+
++ id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
++ vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
++ location          :         ` 37.4224764 -122.0842499` (required, string) - location of the vehicle at the time of this event
++ eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
++ triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
++ ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
++ gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
++ canIdentifier     :                        `C F004 01` (required, string) - a hex-encoded string (spaces allowed) of the 29-bit J1939 CAN identifier
++ data              :          `FF FF 82 DF 1A FF FF FF` (required, string) - a hex-encoded string (spaces allowed) of the J1939 data payload
+
 ### Vehicle Fault Code Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
 + serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
-+ location          :         ` 37.4224764 -122.0842499` (required, string) - location
++ location          :         ` 37.4224764 -122.0842499` (required, string) - location of the vehicle at the time of this event
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
@@ -1120,6 +1151,7 @@ Telematics Data Model* for object descriptions as well.
 + vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + flaggedVehicleFaultEvents                              (array[Flagged Vehicle Fault Code Event], fixed-type) - Any of the Flagged Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ vehicleStatusEvents                                    (array[Vehicle Status Event], fixed-type) - Any of the Vehicle Status Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -1971,6 +2003,61 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
     + Headers
 
             Retry-After: {implementation-defined}
+
+## Follow Fleet Status Events                              [GET /v1.0/fleet/statusevents/feed{?token}]
+<a id="follow_fleet_status_events"></a>
+
+Clients can follow a feed of Vehicle Status Events as they are added to the TSP system; following is accomplished bia
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+These vehicle status events are largely *raw* J1939 data. Open Telematics API makes no requirements on how the TSP
+determines what raw frames to send via this interface. It is expected that the motor freight carrier and the TSP
+configure/agree-to the set of raw data via some other mechanism.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Status Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Status Events
+        + feed                                  (array[Vehicle Status Event], fixed-type) - the 'feed' of Log Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 
 # Group Driver
 
@@ -2973,6 +3060,7 @@ The *Complete* objects will contain sets of all of the following objects embedde
 * [Vehicle Flagged Event](#vehicle_flagged_event_object)
 * [Vehicle Performance Event](#vehicle_performance_event_object)
 * [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Status Event](#vehicle_status_event)
 * [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
 * [Driver](#driver_object)
 * [Log Event](#log_event_object)
@@ -2991,6 +3079,7 @@ The *Vehicle-Only* objects will contain sets of all of the following objects emb
 * [Vehicle Flagged Event](#vehicle_flagged_event_object)
 * [Vehicle Performance Event](#vehicle_performance_event_object)
 * [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Status Event](#vehicle_status_event)
 * [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
 * [State of Health](#state_of_health_object)
 
@@ -3524,6 +3613,52 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 + Response 200 (application/json)
     + Attributes (Vehicle Flagged Event)
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Status Event Object                                 [/v1.0/fleet/statusevents/{id}]
+<a id="vehicle_status_event_object"></a>
+
++ Parameters
+    + id            (string) - ID of the Vehicle Status Event of interest
+
++ Attributes (Vehicle Status Event)
+
+### Get a Vehicle Status Event by its ID                   [GET]
+<a id="get_a_vehicle_status_event_by_its_id"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Status Event)
 
 + Response 404 (text/plain)
 
