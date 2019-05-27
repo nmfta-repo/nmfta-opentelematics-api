@@ -925,7 +925,7 @@ Telematics Data Model* for object descriptions as well.
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `performance event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ hours             :                                6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
++ hours             :                               6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
 + thresholds                                             (required, Performance Thresholds) - the thresholds that were active during this event
 + odometerStart                                          (required, number) - the vehicle odometer reading at the start of this event, in m
 + odometerEnd                                            (required, number) - the vehicle odometer reading at the end of this event, in m
@@ -938,6 +938,7 @@ Telematics Data Model* for object descriptions as well.
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
 + headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
 + speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in km/h
++ batteryVoltage                                         (number)           - the optional battery voltage reading at the end of this event
 + overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
 + overSpeedTime                                          (number)           - the total amount of time spent over the speed threshold during this event, in seconds
 + excessSpeedTime                                        (number)           - the total amount of time spent over the excess speed threshold, in seconds
@@ -966,10 +967,10 @@ Telematics Data Model* for object descriptions as well.
         + `FILTERSTATUS_ACTIVE_REGEN_END' - Filter active regen ended
         + `FILTERSTATUS_PASSIVE_REGEN_END' - Filter passive regen ended
 + exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
-+ overspeedLowThrottle                                   (number)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
-+ overspeedHiThrottle                                    (number)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
-+ overrpmLowThrottle                                     (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
-+ overrpmHiThrottle                                      (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
++ overspeedLowThrottle                                   (number)           - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
++ overspeedHiThrottle                                    (number)           - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
++ overrpmLowThrottle                                     (number)           - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
++ overrpmHiThrottle                                      (number)           - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
 + lkaActive                                              (boolean)          - Lane Keep Assist active status
 + lkaDisable                                             (boolean)          - Lane Keep Assist disable switch status
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
