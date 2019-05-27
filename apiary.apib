@@ -1322,43 +1322,53 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
                   "startName": {
                     "type": "string",
                     "description": "a name for the start location",
-                    "example": "start place 202"
+                    "example": "start place 202",
+                    "maxLength": 200
                   },
                   "startAddress": {
                     "type": "string",
                     "description": "an optional street address of the start",
-                    "example": "11 Elm Street"
+                    "example": "11 Elm Street",
+                    "maxLength": 200
                   },
                   "startLocation": {
                     "type": "string",
                     "description": "the location of the start",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "routeAddInstructions": {
                     "type": "string",
                     "description": "an optional comment with details about the route",
-                    "example": "take trailers XXX and YYY"
+                    "example": "take trailers XXX and YYY",
+                    "maxLength": 200
                   },
                   "stopName": {
                     "type": "string",
                     "description": "a name for the stop location",
-                    "example": "pickup place 101"
+                    "example": "pickup place 101",
+                    "maxLength": 200
                   },
                   "stopAddress": {
                     "type": "string",
                     "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
+                    "example": "13 Sycamore Ave",
+                    "maxLength": 200
                   },
                   "stopLocation": {
                     "type": "string",
                     "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "stopDeadline": {
                     "type": "string",
                     "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
+                    "example": "2019-04-05T02:04:16Z",
+                    "maxLength": 20,
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
                   }
                 }
             }
@@ -1429,23 +1439,28 @@ change the destination of the route, hence also changing the stopId associated w
                   "stopName": {
                     "type": "string",
                     "description": "a name for the stop location",
-                    "example": "pickup place 101"
+                    "example": "pickup place 101",
+                    "maxLength": 200
                   },
                   "stopAddress": {
                     "type": "string",
                     "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
+                    "example": "13 Sycamore Ave",
+                    "maxLength": 200
                   },
                   "stopLocation": {
                     "type": "string",
                     "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "stopDeadline": {
                     "type": "string",
                     "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
+                    "example": "2019-04-05T02:04:16Z",
+                    "maxLength": 20,
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
                   }
                 }
               }
@@ -1517,19 +1532,26 @@ any other routes using this stop will also be updated.
                 "properties": {
                   "comment": {
                     "type": "string",
-                    "description": "an optional comment"
+                    "description": "an optional comment",
+                    "maxLength": 200
                   },
                   "location": {
                     "type": "string",
                     "description": "the location of the delivery date at this stop",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$
                   },
                   "entryArea": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "37.4224764 -122.0842499",
+                      "maxLength": 26,
+                      "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$
                     },
-                    "description": "optional geographic location polygon detailing the entryway area for this stop"
+                    "description": "optional geographic location polygon detailing the entryway area for this stop",
+                    "maxItems": 200
                   }
                 }
             }
@@ -1596,11 +1618,13 @@ characters in its string). The TSP must filter characters that are illegal for t
                 "properties": {
                   "subject": {
                     "type": "string",
-                    "description": "a brief 'subject-line' for this message"
+                    "description": "a brief 'subject-line' for this message",
+                    "maxLength": 200
                   },
                   "message": {
                     "type": "string",
-                    "description": "the message to be displayed to the driver"
+                    "description": "the message to be displayed to the driver",
+                    "maxLength": 200
                   }
                 }
             }
@@ -2355,13 +2379,16 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
                   "dateTime": {
                     "type": "string",
                     "description": "Date and time for this status change",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
+                    "example": "2019-04-05T02:04:16Z",
+                    "maxLength": 20,
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
                   },
                   "location": {
                     "type": "string",
                     "description": "An object with the location information for this status change.",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "status": {
                     "enum": [
@@ -2433,7 +2460,8 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
                 "properties": {
                   "username": {
                     "type": "string",
-                    "description": "a username of this driver"
+                    "description": "a username of this driver",
+                    "maxLength": 200
                   },
                   "hoursWorked": {
                     "type": "number",
@@ -2442,21 +2470,25 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
                   },
                   "driverLicenseNumber": {
                     "type": "string",
-                    "description": "the driver's license number"
+                    "description": "the driver's license number",
+                    "maxLength": 200
                   },
                   "country": {
                     "type": "string",
                     "description": "short code for the country of the driver's license",
-                    "example": "CA"
+                    "example": "CA",
+                    "maxLength": 8
                   },
                   "region": {
                     "type": "string",
                     "description": "short code for the country's region/state/province/territory of the driver's license",
-                    "example": "ON"
+                    "example": "ON",
+                    "maxLength": 8
                   },
                   "driverHomeTerminal": {
                     "type": "string",
-                    "description": "the home terminal of the driver"
+                    "description": "the home terminal of the driver",
+                    "maxLength": 8
                   }
                 }
             }
@@ -2575,7 +2607,8 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
                   },
                   "password": {
                     "type": "string",
-                    "description": "user password"
+                    "description": "user password",
+                    "maxLength": 200
                   },
                   "enabled": {
                     "type": "boolean",
