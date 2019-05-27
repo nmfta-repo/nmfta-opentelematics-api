@@ -1138,7 +1138,7 @@ data type defined below. If you change one you should probably also change the o
 ### Externally Sourced Vehicle Display Messages (object)
 
 + subject                                                (string) - a brief 'subject-line' for this message
-+ message                                                (required, string) - the message to be displayed to the driver
++ message                                                (required, string) - the message to be displayed to the driver. This string can contain any characters valid in JSON including unicode characters. The TSP must filter characters that are illegal for transport or display in their systems.
 
 ### Externally Sourced Stop Geographic Details (object)
 
@@ -1453,6 +1453,9 @@ any other routes using this stop will also be updated.
 
 ## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
 <a id="send_message_to_a_vehicle"></a>
+
+This message can contain any characters, including unicode and non-printables (since the JSON object can have escaped
+characters in its string). The TSP must filter characters that are illegal for transport or display in their systems.
 
 **Access Controls**
 
