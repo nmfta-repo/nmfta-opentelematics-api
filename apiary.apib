@@ -547,6 +547,17 @@ At the end of trips they also query for any updates on changes to gates, access,
 
 * [Get Stop Geographic Details by its ID](#get_a_region_specific_waivers_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
+## Dispatch Messaging (by Driver)
+
+Motor freight carriers need to enable their drivers to 'call-back' to the dispatch in a timely and safe manner. To do this
+they often rely on two-way messaging provided by the TSP. The drivers can create and send messages to dispatch at the
+motor freight carrier by using an interface on their in-cab displays.
+
+Both personel and semi-automated systems responsible for drivers in the field, "Dispatch", need to be notified of new
+messages. To process the invoming messages for Dispatch in 'real time' they follow a feed using
+
+* [Follow Dispatch Messages](#follow_dispatch_messages)
+
 ## Driver Messaging by Geo-Location
 
 Motor freight carriers use telematics systems to message their drivers for various reasons, not the least of which is to
@@ -1130,6 +1141,17 @@ Telematics Data Model* for object descriptions as well.
 + deliveredTime     :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was delivered to the vehicle
 + readTime          :             `2019-04-05T02:04:16Z` (string) - Date and time when the message was displayed to driver
 
+### Dispatch Message (object)
+
++ id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Dispatch Message object
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the Dispatch Message object was last updated in the TSP
++ subject                                                (string) - the 'subject-line' of the delivered message
++ message                                                (required, string) - the message delivered
++ sentTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was sent to Dispatch from the vehicle
++ deliveredTime     :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was delivered to Dispatch
++ readTime          :             `2019-04-05T02:04:16Z` (string) - Date and time when the message was displayed to Dispatch
+
 ### Token Translation (object)
 
 + origin :                `Log Event, malfunction` (string) - optional note of origin of token to be translated
@@ -1181,6 +1203,7 @@ Telematics Data Model* for object descriptions as well.
 + regionSpecificBreakRules                               (array[Region Specific Break Rules], fixed-type) - Any of the Region Specific Break Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ dispatchMessages                                       (array[Dispatch Message], fixed-type) - Any of the Dispatch Message objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + displayMessageReceipts                                 (array[Message Receipt], fixed-type) - Any of the Message Receipt objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
 ## Data Structures
@@ -2102,6 +2125,57 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
     + Attributes (object)
         + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Performance Events
         + feed                                  (array[Vehicle Status Event], fixed-type) - the 'feed' of Performance Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+
+## Follow Dispatch Messages                                     [GET /v1.0/fleet/dispatchmessages/feed{?token}]
+<a id="follow_dispatch_messages"></a>
+
+Clients can follow a feed of Dispatch Message objects as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | ***DENY***   | **DENY**   | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Dispatch Message objects; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Dispatch Message objects
+        + feed                                  (array[Dispatch Message], fixed-type) - the 'feed' of Dispatch Message objects
 
 + Response 400 (text/plain)
 
@@ -3138,6 +3212,7 @@ The *Complete* objects will contain sets of all of the following objects embedde
 * [Region Specific Waivers](#region_specific_waivers_object)
 * [Driver Performance Summary](#driver_performance_summary_object)
 * [Message Receipt](#message_receipts)
+* [Dispatch Message](#dispatch_message)
 * [State of Health](#state_of_health_object)
 
 ***Vehicle-Only Data Export***
@@ -3440,6 +3515,53 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
 + Response 200 (application/json)
     + Attributes (Message Receipt)
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Dispatch Message Object                                         [/v1.0/dispatch_message/{id}]
+<a id="dispatch_message_object"></a>
+
++ Parameters
+    + id            (string) - ID of a Dispatch Message object
+
++ Attributes (Dispatch Message)
+
+
+### Get a Message Receipt by its ID                            [GET]
+<a id="get_a_dispatch_message_by_its_id"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | Allow         | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Dispatch Message)
 
 + Response 404 (text/plain)
 
