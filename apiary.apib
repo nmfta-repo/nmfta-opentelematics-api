@@ -690,6 +690,18 @@ To determine what the expected data qualities of the service are, they use
 
 * [Get Data Qualities Statement](#get_data_qualities_statement).
 
+## Estimating Received Data Quality
+
+Motor freight carriers need to estimate certain data quality properties of their service for a given time period.
+
+To gain these estimates they post-process either the complete or vehicle only records for the given time period from
+
+* [Complete Telematics Export Format](#complete_telematics_export_format) OR
+* [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
+
+For example, estimates of received data latency can be obtained by processing downloads from either of the above and
+summarizing the difference between the created timestamps and server timestamps.
+
 ## Data Structures
 
 ### Open Telematics Data Model Objects (object)
