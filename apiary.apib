@@ -3420,7 +3420,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 + Parameters
     + id            (string) - ID of a Message Receipt object
 
-+ Attributes (Vehicle)
++ Attributes (Message Receipt)
 
 
 ### Get a Message Receipt by its ID                            [GET]
@@ -3431,7 +3431,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
