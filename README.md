@@ -18,6 +18,8 @@ The draft specification is pubished in various forms:
 
 There is also a prototype implementation of version [0.1rc4](https://github.com/nmfta-repo/nmfta-opentelematics-api/releases/tag/proto-0.1rc4) of this specificiation available at [github.com/nmfta-repo/nmfta-opentelematics-prototype](https://github.com/nmfta-repo/nmfta-opentelematics-prototype).
 
+Finally, a questionnaire for use by motor freight carriers in assessing the degree to which a TSP provides OTAPI support is also available: [Open Telematics Supported Use Cases Questionnaire.xlsx](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/Open%20Telematics%20Supported%20Use%20Cases%20Questionnaire.xlsx)
+
 # Contributors
 
 This Open Telematics API was made possible through the generous contributions of thought leadership and technical expertise

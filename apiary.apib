@@ -20,6 +20,8 @@ The draft specification is pubished in various forms:
 
 There is also a prototype implementation of version [0.1rc4](https://github.com/nmfta-repo/nmfta-opentelematics-api/releases/tag/proto-0.1rc4) of this specificiation available at [github.com/nmfta-repo/nmfta-opentelematics-prototype](https://github.com/nmfta-repo/nmfta-opentelematics-prototype).
 
+Finally, a questionnaire for use by motor freight carriers in assessing the degree to which a TSP provides OTAPI support is also available: [Open Telematics Supported Use Cases Questionnaire.xlsx](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/Open%20Telematics%20Supported%20Use%20Cases%20Questionnaire.xlsx)
+
 # Motivation
 
 If a telematics system provider (TSP) suddenly goes out of business (have had two examples of this in 2018) any
@@ -1532,7 +1534,7 @@ change the destination of the route, hence also changing the stopId associated w
 
             Retry-After: {implementation-defined}
 
-## Update Stop Geographic Details                            [PATCH /v1.0/stops/{stopId}]
+## Update Stop Geographic Details                           [PATCH /v1.0/stops/{stopId}]
 <a id="update_stop_geographic_details"></a>
 
 Clients can update the _geographic details_ of a stop; the *Stop Geographic Details* are the specific location for the
@@ -2109,7 +2111,7 @@ via polling an endpoint and providing a 'token' which evolves the window of new 
 
             Retry-After: {implementation-defined}
 
-## Follow Fleet Status Events                                  [GET /v1.0/fleet/statusevents/feed{?token}]
+## Follow Fleet Status Events                              [GET /v1.0/fleet/statusevents/feed{?token}]
 <a id="follow_fleet_status_events"></a>
 
 Clients can follow a feed of Vehicle Status Events as they are added to the TSP system; following is accomplished via
@@ -2164,7 +2166,7 @@ configure/agree-to the set of raw data via some other mechanism.
             Retry-After: {implementation-defined}
 
 
-## Follow Fleet Performance Events                             [GET /v1.0/fleet/performanceevents/feed{?token}]
+## Follow Fleet Performance Events                              [GET /v1.0/fleet/performanceevents/feed{?token}]
 <a id="follow_fleet_performance_events"></a>
 
 Clients can follow a feed of Vehicle Performance Events as they are added to the TSP system; following is accomplished via
@@ -2215,7 +2217,7 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
             Retry-After: {implementation-defined}
 
 
-## Follow Dispatch Messages                                    [GET /v1.0/fleet/dispatchmessages/feed{?token}]
+## Follow Dispatch Messages                                     [GET /v1.0/fleet/dispatchmessages/feed{?token}]
 <a id="follow_dispatch_messages"></a>
 
 Clients can follow a feed of Dispatch Message objects as they are added to the TSP system; following is accomplished via
@@ -3899,7 +3901,7 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
             Retry-After: {implementation-defined}
 
-## Vehicle Status Event Object                                     [/v1.0/fleet/statusevents/{id}]
+## Vehicle Status Event Object                                 [/v1.0/fleet/statusevents/{id}]
 <a id="vehicle_status_event_object"></a>
 
 + Parameters
