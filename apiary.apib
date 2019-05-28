@@ -944,22 +944,22 @@ Telematics Data Model* for object descriptions as well.
 
 ### Cruise Status (object)
 
-+ ccSwitch          :                             false  (required, boolean) - cruise control switch status at time of event
-+ ccSetSwitch       :                             false  (required, boolean) - cruise control set switch status at time of event
-+ ccCoastSwitch     :                             false  (required, boolean) - cruise control coast switch status at time of event
-+ ccClutchSwitch    :                             false  (required, boolean) - cruise control clutch switch status at time of event
-+ ccCruiseSwitch    :                             false  (required, boolean) - cruise control cruise switch status at time of event
-+ ccResumeSwitch    :                             false  (required, boolean) - cruise control resume switch status at time of event
-+ ccAccelerationSwitch:                           false  (required, boolean) - cruise control acceleration switch status at time of event
-+ ccBrakeSwitch     :                             false  (required, boolean) - cruise control brake switch status at time of event
-+ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in km/h
++ ccSwitch          :                             false  (boolean) - cruise control switch status at time of event
++ ccSetSwitch       :                             false  (boolean) - cruise control set switch status at time of event
++ ccCoastSwitch     :                             false  (boolean) - cruise control coast switch status at time of event
++ ccClutchSwitch    :                             false  (boolean) - cruise control clutch switch status at time of event
++ ccCruiseSwitch    :                             false  (boolean) - cruise control cruise switch status at time of event
++ ccResumeSwitch    :                             false  (boolean) - cruise control resume switch status at time of event
++ ccAccelerationSwitch:                           false  (boolean) - cruise control acceleration switch status at time of event
++ ccBrakeSwitch     :                             false  (boolean) - cruise control brake switch status at time of event
++ ccSpeed           :                                 1  (number) - cruise control commanded speed at the time of event, in km/h
 
 ### Ignition Status (object)
 
-+ ignitionAccessory :                             false  (required, boolean) - ignition accessory state at time of event
-+ ignitionRunContact:                             false  (required, boolean) - ignition run contact state at time of event
-+ ignitionCrankContact:                           false  (required, boolean) - ignition crank contact state at time of event
-+ ignitionAidContact:                             false  (required, boolean) - ignition aid contact state at time of event
++ ignitionAccessory :                             false  (boolean) - ignition accessory state at time of event
++ ignitionRunContact:                             false  (boolean) - ignition run contact state at time of event
++ ignitionCrankContact:                           false  (boolean) - ignition crank contact state at time of event
++ ignitionAidContact:                             false  (boolean) - ignition aid contact state at time of event
 
 ### Flagged Event Thresholds (object)
 
@@ -986,13 +986,13 @@ Telematics Data Model* for object descriptions as well.
 + gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
-+ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
-+ engineRPM                                              (required, number) - engine speed at time of event, in revolutions per minute (RPM)
++ ecmSpeed                                               (number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
++ engineRPM                                              (number) - engine speed at time of event, in revolutions per minute (RPM)
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
 + cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
 + parkingBrake      :                             false  (optional, boolean) - parking brake status at time of event
-+ ignitionStatus                                         (required, Ignition Status) - the ignition status at the time of the event
++ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the time of the event
 + forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in km/h
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
 + forwardVehicleElapsed:                              2  (required, number) - vehicle forward travel elapsed time, in s
@@ -1049,7 +1049,7 @@ Telematics Data Model* for object descriptions as well.
 + brakeApplications                                      (required, number) - the total number of applications of the vehicle brakes during this event
 + engineLoadStopped                                      (required, number) - the average engine load while the vehicle was stopped during this event, in percent
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
-+ headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
++ headlightTime                                          (number) - the total amount of time spent with headlights on during this event, in seconds
 + speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in km/h
 + batteryVoltage                                         (number)           - the optional battery voltage reading at the end of this event
 + overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
@@ -1099,7 +1099,7 @@ Telematics Data Model* for object descriptions as well.
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
-+ ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
++ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + canIdentifier     :                        `C F004 01` (required, string) - a hex-encoded string (spaces allowed) of the 29-bit J1939 CAN identifier
 + data              :          `FF FF 82 DF 1A FF FF FF` (required, string) - a hex-encoded string (spaces allowed) of the J1939 data payload
@@ -1129,7 +1129,7 @@ Telematics Data Model* for object descriptions as well.
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
 + ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
 + cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
-+ ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
++ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + clearType                                              (enum[string]) - by what means was this fault cleared
     + Members
