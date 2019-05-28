@@ -132,8 +132,7 @@ OTAPI.
 None of the URLs in any of the endpoints of OTAPI will exceed a maximum of 220 characters. The longest resource path is
 `/v1.0/drivers/{driverId}/availability_factors/` which would be 104 characters long if a 68 character `driverId` were
 used. The endpoints have between 1 and 3 query string parameters, most are dates which are expressed in ISO 8601 format,
-24 characters long the others are opaque IDs which could be up to 68 characters long. Worst case URL lenght is 104 + 24
-+ 24 + 68 (220) characters.
+24 characters long the others are opaque IDs which could be up to 68 characters long. Worst case URL length is 104 + 24 + 24 + 68 (220) characters.
 
 ***NIST 800-53 SC-6: Resource Availability / HTTP request size should not exceed 1MB limit***
 
@@ -147,7 +146,7 @@ There are no direct file references in OTAPI; all objects are referred to by opa
 ***NIST 800-53 AC-3: Access Enforcement / Considerations: Grant privileges directly to users***
 
 The OTAPI is designed for machine to machine communications; as such the privileges for access to OTAPI information is
-granted to the motor freight carrier backend systems which intergrate with OTAPI services. The privileges assigned
+granted to the motor freight carrier backend systems which integrate with OTAPI services. The privileges assigned
 can be minimized, however -- see sections [Authentication](#authentication) and [Authorization](#authorization).
 
 ***NIST 800-53 AC-24: Access Control Decisions / Considerations: Security controls assigned to each request***
