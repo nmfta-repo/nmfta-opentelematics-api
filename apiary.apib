@@ -441,11 +441,11 @@ less than optimal operation.
 
 To check the current state of health of the service they use
 
-* [Check Current State of Health](#check_current_state_of_health)
+* [Check Current State of Health `GET /v1.0/health/current`](#check_current_state_of_health)
 
 To check the past 30 days worth of states of health they use
 
-* [Check Past 30d State of Health](#check_past_30d_state_of_health)
+* [Check Past 30d State of Health `GET /v1.0/health/recents`](#check_past_30d_state_of_health)
 
 ## Data Export
 
@@ -456,11 +456,11 @@ TSP outage or to restore data -- although this last potential use is _not_ a use
 
 To obtain a complete data export (including driver information) they use
 
-* [Complete Telematics Export Format](#complete_telematics_export_format).
+* [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format).
 
 To obtain a data export with vehicle information only (intended to be free of PII) they use
 
-* [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format).
+* [Vehicle-Only Telematics Export Format `GET /v1.0/export/vehiclerecords/status{?dayOf}`](#vehicle_only_telematics_export_format).
 
 ## Generate Records of Duty Status for Compliance
 
@@ -478,7 +478,7 @@ kinds of nuances that are handled by TPSs in their service offering and OTAPI is
 Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
 event a TSP is no longer available.
 
-See [Complete Telematics Export Format](#complete_telematics_export_format) for more details on the file format
+See [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format) for more details on the file format
 which should contain sufficient data for this use case in the array of [Log Event objects](#log_event_object).
 
 ## Driver Availability
@@ -494,17 +494,17 @@ availability of a Driver. They have
 To calculate the current driver availablity they retrieve 'driver availability factors' from which the current driver
 availability can be calculated using
 
-* [Get Driver Availability Factors](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Availability Factors `GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}`](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
 
 To consider also the breaks and exemption rules for driver in those logs (if they operate in regions with specific break
 rules or waivers) they use
 
-* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Breaks and Waivers `GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}`](#get_driver_breaks_and_waivers) a given [Driver object id](#driver_object) over a given period of time
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
 this their systems send duty status changes to the TSP using
 
-* [Update Driver Duty Status](#update_driver_duty_status) for a given [Driver object id](#driver_object).
+* [Update Driver Duty Status `PATCH /v1.0/drivers/{driverId}/duty_status`](#update_driver_duty_status) for a given [Driver object id](#driver_object).
 
 ## Driver Route & Directions Communication
 
@@ -519,22 +519,22 @@ Driver's destination and route during a trip. They have
 
 * a [Driver object id](#driver_object) for a given driver
 * a [Vehicle object id](#vehicle_object) for a given vehicle
-* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) they have both
+* and because they previously [created a *Vehicle Route* `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) they have both
     * a *Vehicle Route object id* and
     * a [Stop Geographic Details object id](#stop_geographic_details_object).
 
 To confirm that the given driver is still available to complete the route they retrieve the driver availability factors
 for the time period from the driver's start of route up until the present by using
 
-* [Get Driver Availability Factors](#get_driver_availability_factors) endpoint for a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Availability Factors `GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}`](#get_driver_availability_factors) endpoint for a given [Driver object id](#driver_object) over a given period of time
 
 To change the route they use
 
-* [Update Vehicle Route](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
+* [Update Vehicle Route `PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}`](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
 
 To update details (entry points, notes) of the route stop they use
 
-* [Update Stop Geographic Details](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+* [Update Stop Geographic Details `PATCH /v1.0/stops/{stopId}`](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Driver Route & Directions Start
 
@@ -550,12 +550,12 @@ drivers about their planned route before the driver starts the trip. They have
 
 To first check the vehicle for any faults or alarms in the past 24h they use
 
-* [Get Vehicle Flagged Events](#get_vehicle_flagged_events) for a given [Vehicle object id](#vehicle_object) over a given period of time
+* [Get Vehicle Flagged Events `GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}`](#get_vehicle_flagged_events) for a given [Vehicle object id](#vehicle_object) over a given period of time
 
 Assuming the vehicle is good to go, then they send trip start and stop destinations to the driver along with any other
 instructions (such as which trailers to take) using
 
-* [Create a Vehicle Route](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
+* [Create a Vehicle Route `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
 
 A successful creation of a route will yield a *Route object id* in the response to use in further updates or modifications
 to the route.
@@ -570,22 +570,22 @@ Both personnel and semi-automated systems responsible for planning and assigning
 completed trip, along with the driver information about duty on the trip. They have
 
 * a [Driver object id](#driver_object) for a given driver
-* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) and may have optionally
-[updated the driver's Route Stop](#update_vehicle_route) or [updated the *Stop Geographic Details*](#update_stop_geographic_details)
+* and because they previously [created a *Vehicle Route* `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) and may have optionally
+[updated the driver's Route Stop `PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}`](#update_vehicle_route) or [updated the *Stop Geographic Details* `PATCH /v1.0/stops/{stopId}`](#update_stop_geographic_details)
 they hence have both
     * a *Vehicle Route object id* and
     * a [Stop Geographic Details object id](#stop_geographic_details_object).
 
 To react to the route completions in 'real-time' they follow a feed using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 They mark trips completed based on matching a [Log Event object](#log_event_object) in the feed which matches a given
 [Driver object id](#driver_object) and also has a status indicating that the route is complete.
 
 At the end of trips they also query for any updates on changes to gates, access, repairs etc at the destination using
 
-* [Get Stop Geographic Details by its ID](#get_a_region_specific_waivers_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+* [Get Stop Geographic Details by its ID `GET /v1.0/stops/{id}`](#get_a_stop_geographic_details_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Dispatch Messaging (by Driver)
 
@@ -596,7 +596,7 @@ motor freight carrier by using an interface on their in-cab displays.
 Both personel and semi-automated systems responsible for drivers in the field, "Dispatch", need to be notified of new
 messages. To process the invoming messages for Dispatch in 'real time' they follow a feed using
 
-* [Follow Dispatch Messages](#follow_dispatch_messages)
+* [Follow Dispatch Messages `GET /v1.0/fleet/dispatchmessages/feed{?token}`](#follow_dispatch_messages)
 
 ## Driver Messaging by Geo-Location
 
@@ -611,11 +611,11 @@ geographic region. They have
 To determine which vehicles presently lie within the geographic area they get the current location of all fleet vehicles
 using
 
-* [Get Fleet Latest Locations](#get_fleet_latest_locations)
+* [Get Fleet Latest Locations `GET /v1.0/fleet/locations/latest{?page,count}`](#get_fleet_latest_locations)
 
 Then, for each [Vehicle object id](#vehicle_object) which lies within the geographic area they send it a message using
 
-* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
+* [Send Message to a Vehicle `POST /v1.0/vehicles/{vehicleId}/message`](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
 
 ## Driver Messaging by Vehicle
 
@@ -627,7 +627,7 @@ Personnel responsible for planning and assigning driver routes want to send a me
 
 they send the vehicle a message using
 
-* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
+* [Send Message to a Vehicle `POST /v1.0/vehicles/{vehicleId}/message`](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
 
 ## Vehicle Location Time History Processing
 
@@ -638,7 +638,7 @@ as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet M
 
 To perform the analysis on fleet location time history they use
 
-* [Get Fleet Location History](#get_fleet_location_history) for a given time period
+* [Get Fleet Location History `GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}`](#get_fleet_location_history) for a given time period
 
 ## Human Resources Process: Payroll
 
@@ -649,24 +649,24 @@ Automated payroll/HR systems want to receive Log Events and convert these into p
 
 To do create payroll tracking entries in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 furthermore -- if they operate in regions with specific break rules or waivers are applicable -- they use
 
-* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) for each [Driver object id](#driver_object) in the
+* [Get Driver Breaks and Waivers `GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}`](#get_driver_breaks_and_waivers) for each [Driver object id](#driver_object) in the
 feed for the times of interest to the payroll tracking entries
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
 this their systems send data _to_ the TSPs using
 
-* [Update Driver Duty Status](#update_driver_duty_status) endpoint for a given [Driver object id](#driver_object).
+* [Update Driver Duty Status `PATCH /v1.0/drivers/{driverId}/duty_status`](#update_driver_duty_status) endpoint for a given [Driver object id](#driver_object).
 
-and the duty status changes are reflected in the [Follow Fleet Log Events](#follow_fleet_log_events) endpoint.
+and the duty status changes are reflected in the [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) endpoint.
 
 To associate their Driver's with metadata for use by the TSP (e.g. the region of governance for duty breaks and
 exemptions) they use
 
-* [Update Driver Info](#update_driver_info) for a given [Driver object id](#driver_object).
+* [Update Driver Info `PATCH /v1.0/drivers/{driverId}`](#update_driver_info) for a given [Driver object id](#driver_object).
 
 ## Human Resources Process: Accident Report
 
@@ -677,7 +677,7 @@ internally according to their own processes.
 
 To do respond to accidents in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 ## Carrier Custom Business Intelligence
 
@@ -689,15 +689,15 @@ time period.
 
 To process the fleet state over a target time period they use
 
-* [Get Fleet Vehicle Info](#get_fleet_vehicle_info) for a given time period
+* [Get Fleet Vehicle Info `GET /v1.0/fleet/infos/{?startTime,stopTime}`](#get_fleet_vehicle_info) for a given time period
 
 To process and respond to fleet status in 'real-time' they follow a feed using
 
-* [Follow Fleet Vehicle Info](#follow_fleet_vehicle_info) for all vehicles
+* [Follow Fleet Vehicle Info `GET /v1.0/fleet/infos/feed{?token}`](#follow_fleet_vehicle_info) for all vehicles
 
 To follow-up with queries of the hi-resolution time history of the fleet for a given time period they use
 
-* [Get Fleet Location History](#get_fleet_location_history) for a given time period.
+* [Get Fleet Location History `GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}`](#get_fleet_location_history) for a given time period.
 
 ## Compliance and Safety Monitoring
 
@@ -710,12 +710,12 @@ Personnel responsible for safety and compliance want to review the safety and co
 
 To obtain the information necessary to review for safety and compliance they use
 
-* [Get Driver Performance Summaries](#get_driver_performance_summaries) for a given [Driver object id](#driver_object) and for a given time period
+* [Get Driver Performance Summaries `GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}`](#get_driver_performance_summaries) for a given [Driver object id](#driver_object) and for a given time period
 
 To create, delete and modify driver login credentials that the drivers will use in the
 field and to which the [Driver Performance Summary objects](#driver_performance_summary_object) are associate they use
 
-* [Update Driver TSP Portal Account](#update_driver_tsp_portal_account) for a given [Driver object id](#driver_object)
+* [Update Driver TSP Portal Account `PATCH /v1.0/drivers/{driverId}/driverportaluser`](#update_driver_tsp_portal_account) for a given [Driver object id](#driver_object)
 
 ## In-Field Maintenance & Repair
 
@@ -725,12 +725,12 @@ Automated back-end systems at the motor freight carrier want to be notified of a
 
 To determine which events require maintenance in 'real-time' they follow a feed using
 
-* [Follow Fleet Fault Code Events](#follow_fleet_fault_code_events) for all fleet vehicles
+* [Follow Fleet Fault Code Events `GET /v1.0/fleet/faults/feed{?token}`](#follow_fleet_fault_code_events) for all fleet vehicles
 
 To dispatch assitance to the location of a given [Vehicle object id](#vehicle_object) -- in the event that an issue
 requiring maintenance must be resolved in the field -- they obtain the most recent vehicle location using
 
-* [Get Vehicle Location History](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
+* [Get Vehicle Location History `GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}`](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
 
 ## Machine-Readable Data Quality
 
@@ -739,7 +739,7 @@ their back-end systems depending on the various data quality propoerties of a gi
 
 To determine what the expected data qualities of the service are, they use
 
-* [Get Data Qualities Statement](#get_data_qualities_statement).
+* [Get Data Qualities Statement `GET /v1.0/dataquality`](#get_data_qualities_statement).
 
 ## Estimating Received Data Quality
 
@@ -747,8 +747,8 @@ Motor freight carriers need to estimate certain data quality properties of their
 
 To gain these estimates they post-process either the complete or vehicle only records for the given time period from
 
-* [Complete Telematics Export Format](#complete_telematics_export_format) OR
-* [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
+* [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format) OR
+* [Vehicle-Only Telematics Export Format `GET /v1.0/export/vehiclerecords/status{?dayOf}`](#vehicle_only_telematics_export_format)
 
 For example, estimates of received data latency can be obtained by processing downloads from either of the above and
 summarizing the difference between the created timestamps and server timestamps.
@@ -757,7 +757,7 @@ summarizing the difference between the created timestamps and server timestamps.
 
 Motor freight carriers need access to raw J1939 vehicle frames for various custom fleet management tasks. To process the raw frames in 'real-time' they follow a feed using
 
-* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
 
 NB: These vehicle status events are largely *raw* J1939 data. Open Telematics API makes no requirements on how the TSP
 determines what raw frames to send via this interface. It is expected that the motor freight carrier and the TSP
@@ -767,7 +767,7 @@ Furthermore, truck leasing companies need to have access to this raw vehicle sta
 the motor freight carrier's TSP. i.e. the truck leasing company does not require access to any other information so the account has a
 single role and no further permissions. For this, the leasing companies also use
 
-* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
 
 ## Monitor Fleet Battery Status
 
@@ -775,17 +775,17 @@ Motor freight carriers need to monitor the battery voltage of their fleet of veh
 
 To monitor these battery voltages in 'real time' they follow a feed using
 
-* [Follow Fleet Performance Events](#follow_fleet_performance_events) for all fleet vehicles
+* [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events) for all fleet vehicles
 
 Alternatively, the motor freight carriers may follow a feed using
 
-* [Follow Fleet Status Events](#follow_fleet_status_events) for all fleet vehicles.
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
 
 However, the latter may require special configuration for allowing the appropriate raw CAN frames to be sent via the
-[Follow Fleet Status Events](#follow_fleet_status_events) endpoint. Furthermore, the [Follow Fleet Status Events](#follow_fleet_status_events)
-endpoint may not produce data in as many ignition states as [Follow Fleet Performance Events](#follow_fleet_performance_events)
-and the [Follow Fleet Performance Events](#follow_fleet_performance_events) may offer higher resolution on battery
-voltage than [Follow Fleet Status Events](#follow_fleet_status_events).
+[Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) endpoint. Furthermore, the [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events)
+endpoint may not produce data in as many ignition states as [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events)
+and the [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events) may offer higher resolution on battery
+voltage than [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events).
 
 ## Data Structures
 
