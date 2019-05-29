@@ -1310,7 +1310,10 @@ data type defined below. If you change one you should probably also change the o
 ### Externally Sourced Driver Info (object)
 
 + username                                               (required, string) - a username of this driver
-+ hoursWorked       :                              `1.5` (number) - the hours worked on-duty by this user so far today (on any duty at all)
++ timeOnDuty        :                                1.5 (number) - the hours worked on-duty by this user so far today
++ timeDriving       :                                1.5 (number) - the hours worked driving by this user so far today
++ timePersonalConveyance:                            1.5 (number) - the hours in personal conveyance by this user so far today
++ timeYardMove      :                                1.5 (number) - the hours worked in yard moves by this user so far today
 + driverLicenseNumber                                    (string) - the driver's license number
 + country           :                               `CA` (string) - short code for the country of the driver's license
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory of the driver's license
