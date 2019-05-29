@@ -954,17 +954,18 @@ Telematics Data Model* for object descriptions as well.
 + ccBrakeSwitch     :                             false  (boolean) - cruise control brake switch status at time of event
 + ccSpeed           :                                 1  (number) - cruise control commanded speed at the time of event, in km/h
 
-### Ignition Status (object)
-
-+ ignitionAccessory :                             false  (boolean) - ignition accessory state at time of event
-+ ignitionRunContact:                             false  (boolean) - ignition run contact state at time of event
-+ ignitionCrankContact:                           false  (boolean) - ignition crank contact state at time of event
-+ ignitionAidContact:                             false  (boolean) - ignition aid contact state at time of event
-
 ### Flagged Event Thresholds (object)
 
 + suddenThreshold:                           `3.13` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
 + collisionThreshold:                        `12.2` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_COLLISION` is created, in m/s/s
+
+### Ignition Status (enum[string])
+
++ `IGNITION_STATUS_ACCESSORY` - ignition accessory state
++ `IGNITION_STATUS_RUN_CONTACT` - ignition run contact state
++ `IGNITION_STATUS_CRANK_CONTACT` - ignition crank contact state
++ `IGNITION_STATUS_AID_CONTACT` - ignition aid contact state
++ `IGNITION_STATUS_OFF` - ignition off state
 
 ### Vehicle Flagged Event (object)
 
@@ -983,6 +984,7 @@ Telematics Data Model* for object descriptions as well.
         + `FLAGGEDTYPE_SUDDEN_STOP` - Sudden stop flagged event
         + `FLAGGEDTYPE_COLLISION` - Collision flagged event
         + `FLAGGEDTYPE_ONBOARD_RECORDING` - onboard recording flagged event
+
 + gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
@@ -992,7 +994,7 @@ Telematics Data Model* for object descriptions as well.
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
 + cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
 + parkingBrake      :                             false  (optional, boolean) - parking brake status at time of event
-+ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the time of the event
++ ignitionStatus                                         (Ignition Status) - the ignition status at the time of the event
 + forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in km/h
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
 + forwardVehicleElapsed:                              2  (required, number) - vehicle forward travel elapsed time, in s
@@ -1099,7 +1101,7 @@ Telematics Data Model* for object descriptions as well.
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
-+ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the trigger time of this fault code event
++ ignitionStatus                                         (Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + canIdentifier     :                        `C F004 01` (required, string) - a hex-encoded string (spaces allowed) of the 29-bit J1939 CAN identifier
 + data              :          `FF FF 82 DF 1A FF FF FF` (required, string) - a hex-encoded string (spaces allowed) of the J1939 data payload
@@ -1129,7 +1131,7 @@ Telematics Data Model* for object descriptions as well.
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
 + ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
 + cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
-+ ignitionStatus                                         (optional, Ignition Status) - the ignition status at the trigger time of this fault code event
++ ignitionStatus                                         (Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + clearType                                              (enum[string]) - by what means was this fault cleared
     + Members
@@ -3200,6 +3202,31 @@ the request headers.)
                         "origin": "Data Qualities, samplingMethod",
                         "msgid": "SAMPLING_CHANGE",
                         "msgstr": "change/event based sampling"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_ACCESSORY",
+                        "msgstr": "ignition accessory state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_RUN_CONTACT",
+                        "msgstr": "ignition run contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_CRANK_CONTACT",
+                        "msgstr": "ignition crank contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_AID_CONTACT",
+                        "msgstr": "ignition aid contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_OFF",
+                        "msgstr": "ignition off state"
                     }
                 ]
             }
