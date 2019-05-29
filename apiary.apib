@@ -1314,7 +1314,6 @@ endpoint `Request`s in the API Blueprint that follows.
 
 ### Externally Sourced Driver Info (object)
 
-+ username                                               (required, string) - a username of this driver
 + timeOnDuty        :                                1.5 (number) - the hours worked on-duty by this user so far today
 + timeDriving       :                                1.5 (number) - the hours worked driving by this user so far today
 + timePersonalConveyance:                            1.5 (number) - the hours in personal conveyance by this user so far today
@@ -2479,7 +2478,7 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
 ## Update Driver Info                                        [PATCH /v1.0/drivers/{driverId}]
 <a id="update_driver_info"></a>
 
-Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
+Clients can request updates to the user info stored in the TSP's accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
 
@@ -2503,16 +2502,8 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
             {
                 "$schema": "http://json-schema.org/draft-04/schema#",
                 "title": "ExternallySourcedDriverInfo",
-                "required": [
-                  "username"
-                ],
                 "type": "object",
                 "properties": {
-                  "username": {
-                    "type": "string",
-                    "description": "a username of this driver",
-                    "maxLength": 200
-                  },
                   "timeOnDuty": {
                     "type": "number",
                     "description": "the hours worked on-duty by this user so far today",
