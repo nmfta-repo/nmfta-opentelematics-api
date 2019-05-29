@@ -414,13 +414,13 @@ The localization does not apply to units of measure. Open Telematics API will us
 The localization also does not apply to arbitrary strings in data objects of the API such as messages for display in
 vehicles or comment fields.
 
-Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
+Requests to [Get a Translation `GET /v1.0/i18n`](#get_a_translation_table) shall include the request header `Accept-
 Language: `. If no request header is present then `Accept-Language: en` will be assumed.
 
 Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header
 specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response
 will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is
-provided below for convenience in the sample response to `GET /v1.0/i18n`.
+provided below for convenience in the sample response to [`GET /v1.0/i18n`](#get_a_translation_table).
 
 # Telematics API Use Cases by Motor Freight Carriers
 
