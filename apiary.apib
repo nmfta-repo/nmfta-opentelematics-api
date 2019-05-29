@@ -1275,6 +1275,9 @@ JSON Schema to an action which overides the JSON schema generated from the MSON.
 define the data types used for inbound objects, there is also corresponding JSON Schemas for endpoints accepting these
 data type defined below. If you change one you should probably also change the other.
 
+Note 5: WARNING, changes to the objects here require also changing the explicit JSON Schema sections added to the
+endpoint `Request`s in the API Blueprint that follows.
+
 ### Externally Sourced Route Stop Details (object)
 
 + stopName          :                 `pickup place 101` (required, string) - a name for the stop location
@@ -2510,9 +2513,24 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
                     "description": "a username of this driver",
                     "maxLength": 200
                   },
-                  "hoursWorked": {
+                  "timeOnDuty": {
                     "type": "number",
-                    "description": "the hours worked on-duty by this user so far today (on any duty at all)",
+                    "description": "the hours worked on-duty by this user so far today",
+                    "example": 1.5
+                  },
+                  "timeDriving": {
+                    "type": "number",
+                    "description": "the hours worked driving by this user so far today",
+                    "example": 1.5
+                  },
+                  "timePersonalConveyance": {
+                    "type": "number",
+                    "description": "the hours in personal conveyance by this user so far today",
+                    "example": 1.5
+                  },
+                  "timeYardMove": {
+                    "type": "number",
+                    "description": "the hours worked in yard moves by this user so far today",
                     "example": 1.5
                   },
                   "driverLicenseNumber": {
