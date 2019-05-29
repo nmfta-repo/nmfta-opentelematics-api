@@ -524,7 +524,7 @@ Driver's destination and route during a trip. They have
 * a [Vehicle object id](#vehicle_object) for a given vehicle
 * and because they previously [created a *Vehicle Route* `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) they have both
     * a *Vehicle Route object id* and
-    * a [Stop Geographic Details object id](#stop_geographic_details_object).
+    * an array of [Stop Geographic Details object id](#stop_geographic_details_object).
 
 To confirm that the given driver is still available to complete the route they retrieve the driver availability factors
 for the time period from the driver's start of route up until the present by using
@@ -535,7 +535,7 @@ To change the route they use
 
 * [Update Vehicle Route `PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}`](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
 
-To update details (entry points, notes) of the route stop they use
+To update details (entry points, notes) of the route stops they use
 
 * [Update Stop Geographic Details `PATCH /v1.0/stops/{stopId}`](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
@@ -560,8 +560,8 @@ instructions (such as which trailers to take) using
 
 * [Create a Vehicle Route `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
 
-A successful creation of a route will yield a *Route object id* in the response to use in further updates or modifications
-to the route.
+A successful creation of a route will yield a *Route object id* and an array of [Stop Geographic Details object id](#stop_geographic_details_object) in the response to use in further updates or modifications
+to the route or stops.
 
 ## Driver Route and Directions Done
 
@@ -1285,7 +1285,11 @@ endpoint `Request`s in the API Blueprint that follows.
 + stopLocation      :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
 + stopDeadline      :             `2019-04-05T02:04:16Z` (string) - optional time and date when the stop must be arrived at
 
-### Externally Sourced Route Start Stop Details (Externally Sourced Route Stop Details)
+### Externally Sourced Route Stops (object)
+
++ stops                                                   (required, array[Externally Sourced Route Stop Details], fixed-type) - the stops for the route
+
+### Externally Sourced Route Start Details And Stops (Externally Sourced Route Stops)
 
 + startName         :                  `start place 202` (required, string) - a name for the start location
 + startAddress      :                    `11 Elm Street` (string) - an optional street address of the start
@@ -1336,7 +1340,7 @@ endpoint `Request`s in the API Blueprint that follows.
 <a id="create_a_vehicle_route"></a>
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
-additional instructions in a *Externally Sourced Route Start Stop Details* object.
+additional instructions.
 
 **Access Controls**
 
@@ -1353,80 +1357,91 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-    + Attributes (Externally Sourced Route Start Stop Details)
+    + Attributes (Externally Sourced Route Start Details And Stops)
 
     + Schema
 
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStartStopDetails",
-                "required": [
-                  "startName",
-                  "startLocation",
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "startName": {
-                    "type": "string",
-                    "description": "a name for the start location",
-                    "example": "start place 202",
-                    "maxLength": 200
+              "type": "object",
+              "properties": {
+                "stops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stopName": {
+                        "type": "string",
+                        "description": "a name for the stop location",
+                        "example": "pickup place 101",
+                        "maxLength": 200
+                      },
+                      "stopAddress": {
+                        "type": "string",
+                        "description": "an optional street address",
+                        "example": "13 Sycamore Ave",
+                        "maxLength": 200
+                      },
+                      "stopLocation": {
+                        "type": "string",
+                        "description": "the location of the stop",
+                        "example": "37.4224764 -122.0842499",
+                        "maxLength": 26,
+                        "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                      },
+                      "stopDeadline": {
+                        "type": "string",
+                        "description": "optional time and date when the stop must be arrived at",
+                        "example": "2019-04-05T02:04:16Z",
+                        "maxLength": 20,
+                        "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
+                      }
+                    },
+                    "required": [
+                      "stopName",
+                      "stopLocation"
+                    ]
                   },
-                  "startAddress": {
-                    "type": "string",
-                    "description": "an optional street address of the start",
-                    "example": "11 Elm Street",
-                    "maxLength": 200
-                  },
-                  "startLocation": {
-                    "type": "string",
-                    "description": "the location of the start",
-                    "example": "37.4224764 -122.0842499",
-                    "maxLength": 26,
-                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
-                  },
-                  "routeAddInstructions": {
-                    "type": "string",
-                    "description": "an optional comment with details about the route",
-                    "example": "take trailers XXX and YYY",
-                    "maxLength": 200
-                  },
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101",
-                    "maxLength": 200
-                  },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave",
-                    "maxLength": 200
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499",
-                    "maxLength": 26,
-                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "example": "2019-04-05T02:04:16Z",
-                    "maxLength": 20,
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
-                  }
+                  "description": "the stops for the route"
+                },
+                "startName": {
+                  "type": "string",
+                  "description": "a name for the start location",
+                  "example": "start place 202",
+                  "maxLength": 200
+                },
+                "startAddress": {
+                  "type": "string",
+                  "description": "an optional street address of the start",
+                  "example": "11 Elm Street",
+                  "maxLength": 200
+                },
+                "startLocation": {
+                  "type": "string",
+                  "description": "the location of the start",
+                  "example": "37.4224764 -122.0842499",
+                  "maxLength": 26,
+                  "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                },
+                "routeAddInstructions": {
+                  "type": "string",
+                  "description": "an optional comment with details about the route",
+                  "example": "take trailers XXX and YYY",
+                  "maxLength": 200
                 }
+              },
+              "required": [
+                "stops",
+                "startName",
+                "startLocation"
+              ],
+              "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
 + Response 201 (application/json)
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
 
 + Response 204
 
@@ -1472,53 +1487,64 @@ change the destination of the route, hence also changing the stopId associated w
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-    + Attributes (Externally Sourced Route Stop Details)
+    + Attributes (Externally Sourced Route Stops)
 
     + Schema
 
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStopDetails",
-                "required": [
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101",
-                    "maxLength": 200
+              "type": "object",
+              "properties": {
+                "stops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stopName": {
+                        "type": "string",
+                        "description": "a name for the stop location",
+                        "example": "pickup place 101",
+                        "maxLength": 200
+                      },
+                      "stopAddress": {
+                        "type": "string",
+                        "description": "an optional street address",
+                        "example": "13 Sycamore Ave",
+                        "maxLength": 200
+                      },
+                      "stopLocation": {
+                        "type": "string",
+                        "description": "the location of the stop",
+                        "example": "37.4224764 -122.0842499",
+                        "maxLength": 26,
+                        "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                      },
+                      "stopDeadline": {
+                        "type": "string",
+                        "description": "optional time and date when the stop must be arrived at",
+                        "example": "2019-04-05T02:04:16Z",
+                        "maxLength": 20,
+                        "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
+                      }
+                    },
+                    "required": [
+                      "stopName",
+                      "stopLocation"
+                    ]
                   },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave",
-                    "maxLength": 200
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499",
-                    "maxLength": 26,
-                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "example": "2019-04-05T02:04:16Z",
-                    "maxLength": 20,
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
-                  }
+                  "description": "the stops for the route"
                 }
-              }
+              },
+              "required": [
+                "stops"
+              ],
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
 
 + Response 200 (application/json)
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the updated route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
 
 + Response 204
 
