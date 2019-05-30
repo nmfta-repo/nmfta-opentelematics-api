@@ -1126,7 +1126,7 @@ Telematics Data Model* for object descriptions as well.
 + faultCodeParameterorSubsystemId                        (number) - either the PID or SID, as in SAE J1587
 + sourceAddress                                          (required, number) - SA from SAE J1939
 + suspectParameterNumber                                 (required, number) - SPN from SAE J1939
-+ failureModeIdentifier                                  (number) - FMI from SAE J1939
++ failureModeIdentifier                                  (required, number) - FMI from SAE J1939
 + urgentFlag        :                              false (required, boolean) - is the fault urgent?
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
