@@ -1214,7 +1214,7 @@ Telematics Data Model* for object descriptions as well.
         + `SAMPLING_PERIODIC` - regular/periodic sampling
         + `SAMPLING_CHANGE` - change/event based sampling
 + sampleRate        :                                100 (number) - the sample rate (in the case of `SAMPLING_PERIODIC`) in Hz
-+ latency           :                                 30 (required, number) - the expected latency of delivery of an event/object from the telematics device to the motor freight carrier via OTAPI
++ latency           :                              0.010 (required, number) - the expected latency of delivery of an event/object from the telematics device to the motor freight carrier via OTAPI, in seconds
 + vehicleSpeedSource:                 `SPEED_SOURCE_ECM` (required, enum[string]) - the source of vehicle speed in this TSP
     + Members
         + `SPEED_SOURCE_ECM` - the vehicle speed reported in TSP data is from the ECMs of the vehicle
