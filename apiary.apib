@@ -1131,7 +1131,7 @@ Telematics Data Model* for object descriptions as well.
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
 + ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
-+ cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
++ cruiseStatus                                           (optional, Cruise Status) - the cruise status at the trigger time of this fault code event
 + ignitionStatus                                         (Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + clearType                                              (enum[string]) - by what means was this fault cleared
