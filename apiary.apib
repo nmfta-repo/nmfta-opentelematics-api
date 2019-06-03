@@ -11,12 +11,18 @@ This document is written in [API Blueprint format 1A](https://github.com/apiaryi
 The draft specification is pubished in various forms:
 
 * at [github.com/nmfta-repo/nmfta-opentelematics-api](https://github.com/nmfta-repo/nmfta-opentelematics-api)
+    * [`apiary.apib`](https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/apiary.apib) -- API Blueprint specification
+    * [`otapi.html`](https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/otapi.html) -- standalone documentation rendering of the above
 * here, [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io), as:
     * Interactive documentation
     * A mock server
 * at [apimatic/.../nmfta-opentelematics-api](https://www.apimatic.io/apidocs/nmfta-opentelematics-api) as:
     * Exportable API specifications in multiple formats including: Open API 3.0, RAML 1.0, and Swagger 2.0
     * Downloadable (client) SDKs in .NET and Python
+
+There is also a prototype implementation of version [0.1rc4](https://github.com/nmfta-repo/nmfta-opentelematics-api/releases/tag/proto-0.1rc4) of this specificiation available at [github.com/nmfta-repo/nmfta-opentelematics-prototype](https://github.com/nmfta-repo/nmfta-opentelematics-prototype).
+
+Finally, a questionnaire for use by motor freight carriers in assessing the degree to which a TSP provides OTAPI support is also available: [Open Telematics Supported Use Cases Questionnaire.xlsx](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/Open%20Telematics%20Supported%20Use%20Cases%20Questionnaire.xlsx)
 
 # Motivation
 
@@ -51,13 +57,15 @@ their time and energy to make this a reality.
 
 | **Fleet Managers**   | **Telematics Providers** | **Independents**                                                |
 |:--------------------:|:------------------------:|:---------------------------------------------------------------:|
-| Bill Brown, SEFL     | Geotab                   | Altaz Valani, Security Compass                                  |
-| Penske Truck Leasing | Samsara Networks, Inc.   | Andrew Smith, ISE Inc.                                          |
+| Bill Brown, SEFL     | Samsara Networks, Inc.   | Altaz Valani, Security Compass                                  |
+| Penske Truck Leasing | Geotab                   | Andrew Smith, ISE Inc.                                          |
 |                      | Omnitracs                | Dr. Jeremy Daily, UTulsa                                        |
+|                      | Derek Held, Zonar Systems|                                                                 |
 
-![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png) ![Omnitracs](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/Omnitracs_logo_2015_CMYK_no_tagline.jpg)
+![SEFL](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/SFL2c_300dpi-resized.jpg) ![Samsara Networks Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/samsara_horizontal_logo_black-resized.jpg) ![Geotab](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/geotab-logo_full-colour-rgb_resized.png) ![Security Compass](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/securitycompass-logo-resized.jpg) ![ISE Inc.](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/ISE_A_Trimble_Company_RGB.png) ![Omnitracs](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/Omnitracs_logo_2015_CMYK_no_tagline.jpg) ![Zonar Systems](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/zonar-logo-RGB-750.png)
 
 # Authentication
+<a id="authentication"></a>
 
 **All requests** to Open Telematics API endpoints **require authentication**.
 
@@ -94,9 +102,9 @@ TSPs implementing the Open Telematics API must restrict authorization of request
 in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
 The intent of these access controls is so that carriers can limit which clients they deploy have access to:
 * streaming *feeds* of objects as they are added to the TSP
@@ -111,7 +119,45 @@ are assigned `DENY/ALLOW` such that:
 * the *Driver X* roles can access both vehicle info and PII
 * the *Driver Dispatch* role is allowed to update route info and send messages to drivers
 * the *Driver Duty* role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)
-* the *HR* role is allowed to update Driver information and TSP portal user accounts
+* the *HR* role is allowed to perform HR use cases and update Driver information
+* the *S&C* roles is allowed to perform Safety and Compliance use cases and to update TSP portal user account username, password and enable/disable
+
+# Security Manifest
+
+The Open Telematics has been design with security up-front. Here we capture some NIST 800-53 controls which are satisfied
+by the present design of OTAPI and how. The intent of this section is to give some assurance of security-by-design in the
+OTAPI.
+
+***NIST 800-53 SC-6: Resource Availability / URL size should not exceed 2000 characters***
+
+None of the URLs in any of the endpoints of OTAPI will exceed a maximum of 220 characters. The longest resource path is
+`/v1.0/drivers/{driverId}/availability_factors/` which would be 104 characters long if a 68 character `driverId` were
+used. The endpoints have between 1 and 3 query string parameters, most are dates which are expressed in ISO 8601 format,
+24 characters long the others are opaque IDs which could be up to 68 characters long. Worst case URL length is 104 + 24 + 24 + 68 (220) characters.
+
+***NIST 800-53 SC-6: Resource Availability / HTTP request size should not exceed 1MB limit***
+
+All `POST`, `PUT` and `PATCH` methods in the OTAPI are specific with JSON Schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
+4K.
+
+***NIST 800-53 SI-10: Information Input Validation / All file references should be indirect***
+
+There are no direct file references in OTAPI; all objects are referred to by opaque identifiers and furthermore the data export API returns a URL for dereferencing and not a file.
+
+***NIST 800-53 AC-3: Access Enforcement / Considerations: Grant privileges directly to users***
+
+The OTAPI is designed for machine to machine communications; as such the privileges for access to OTAPI information is
+granted to the motor freight carrier backend systems which integrate with OTAPI services. The privileges assigned
+can be minimized, however -- see sections [Authentication](#authentication) and [Authorization](#authorization).
+
+***NIST 800-53 AC-24: Access Control Decisions / Considerations: Security controls assigned to each request***
+
+OTAPI requires valid authorization with each request; see section [Authentication](#authentication).
+
+***NIST 800-53 AU-6: Audit Review, Analysis, and Reporting / Considerations: Grant privileges to specific users***
+
+OTAPI is designed with segmented privileges and separated user roles so that privileges are granted to specific roles
+and no more privilege is used than is needed. See section [Authorization](#authorization).
 
 # Security Requirements for Implementors
 <a id="security_requirements_for_implementors"></a>
@@ -369,13 +415,13 @@ The localization does not apply to units of measure. Open Telematics API will us
 The localization also does not apply to arbitrary strings in data objects of the API such as messages for display in
 vehicles or comment fields.
 
-Requests to the Translation `/i18n` endpoint (see below for more details) shall include the request header `Accept-
+Requests to [Get a Translation `GET /v1.0/i18n`](#get_a_translation_table) shall include the request header `Accept-
 Language: `. If no request header is present then `Accept-Language: en` will be assumed.
 
 Open Telematics API implementors choose which languages they will support. If the `Accept-Language: ` request header
 specifies a language which is unsupported by the Open Telematics API instance, then a `406` (Not Acceptable) response
 will returned. Implementors must support `Accept-Language: en` and return a complete mapping -- a sample of which is
-provided below for convenience in the sample response to `GET /v1.0/i18n`.
+provided below for convenience in the sample response to [`GET /v1.0/i18n`](#get_a_translation_table).
 
 # Telematics API Use Cases by Motor Freight Carriers
 
@@ -399,11 +445,11 @@ less than optimal operation.
 
 To check the current state of health of the service they use
 
-* [Check Current State of Health](#check_current_state_of_health)
+* [Check Current State of Health `GET /v1.0/health/current`](#check_current_state_of_health)
 
 To check the past 30 days worth of states of health they use
 
-* [Check Past 30d State of Health](#check_past_30d_state_of_health)
+* [Check Past 30d State of Health `GET /v1.0/health/recents`](#check_past_30d_state_of_health)
 
 ## Data Export
 
@@ -412,79 +458,13 @@ this specification is all the data specified here and does not include any other
 and employed by the TSP. These data exports could be used by carriers to complete mandatory processes during times of
 TSP outage or to restore data -- although this last potential use is _not_ a use case we aim to support in OTAPI.
 
-***Data Import***
+To obtain a complete data export (including driver information) they use
 
-The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
-same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
-data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+* [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format).
 
-***PII Separation***
+To obtain a data export with vehicle information only (intended to be free of PII) they use
 
-The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
-above. OTAPI implementations must provide for export of both [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
-and [Complete Telematics Export Format](#complete_telematics_export_format) objects so that systems which must be separated
-from PII can download the [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) type. As is
-noted in the access controls below, requests for these data types deny access by the *Vehicle X* roles.
-
-***Polling for Daily Files***
-
-The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
-server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
-not yet ready, or respond with a redirect to a location serving the complete file (statically).
-
-Implementors are free to make the files available for download from any service they choose. If the service hosting the
-files for download exposes endpoints under that of the OTAPI endpoints then the same authentication and authorization
-schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible
-without any authentication or authorization and the client is expected to be configured with the appropriate credentials
-for download independently of responses from the OTAPI server.
-
-***Time-base for Data Export***
-
-Note that the data export files will include both time-varying objects (those that have time associated with them) and
-also those that do not.
-
-* For time-varying objects: the files will only include whose associated time periods have an intesection with the
-requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
-
-* For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
-regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
-API consistency under `/export/...`)
-
-Furthermore, the event and object times considered in the time queries for data export use *received times* (as opposed
-the default policy of relying on *creation times*). These are the times when the event or object was received, recorded
-and/or made available by the OTAPI server. This could pose problems for processing exported data for RODS compliance as
-multiple files may need to be processed in high-latency situations; however, the alternative is allow for data loss in
-the daily export files.
-
-***Complete Data Export***
-
-The *Complete* objects will contain sets of all of the following objects embedded, see [Complete Telematics Export Format](#complete_telematics_export_format) for more details.
-
-* [Vehicle](#vehicle_object)
-* [Vehicle Location Time](#vehicle_location_time_object)
-* [Vehicle Flagged Event](#vehicle_flagged_event_object)
-* [Vehicle Performance Event](#vehicle_performance_event_object)
-* [Stop Geographic Details](#stop_geographic_details_object)
-* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
-* [Driver](#driver_object)
-* [Log Event](#log_event_object)
-* [Region Specific Break Rules](#region_specific_break_rules_object)
-* [Region Specific Waivers](#region_specific_waivers_object)
-* [Driver Performance Summary](#driver_performance_summary_object)
-* [Message Receipt](#message_receipts)
-* [State of Health](#state_of_health_object)
-
-***Vehicle-Only Data Export***
-
-The *Vehicle-Only* objects will contain sets of all of the following objects embedded, see [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) for more details.
-
-* [Vehicle](#vehicle_object)
-* [Vehicle Location Time](#vehicle_location_time_object)
-* [Vehicle Flagged Event](#vehicle_flagged_event_object)
-* [Vehicle Performance Event](#vehicle_performance_event_object)
-* [Stop Geographic Details](#stop_geographic_details_object)
-* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
-* [State of Health](#state_of_health_object)
+* [Vehicle-Only Telematics Export Format `GET /v1.0/export/vehiclerecords/status{?dayOf}`](#vehicle_only_telematics_export_format).
 
 ## Generate Records of Duty Status for Compliance
 
@@ -502,7 +482,7 @@ kinds of nuances that are handled by TPSs in their service offering and OTAPI is
 Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
 event a TSP is no longer available.
 
-See [Complete Telematics Export Format](#complete_telematics_export_format) for more details on the file format
+See [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format) for more details on the file format
 which should contain sufficient data for this use case in the array of [Log Event objects](#log_event_object).
 
 ## Driver Availability
@@ -518,17 +498,17 @@ availability of a Driver. They have
 To calculate the current driver availablity they retrieve 'driver availability factors' from which the current driver
 availability can be calculated using
 
-* [Get Driver Availability Factors](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Availability Factors `GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}`](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
 
 To consider also the breaks and exemption rules for driver in those logs (if they operate in regions with specific break
 rules or waivers) they use
 
-* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Breaks and Waivers `GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}`](#get_driver_breaks_and_waivers) a given [Driver object id](#driver_object) over a given period of time
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
 this their systems send duty status changes to the TSP using
 
-* [Update Driver Duty Status](#update_driver_duty_status) for a given [Driver object id](#driver_object).
+* [Update Driver Duty Status `PATCH /v1.0/drivers/{driverId}/duty_status`](#update_driver_duty_status) for a given [Driver object id](#driver_object).
 
 ## Driver Route & Directions Communication
 
@@ -543,22 +523,22 @@ Driver's destination and route during a trip. They have
 
 * a [Driver object id](#driver_object) for a given driver
 * a [Vehicle object id](#vehicle_object) for a given vehicle
-* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) they have both
+* and because they previously [created a *Vehicle Route* `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) they have both
     * a *Vehicle Route object id* and
-    * a [Stop Geographic Details object id](#stop_geographic_details_object).
+    * an array of [Stop Geographic Details object id](#stop_geographic_details_object).
 
 To confirm that the given driver is still available to complete the route they retrieve the driver availability factors
 for the time period from the driver's start of route up until the present by using
 
-* [Get Driver Availability Factors](#get_driver_availability_factors) endpoint for a given [Driver object id](#driver_object) over a given period of time
+* [Get Driver Availability Factors `GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}`](#get_driver_availability_factors) endpoint for a given [Driver object id](#driver_object) over a given period of time
 
 To change the route they use
 
-* [Update Vehicle Route](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
+* [Update Vehicle Route `PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}`](#update_vehicle_route) for a given [Vehicle object id](#vehicle_object) and a given *Vehicle Route object id*
 
-To update details (entry points, notes) of the route stop they use
+To update details (entry points, notes) of the route stops they use
 
-* [Update Stop Geographic Details](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+* [Update Stop Geographic Details `PATCH /v1.0/stops/{stopId}`](#update_stop_geographic_details) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
 
 ## Driver Route & Directions Start
 
@@ -574,15 +554,15 @@ drivers about their planned route before the driver starts the trip. They have
 
 To first check the vehicle for any faults or alarms in the past 24h they use
 
-* [Get Vehicle Flagged Events](#get_vehicle_flagged_events) for a given [Vehicle object id](#vehicle_object) over a given period of time
+* [Get Vehicle Flagged Events `GET /v1.0/vehicles/{vehicleId}/flagged_events/{?startTime,stopTime}`](#get_vehicle_flagged_events) for a given [Vehicle object id](#vehicle_object) over a given period of time
 
 Assuming the vehicle is good to go, then they send trip start and stop destinations to the driver along with any other
 instructions (such as which trailers to take) using
 
-* [Create a Vehicle Route](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
+* [Create a Vehicle Route `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) for a given [Vehicle object id](#vehicle_object)
 
-A successful creation of a route will yield a *Route object id* in the response to use in further updates or modifications
-to the route.
+A successful creation of a route will yield a *Route object id* and an array of [Stop Geographic Details object id](#stop_geographic_details_object) in the response to use in further updates or modifications
+to the route or stops.
 
 ## Driver Route and Directions Done
 
@@ -594,22 +574,33 @@ Both personnel and semi-automated systems responsible for planning and assigning
 completed trip, along with the driver information about duty on the trip. They have
 
 * a [Driver object id](#driver_object) for a given driver
-* and because they previously [created a *Vehicle Route*](#create_a_vehicle_route) and may have optionally
-[updated the driver's Route Stop](#update_vehicle_route) or [updated the *Stop Geographic Details*](#update_stop_geographic_details)
+* and because they previously [created a *Vehicle Route* `POST /v1.0/vehicles/{vehicleId}/routes`](#create_a_vehicle_route) and may have optionally
+[updated the driver's Route Stop `PUT /v1.0/vehicles/{vehicleId}/routes/{routeId}`](#update_vehicle_route) or [updated the *Stop Geographic Details* `PATCH /v1.0/stops/{stopId}`](#update_stop_geographic_details)
 they hence have both
     * a *Vehicle Route object id* and
     * a [Stop Geographic Details object id](#stop_geographic_details_object).
 
 To react to the route completions in 'real-time' they follow a feed using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 They mark trips completed based on matching a [Log Event object](#log_event_object) in the feed which matches a given
 [Driver object id](#driver_object) and also has a status indicating that the route is complete.
 
 At the end of trips they also query for any updates on changes to gates, access, repairs etc at the destination using
 
-* [Get Stop Geographic Details by its ID](#get_a_region_specific_waivers_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+* [Get Stop Geographic Details by its ID `GET /v1.0/stops/{id}`](#get_a_stop_geographic_details_by_its_id) for a given [Stop Geographic Details object id](#stop_geographic_details_object)
+
+## Dispatch Messaging (by Driver)
+
+Motor freight carriers need to enable their drivers to 'call-back' to the dispatch in a timely and safe manner. To do this
+they often rely on two-way messaging provided by the TSP. The drivers can create and send messages to dispatch at the
+motor freight carrier by using an interface on their in-cab displays.
+
+Both personel and semi-automated systems responsible for drivers in the field, "Dispatch", need to be notified of new
+messages. To process the invoming messages for Dispatch in 'real time' they follow a feed using
+
+* [Follow Dispatch Messages `GET /v1.0/fleet/dispatchmessages/feed{?token}`](#follow_dispatch_messages)
 
 ## Driver Messaging by Geo-Location
 
@@ -624,11 +615,11 @@ geographic region. They have
 To determine which vehicles presently lie within the geographic area they get the current location of all fleet vehicles
 using
 
-* [Get Fleet Latest Locations](#get_fleet_latest_locations)
+* [Get Fleet Latest Locations `GET /v1.0/fleet/locations/latest{?page,count}`](#get_fleet_latest_locations)
 
 Then, for each [Vehicle object id](#vehicle_object) which lies within the geographic area they send it a message using
 
-* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
+* [Send Message to a Vehicle `POST /v1.0/vehicles/{vehicleId}/message`](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
 
 ## Driver Messaging by Vehicle
 
@@ -640,7 +631,7 @@ Personnel responsible for planning and assigning driver routes want to send a me
 
 they send the vehicle a message using
 
-* [Send Message to a Vehicle](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
+* [Send Message to a Vehicle `POST /v1.0/vehicles/{vehicleId}/message`](#send_message_to_a_vehicle) for a given [Vehicle object id](#vehicle_object)
 
 ## Vehicle Location Time History Processing
 
@@ -651,7 +642,7 @@ as: Fuel Purchase Prediction, Fuel Consumption Performance Tracking, and Fleet M
 
 To perform the analysis on fleet location time history they use
 
-* [Get Fleet Location History](#get_fleet_location_history) for a given time period
+* [Get Fleet Location History `GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}`](#get_fleet_location_history) for a given time period
 
 ## Human Resources Process: Payroll
 
@@ -662,24 +653,24 @@ Automated payroll/HR systems want to receive Log Events and convert these into p
 
 To do create payroll tracking entries in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 furthermore -- if they operate in regions with specific break rules or waivers are applicable -- they use
 
-* [Get Driver Breaks and Waivers](#get_driver_breaks_and_waivers) for each [Driver object id](#driver_object) in the
+* [Get Driver Breaks and Waivers `GET /v1.0/drivers/{driverId}/breaks_and_waivers/{?startTime,stopTime}`](#get_driver_breaks_and_waivers) for each [Driver object id](#driver_object) in the
 feed for the times of interest to the payroll tracking entries
 
 In some cases, facilities systems want to set the driver status in cases where they are on-duty but not driving. To do
 this their systems send data _to_ the TSPs using
 
-* [Update Driver Duty Status](#update_driver_duty_status) endpoint for a given [Driver object id](#driver_object).
+* [Update Driver Duty Status `PATCH /v1.0/drivers/{driverId}/duty_status`](#update_driver_duty_status) endpoint for a given [Driver object id](#driver_object).
 
-and the duty status changes are reflected in the [Follow Fleet Log Events](#follow_fleet_log_events) endpoint.
+and the duty status changes are reflected in the [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) endpoint.
 
 To associate their Driver's with metadata for use by the TSP (e.g. the region of governance for duty breaks and
 exemptions) they use
 
-* [Update Driver Info](#update_driver_info) for a given [Driver object id](#driver_object).
+* [Update Driver Info `PATCH /v1.0/drivers/{driverId}`](#update_driver_info) for a given [Driver object id](#driver_object).
 
 ## Human Resources Process: Accident Report
 
@@ -690,7 +681,7 @@ internally according to their own processes.
 
 To do respond to accidents in 'real-time' they follow the feed of [Log Events](#log_event_object) using
 
-* [Follow Fleet Log Events](#follow_fleet_log_events) for all drivers
+* [Follow Fleet Log Events `GET /v1.0/event_logs/feed{?token}`](#follow_fleet_log_events) for all drivers
 
 ## Carrier Custom Business Intelligence
 
@@ -702,15 +693,15 @@ time period.
 
 To process the fleet state over a target time period they use
 
-* [Get Fleet Vehicle Info](#get_fleet_vehicle_info) for a given time period
+* [Get Fleet Vehicle Info `GET /v1.0/fleet/infos/{?startTime,stopTime}`](#get_fleet_vehicle_info) for a given time period
 
 To process and respond to fleet status in 'real-time' they follow a feed using
 
-* [Follow Fleet Vehicle Info](#follow_fleet_vehicle_info) for all vehicles
+* [Follow Fleet Vehicle Info `GET /v1.0/fleet/infos/feed{?token}`](#follow_fleet_vehicle_info) for all vehicles
 
 To follow-up with queries of the hi-resolution time history of the fleet for a given time period they use
 
-* [Get Fleet Location History](#get_fleet_location_history) for a given time period.
+* [Get Fleet Location History `GET /v1.0/fleet/locations/{?startTime,stopTime,page,count}`](#get_fleet_location_history) for a given time period.
 
 ## Compliance and Safety Monitoring
 
@@ -723,12 +714,12 @@ Personnel responsible for safety and compliance want to review the safety and co
 
 To obtain the information necessary to review for safety and compliance they use
 
-* [Get Driver Performance Summaries](#get_driver_performance_summaries) for a given [Driver object id](#driver_object) and for a given time period
+* [Get Driver Performance Summaries `GET /v1.0/drivers/{driverId}/performance_summaries/{?startTime,stopTime}`](#get_driver_performance_summaries) for a given [Driver object id](#driver_object) and for a given time period
 
 To create, delete and modify driver login credentials that the drivers will use in the
 field and to which the [Driver Performance Summary objects](#driver_performance_summary_object) are associate they use
 
-* [Update Driver TSP Portal Account](#update_driver_tsp_portal_account) for a given [Driver object id](#driver_object)
+* [Update Driver TSP Portal Account `PATCH /v1.0/drivers/{driverId}/driverportaluser`](#update_driver_tsp_portal_account) for a given [Driver object id](#driver_object)
 
 ## In-Field Maintenance & Repair
 
@@ -738,12 +729,67 @@ Automated back-end systems at the motor freight carrier want to be notified of a
 
 To determine which events require maintenance in 'real-time' they follow a feed using
 
-* [Follow Fleet Fault Code Events](#follow_fleet_fault_code_events) for all fleet vehicles
+* [Follow Fleet Fault Code Events `GET /v1.0/fleet/faults/feed{?token}`](#follow_fleet_fault_code_events) for all fleet vehicles
 
 To dispatch assitance to the location of a given [Vehicle object id](#vehicle_object) -- in the event that an issue
 requiring maintenance must be resolved in the field -- they obtain the most recent vehicle location using
 
-* [Get Vehicle Location History](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
+* [Get Vehicle Location History `GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}`](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
+
+## Machine-Readable Data Quality
+
+Motor freight carriers rely on data quality properties of the service provided by TSPs and need to be able to adapt
+their back-end systems depending on the various data quality propoerties of a given TSP's service.
+
+To determine what the expected data qualities of the service are, they use
+
+* [Get Data Qualities Statement `GET /v1.0/dataquality`](#get_data_qualities_statement).
+
+## Estimating Received Data Quality
+
+Motor freight carriers need to estimate certain data quality properties of their service for a given time period.
+
+To gain these estimates they post-process either the complete or vehicle only records for the given time period from
+
+* [Complete Telematics Export Format `GET /v1.0/export/allrecords/status{?dayOf}`](#complete_telematics_export_format) OR
+* [Vehicle-Only Telematics Export Format `GET /v1.0/export/vehiclerecords/status{?dayOf}`](#vehicle_only_telematics_export_format)
+
+For example, estimates of received data latency can be obtained by processing downloads from either of the above and
+summarizing the difference between the created timestamps and server timestamps.
+
+## Monitor Vehicle Status Events
+
+Motor freight carriers need access to raw J1939 vehicle frames for various custom fleet management tasks. To process the raw frames in 'real-time' they follow a feed using
+
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
+
+NB: These vehicle status events are largely *raw* J1939 data. Open Telematics API makes no requirements on how the TSP
+determines what raw frames to send via this interface. It is expected that the motor freight carrier and the TSP
+configure/agree-to the set of raw data via some other mechanism.
+
+Furthermore, truck leasing companies need to have access to this raw vehicle status data via single-purpose accounts at
+the motor freight carrier's TSP. i.e. the truck leasing company does not require access to any other information so the account has a
+single role and no further permissions. For this, the leasing companies also use
+
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
+
+## Monitor Fleet Battery Status
+
+Motor freight carriers need to monitor the battery voltage of their fleet of vehicles.
+
+To monitor these battery voltages in 'real time' they follow a feed using
+
+* [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events) for all fleet vehicles
+
+Alternatively, the motor freight carriers may follow a feed using
+
+* [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
+
+However, the latter may require special configuration for allowing the appropriate raw CAN frames to be sent via the
+[Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) endpoint. Furthermore, the [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events)
+endpoint may not produce data in as many ignition states as [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events)
+and the [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events) may offer higher resolution on battery
+voltage than [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events).
 
 ## Data Structures
 
@@ -899,27 +945,28 @@ Telematics Data Model* for object descriptions as well.
 
 ### Cruise Status (object)
 
-+ ccSwitch          :                             false  (required, boolean) - cruise control switch status at time of event
-+ ccSetSwitch       :                             false  (required, boolean) - cruise control set switch status at time of event
-+ ccCoastSwitch     :                             false  (required, boolean) - cruise control coast switch status at time of event
-+ ccClutchSwitch    :                             false  (required, boolean) - cruise control clutch switch status at time of event
-+ ccCruiseSwitch    :                             false  (required, boolean) - cruise control cruise switch status at time of event
-+ ccResumeSwitch    :                             false  (required, boolean) - cruise control resume switch status at time of event
-+ ccAccelerationSwitch:                           false  (required, boolean) - cruise control acceleration switch status at time of event
-+ ccBrakeSwitch     :                             false  (required, boolean) - cruise control brake switch status at time of event
-+ ccSpeed           :                                 1  (required, number) - cruise control commanded speed at the time of event, in km/h
-
-### Ignition Status (object)
-
-+ ignitionAccessory :                             false  (required, boolean) - ignition accessory state at time of event
-+ ignitionRunContact:                             false  (required, boolean) - ignition run contact state at time of event
-+ ignitionCrankContact:                           false  (required, boolean) - ignition crank contact state at time of event
-+ ignitionAidContact:                             false  (required, boolean) - ignition aid contact state at time of event
++ ccSwitch          :                             false  (boolean) - cruise control switch status at time of event
++ ccSetSwitch       :                             false  (boolean) - cruise control set switch status at time of event
++ ccCoastSwitch     :                             false  (boolean) - cruise control coast switch status at time of event
++ ccClutchSwitch    :                             false  (boolean) - cruise control clutch switch status at time of event
++ ccCruiseSwitch    :                             false  (boolean) - cruise control cruise switch status at time of event
++ ccResumeSwitch    :                             false  (boolean) - cruise control resume switch status at time of event
++ ccAccelerationSwitch:                           false  (boolean) - cruise control acceleration switch status at time of event
++ ccBrakeSwitch     :                             false  (boolean) - cruise control brake switch status at time of event
++ ccSpeed           :                                 1  (number) - cruise control commanded speed at the time of event, in km/h
 
 ### Flagged Event Thresholds (object)
 
 + suddenThreshold:                           `3.13` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
 + collisionThreshold:                        `12.2` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_COLLISION` is created, in m/s/s
+
+### Ignition Status (enum[string])
+
++ `IGNITION_STATUS_ACCESSORY` - ignition accessory state
++ `IGNITION_STATUS_RUN_CONTACT` - ignition run contact state
++ `IGNITION_STATUS_CRANK_CONTACT` - ignition crank contact state
++ `IGNITION_STATUS_AID_CONTACT` - ignition aid contact state
++ `IGNITION_STATUS_OFF` - ignition off state
 
 ### Vehicle Flagged Event (object)
 
@@ -938,16 +985,17 @@ Telematics Data Model* for object descriptions as well.
         + `FLAGGEDTYPE_SUDDEN_STOP` - Sudden stop flagged event
         + `FLAGGEDTYPE_COLLISION` - Collision flagged event
         + `FLAGGEDTYPE_ONBOARD_RECORDING` - onboard recording flagged event
+
 + gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
-+ ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
-+ engineRPM                                              (required, number) - engine speed at time of event, in revolutions per minute (RPM)
++ ecmSpeed                                               (number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
++ engineRPM                                              (number) - engine speed at time of event, in revolutions per minute (RPM)
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
 + cruiseStatus                                           (optional, Cruise Status) - the cruise status at the time of this event
 + parkingBrake      :                             false  (optional, boolean) - parking brake status at time of event
-+ ignitionStatus                                         (required, Ignition Status) - the ignition status at the time of the event
++ ignitionStatus                                         (Ignition Status) - the ignition status at the time of the event
 + forwardVehicleSpeed:                                1  (required, number) - vehicle speed according to tire rotation, in km/h
 + forwardVehicleDistance:                           100  (required, number) - vehicle distance traveled since cycled, in m
 + forwardVehicleElapsed:                              2  (required, number) - vehicle forward travel elapsed time, in s
@@ -993,7 +1041,7 @@ Telematics Data Model* for object descriptions as well.
 + eventEnd          :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the end of the event (engine stop)
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
 + eventComment      : `performance event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
-+ hours             :                                6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
++ hours             :                               6.28 (required, number) - the number of hours elapsed over this Vehicle Performance Event, in hours
 + thresholds                                             (required, Performance Thresholds) - the thresholds that were active during this event
 + odometerStart                                          (required, number) - the vehicle odometer reading at the start of this event, in m
 + odometerEnd                                            (required, number) - the vehicle odometer reading at the end of this event, in m
@@ -1004,8 +1052,9 @@ Telematics Data Model* for object descriptions as well.
 + brakeApplications                                      (required, number) - the total number of applications of the vehicle brakes during this event
 + engineLoadStopped                                      (required, number) - the average engine load while the vehicle was stopped during this event, in percent
 + engineLoadMoving                                       (required, number) - the average engine load while the vehicle was moving during this event, in percent
-+ headlightTime                                          (required, number) - the total amount of time spent with headlights on during this event, in seconds
++ headlightTime                                          (number) - the total amount of time spent with headlights on during this event, in seconds
 + speedGovernorValue                                     (required, number) - this vehicles particular speed governor setting, in km/h
++ batteryVoltage                                         (number)           - the optional battery voltage reading at the end of this event
 + overRpmTime                                            (number)           - the total amount of time the vehicle spent moving while over the RPM threshold during this event, in seconds
 + overSpeedTime                                          (number)           - the total amount of time spent over the speed threshold during this event, in seconds
 + excessSpeedTime                                        (number)           - the total amount of time spent over the excess speed threshold, in seconds
@@ -1034,14 +1083,29 @@ Telematics Data Model* for object descriptions as well.
         + `FILTERSTATUS_ACTIVE_REGEN_END' - Filter active regen ended
         + `FILTERSTATUS_PASSIVE_REGEN_END' - Filter passive regen ended
 + exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
-+ overspeedLowThrottle                                   (number)          - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
-+ overspeedHiThrottle                                    (number)          - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
-+ overrpmLowThrottle                                     (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
-+ overrpmHiThrottle                                      (number)          - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
++ overspeedLowThrottle                                   (number)           - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
++ overspeedHiThrottle                                    (number)           - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
++ overrpmLowThrottle                                     (number)           - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
++ overrpmHiThrottle                                      (number)           - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously above the throttle threshold, in seconds
 + lkaActive                                              (boolean)          - Lane Keep Assist active status
 + lkaDisable                                             (boolean)          - Lane Keep Assist disable switch status
 + ldwActive                                              (boolean)          - Lane Departure Warning active status
 + ldwDisable                                             (boolean)          - Lane Departure Warning disable switch status
+
+### Vehicle Status Event (object)
+
++ id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
++ vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
++ location          :         ` 37.4224764 -122.0842499` (required, string) - location of the vehicle at the time of this event
++ eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
++ triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
++ odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
++ ignitionStatus                                         (Ignition Status) - the ignition status at the trigger time of this fault code event
++ gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
++ canIdentifier     :                        `C F004 01` (required, string) - a hex-encoded string (spaces allowed) of the 29-bit J1939 CAN identifier
++ data              :          `FF FF 82 DF 1A FF FF FF` (required, string) - a hex-encoded string (spaces allowed) of the J1939 data payload
 
 ### Vehicle Fault Code Event (object)
 
@@ -1049,7 +1113,7 @@ Telematics Data Model* for object descriptions as well.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
 + serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this event
-+ location          :         ` 37.4224764 -122.0842499` (required, string) - location
++ location          :         ` 37.4224764 -122.0842499` (required, string) - location of the vehicle at the time of this event
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
@@ -1067,8 +1131,8 @@ Telematics Data Model* for object descriptions as well.
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
 + ecmSpeed                                               (required, number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
-+ cruiseStatus                                           (required, Cruise Status) - the cruise status at the trigger time of this fault code event
-+ ignitionStatus                                         (required, Ignition Status) - the ignition status at the trigger time of this fault code event
++ cruiseStatus                                           (optional, Cruise Status) - the cruise status at the trigger time of this fault code event
++ ignitionStatus                                         (Ignition Status) - the ignition status at the trigger time of this fault code event
 + gpsQuality                                             (required, GPS Quality) - the GPS fix quality at the trigger time of this event
 + clearType                                              (enum[string]) - by what means was this fault cleared
     + Members
@@ -1123,12 +1187,38 @@ Telematics Data Model* for object descriptions as well.
 + deliveredTime     :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was delivered to the vehicle
 + readTime          :             `2019-04-05T02:04:16Z` (string) - Date and time when the message was displayed to driver
 
+### Dispatch Message (object)
+
++ id                : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The id of this Dispatch Message object
++ providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
++ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the Dispatch Message object was last updated in the TSP
++ subject                                                (string) - the 'subject-line' of the delivered message
++ message                                                (required, string) - the message delivered
++ sentTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was sent to Dispatch from the vehicle
++ deliveredTime     :             `2019-04-05T02:04:16Z` (required, string) - Date and time when the message was delivered to Dispatch
++ readTime          :             `2019-04-05T02:04:16Z` (string) - Date and time when the message was displayed to Dispatch
+
 ### Token Translation (object)
 
 + origin :                `Log Event, malfunction` (string) - optional note of origin of token to be translated
 + comment : `Diagnostic, information for understanding sources of problems` (string) - optional comment for translators
 + msgid :                             `STATE_DIAGNOSTIC` (required, string) - The token which will be translated
 + msgstr :                                  `Diagnostic` (required, string) - The locale's representation (translation) of the token
+
+### Data Qualities (object)
+
++ providerId        :                 `api.provider.com` (required, string) - the unique 'Provider ID' of the TSP
++ locationPrecision :                                 20 (required, string) - the location precision in meters of radius of precision
++ samplingMethod    :                `SAMPLING_PERIODIC` (required, enum[string]) - the sampling method of the TSP; either regular/periodic sampling or change/event based sampling
+    + Members
+        + `SAMPLING_PERIODIC` - regular/periodic sampling
+        + `SAMPLING_CHANGE` - change/event based sampling
++ sampleRate        :                                100 (number) - the sample rate (in the case of `SAMPLING_PERIODIC`) in Hz
++ latency           :                              0.010 (required, number) - the expected latency of delivery of an event/object from the telematics device to the motor freight carrier via OTAPI, in seconds
++ vehicleSpeedSource:                 `SPEED_SOURCE_ECM` (required, enum[string]) - the source of vehicle speed in this TSP
+    + Members
+        + `SPEED_SOURCE_ECM` - the vehicle speed reported in TSP data is from the ECMs of the vehicle
+        + `SPEED_SOURCE_GPS` - the vehicle speed reported in TSP data is from GPS
 
 ### State of Health (object)
 
@@ -1151,6 +1241,7 @@ Telematics Data Model* for object descriptions as well.
 + vehicleFlaggedEvents                                   (array[Vehicle Flagged Event], fixed-type) - Any of the Vehicle Flagged Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehiclePerformanceEvents                               (array[Vehicle Performance Event], fixed-type) - Any of the Vehicle Performance Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + flaggedVehicleFaultEvents                              (array[Flagged Vehicle Fault Code Event], fixed-type) - Any of the Flagged Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ vehicleStatusEvents                                    (array[Vehicle Status Event], fixed-type) - Any of the Vehicle Status Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + vehicleFaultCodeEvents                                 (array[Vehicle Fault Code Event], fixed-type) - Any of the Vehicle Fault Code Event objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + stateOfHealths                                         (array[State of Health], fixed-type) - Any of the State of Health objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
@@ -1162,6 +1253,7 @@ Telematics Data Model* for object descriptions as well.
 + regionSpecificBreakRules                               (array[Region Specific Break Rules], fixed-type) - Any of the Region Specific Break Rules objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + regionSpecificWaivers                                  (array[Region Specific Waivers], fixed-type) - Any of the Region Specific Waivers objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + driverPerformanceSummaries                             (array[Driver Performance Summary], fixed-type) - Any of the Driver Performance Summary objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
++ dispatchMessages                                       (array[Dispatch Message], fixed-type) - Any of the Dispatch Message objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 + displayMessageReceipts                                 (array[Message Receipt], fixed-type) - Any of the Message Receipt objects known to the TSP at the time of the request whose associated time periods have an intersection with the requested time period
 
 ## Data Structures
@@ -1188,6 +1280,9 @@ JSON Schema to an action which overides the JSON schema generated from the MSON.
 define the data types used for inbound objects, there is also corresponding JSON Schemas for endpoints accepting these
 data type defined below. If you change one you should probably also change the other.
 
+Note 5: WARNING, changes to the objects here require also changing the explicit JSON Schema sections added to the
+endpoint `Request`s in the API Blueprint that follows.
+
 ### Externally Sourced Route Stop Details (object)
 
 + stopName          :                 `pickup place 101` (required, string) - a name for the stop location
@@ -1195,7 +1290,11 @@ data type defined below. If you change one you should probably also change the o
 + stopLocation      :         ` 37.4224764 -122.0842499` (required, string) - the location of the stop
 + stopDeadline      :             `2019-04-05T02:04:16Z` (string) - optional time and date when the stop must be arrived at
 
-### Externally Sourced Route Start Stop Details (Externally Sourced Route Stop Details)
+### Externally Sourced Route Stops (object)
+
++ stops                                                   (required, array[Externally Sourced Route Stop Details], fixed-type) - the stops for the route
+
+### Externally Sourced Route Start Details And Stops (Externally Sourced Route Stops)
 
 + startName         :                  `start place 202` (required, string) - a name for the start location
 + startAddress      :                    `11 Elm Street` (string) - an optional street address of the start
@@ -1205,7 +1304,7 @@ data type defined below. If you change one you should probably also change the o
 ### Externally Sourced Vehicle Display Messages (object)
 
 + subject                                                (string) - a brief 'subject-line' for this message
-+ message                                                (required, string) - the message to be displayed to the driver
++ message                                                (required, string) - the message to be displayed to the driver. This string can contain any characters valid in JSON including unicode characters. The TSP must filter characters that are illegal for transport or display in their systems.
 
 ### Externally Sourced Stop Geographic Details (object)
 
@@ -1224,8 +1323,10 @@ data type defined below. If you change one you should probably also change the o
 
 ### Externally Sourced Driver Info (object)
 
-+ username                                               (required, string) - a username of this driver
-+ hoursWorked       :                              `1.5` (number) - the hours worked on-duty by this user so far today (on any duty at all)
++ timeOnDuty        :                                1.5 (number) - the hours worked on-duty by this user so far today
++ timeDriving       :                                1.5 (number) - the hours worked driving by this user so far today
++ timePersonalConveyance:                            1.5 (number) - the hours in personal conveyance by this user so far today
++ timeYardMove      :                                1.5 (number) - the hours worked in yard moves by this user so far today
 + driverLicenseNumber                                    (string) - the driver's license number
 + country           :                               `CA` (string) - short code for the country of the driver's license
 + region            :                               `ON` (string) - short code for the country's region/state/province/territory of the driver's license
@@ -1244,14 +1345,14 @@ data type defined below. If you change one you should probably also change the o
 <a id="create_a_vehicle_route"></a>
 
 Clients can request the creation of a new route for a given vehicle, providing start & stop location along with
-additional instructions in a *Externally Sourced Route Start Stop Details* object.
+additional instructions.
 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
@@ -1261,70 +1362,91 @@ additional instructions in a *Externally Sourced Route Start Stop Details* objec
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-    + Attributes (Externally Sourced Route Start Stop Details)
+    + Attributes (Externally Sourced Route Start Details And Stops)
 
     + Schema
 
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStartStopDetails",
-                "required": [
-                  "startName",
-                  "startLocation",
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "startName": {
-                    "type": "string",
-                    "description": "a name for the start location",
-                    "example": "start place 202"
+              "type": "object",
+              "properties": {
+                "stops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stopName": {
+                        "type": "string",
+                        "description": "a name for the stop location",
+                        "example": "pickup place 101",
+                        "maxLength": 200
+                      },
+                      "stopAddress": {
+                        "type": "string",
+                        "description": "an optional street address",
+                        "example": "13 Sycamore Ave",
+                        "maxLength": 200
+                      },
+                      "stopLocation": {
+                        "type": "string",
+                        "description": "the location of the stop",
+                        "example": "37.4224764 -122.0842499",
+                        "maxLength": 26,
+                        "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                      },
+                      "stopDeadline": {
+                        "type": "string",
+                        "description": "optional time and date when the stop must be arrived at",
+                        "example": "2019-04-05T02:04:16Z",
+                        "maxLength": 20,
+                        "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
+                      }
+                    },
+                    "required": [
+                      "stopName",
+                      "stopLocation"
+                    ]
                   },
-                  "startAddress": {
-                    "type": "string",
-                    "description": "an optional street address of the start",
-                    "example": "11 Elm Street"
-                  },
-                  "startLocation": {
-                    "type": "string",
-                    "description": "the location of the start",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "routeAddInstructions": {
-                    "type": "string",
-                    "description": "an optional comment with details about the route",
-                    "example": "take trailers XXX and YYY"
-                  },
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101"
-                  },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
-                  }
+                  "description": "the stops for the route"
+                },
+                "startName": {
+                  "type": "string",
+                  "description": "a name for the start location",
+                  "example": "start place 202",
+                  "maxLength": 200
+                },
+                "startAddress": {
+                  "type": "string",
+                  "description": "an optional street address of the start",
+                  "example": "11 Elm Street",
+                  "maxLength": 200
+                },
+                "startLocation": {
+                  "type": "string",
+                  "description": "the location of the start",
+                  "example": "37.4224764 -122.0842499",
+                  "maxLength": 26,
+                  "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                },
+                "routeAddInstructions": {
+                  "type": "string",
+                  "description": "an optional comment with details about the route",
+                  "example": "take trailers XXX and YYY",
+                  "maxLength": 200
                 }
+              },
+              "required": [
+                "stops",
+                "startName",
+                "startLocation"
+              ],
+              "$schema": "http://json-schema.org/draft-04/schema#"
             }
 
 + Response 201 (application/json)
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
 
 + Response 204
 
@@ -1357,9 +1479,9 @@ change the destination of the route, hence also changing the stopId associated w
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
@@ -1370,48 +1492,64 @@ change the destination of the route, hence also changing the stopId associated w
 
             Authorization: Basic YWRtaW46YWRtaW4=
 
-    + Attributes (Externally Sourced Route Stop Details)
+    + Attributes (Externally Sourced Route Stops)
 
     + Schema
 
             {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "title": "ExternallySourcedRouteStopDetails",
-                "required": [
-                  "stopName",
-                  "stopLocation"
-                ],
-                "type": "object",
-                "properties": {
-                  "stopName": {
-                    "type": "string",
-                    "description": "a name for the stop location",
-                    "example": "pickup place 101"
+              "type": "object",
+              "properties": {
+                "stops": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stopName": {
+                        "type": "string",
+                        "description": "a name for the stop location",
+                        "example": "pickup place 101",
+                        "maxLength": 200
+                      },
+                      "stopAddress": {
+                        "type": "string",
+                        "description": "an optional street address",
+                        "example": "13 Sycamore Ave",
+                        "maxLength": 200
+                      },
+                      "stopLocation": {
+                        "type": "string",
+                        "description": "the location of the stop",
+                        "example": "37.4224764 -122.0842499",
+                        "maxLength": 26,
+                        "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
+                      },
+                      "stopDeadline": {
+                        "type": "string",
+                        "description": "optional time and date when the stop must be arrived at",
+                        "example": "2019-04-05T02:04:16Z",
+                        "maxLength": 20,
+                        "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
+                      }
+                    },
+                    "required": [
+                      "stopName",
+                      "stopLocation"
+                    ]
                   },
-                  "stopAddress": {
-                    "type": "string",
-                    "description": "an optional street address",
-                    "example": "13 Sycamore Ave"
-                  },
-                  "stopLocation": {
-                    "type": "string",
-                    "description": "the location of the stop",
-                    "example": "37.4224764 -122.0842499"
-                  },
-                  "stopDeadline": {
-                    "type": "string",
-                    "description": "optional time and date when the stop must be arrived at",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
-                  }
+                  "description": "the stops for the route"
                 }
-              }
+              },
+              "required": [
+                "stops"
+              ],
+              "$schema": "http://json-schema.org/draft-04/schema#"
+            }
 
 + Response 200 (application/json)
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop in the updated route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
 
 + Response 204
 
@@ -1448,9 +1586,9 @@ any other routes using this stop will also be updated.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + stopId           : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - The stop id to update
@@ -1474,19 +1612,26 @@ any other routes using this stop will also be updated.
                 "properties": {
                   "comment": {
                     "type": "string",
-                    "description": "an optional comment"
+                    "description": "an optional comment",
+                    "maxLength": 200
                   },
                   "location": {
                     "type": "string",
                     "description": "the location of the delivery date at this stop",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "entryArea": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "37.4224764 -122.0842499",
+                      "maxLength": 26,
+                      "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                     },
-                    "description": "optional geographic location polygon detailing the entryway area for this stop"
+                    "description": "optional geographic location polygon detailing the entryway area for this stop",
+                    "maxItems": 200
                   }
                 }
             }
@@ -1521,12 +1666,15 @@ any other routes using this stop will also be updated.
 ## Send Message to a Vehicle                                  [POST /v1.0/vehicles/{vehicleId}/message]
 <a id="send_message_to_a_vehicle"></a>
 
+This message can contain any characters, including unicode and non-printables (since the JSON object can have escaped
+characters in its string). The TSP must filter characters that are illegal for transport or display in their systems.
+
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to send the message to
@@ -1550,11 +1698,13 @@ any other routes using this stop will also be updated.
                 "properties": {
                   "subject": {
                     "type": "string",
-                    "description": "a brief 'subject-line' for this message"
+                    "description": "a brief 'subject-line' for this message",
+                    "maxLength": 200
                   },
                   "message": {
                     "type": "string",
-                    "description": "the message to be displayed to the driver"
+                    "description": "the message to be displayed to the driver",
+                    "maxLength": 200
                   }
                 }
             }
@@ -1593,9 +1743,9 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
@@ -1645,9 +1795,9 @@ Clients can retrieve all the flagged vehicle events of a given vehicle over a gi
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id to associate this route to
@@ -1701,9 +1851,9 @@ polling an endpoint and providing a 'token' which evolves the window of new entr
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | ALLOW       | ALLOW         | **DENY**   |    ALLOW   | **DENY**   | ALLOW      |
 
 + Parameters
     + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
@@ -1746,9 +1896,9 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + page                             (optional, number) - the page to select for paginated response
@@ -1794,9 +1944,9 @@ Clients can retrieve the (coarse) vehicle locations (of all vehicles) over a giv
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
@@ -1851,9 +2001,9 @@ Clients can retrieve a combination of all vehicle information for all vehicles o
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + startTime:`2019-04-05T02:04:16Z` (required, string) - the start-date of the search
@@ -1905,12 +2055,12 @@ entries with each query in the polling.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Vehicle Info objects; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
     + Headers
@@ -1919,7 +2069,7 @@ entries with each query in the polling.
 
 + Response 200 (application/json)
     + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Vehicle Info objects
         + feed                                  (object) - the 'feed' of Fleet Vehicle Info
             + coarseVehicleLocationTimeHistories                 (required, Coarse Vehicle Location Time History) - The Coarse Vehicle Location Time History for all vehicles in the requested time period
             + flaggedVehicleFaultEvents                          (required, array[Flagged Vehicle Fault Code Event], fixed-type) - all Flagged Vehicle Fault Code Events for all vehicles in the requested time period
@@ -1954,17 +2104,17 @@ entries with each query in the polling.
 <a id="follow_fleet_fault_code_events"></a>
 
 Clients can follow a feed of Vehicle Fault Code Events as they are added to the TSP system; following is accomplished
-bia polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+via polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
-    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Log Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Fault Code Events; pass in a `null` or omit this token to start with a new token set to 'now'.
 
 + Request
     + Headers
@@ -1973,7 +2123,7 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
 + Response 200 (application/json)
     + Attributes (object)
-        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Log Events
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Fault Code Events
         + feed                                  (array[Vehicle Fault Code Event], fixed-type) - the 'feed' of Log Events
 
 + Response 400 (text/plain)
@@ -2000,6 +2150,164 @@ bia polling an endpoint and providing a 'token' which evolves the window of new 
 
             Retry-After: {implementation-defined}
 
+## Follow Fleet Status Events                              [GET /v1.0/fleet/statusevents/feed{?token}]
+<a id="follow_fleet_status_events"></a>
+
+Clients can follow a feed of Vehicle Status Events as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+These vehicle status events are largely *raw* J1939 data. Open Telematics API makes no requirements on how the TSP
+determines what raw frames to send via this interface. It is expected that the motor freight carrier and the TSP
+configure/agree-to the set of raw data via some other mechanism.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Status Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Status Events
+        + feed                                  (array[Vehicle Status Event], fixed-type) - the 'feed' of Log Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+
+## Follow Fleet Performance Events                              [GET /v1.0/fleet/performanceevents/feed{?token}]
+<a id="follow_fleet_performance_events"></a>
+
+Clients can follow a feed of Vehicle Performance Events as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | ALLOW        | **DENY**   | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Performance Events; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Performance Events
+        + feed                                  (array[Vehicle Performance Event], fixed-type) - the 'feed' of Performance Events
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+
+## Follow Dispatch Messages                                     [GET /v1.0/fleet/dispatchmessages/feed{?token}]
+<a id="follow_dispatch_messages"></a>
+
+Clients can follow a feed of Dispatch Message objects as they are added to the TSP system; following is accomplished via
+polling an endpoint and providing a 'token' which evolves the window of new entries with each query in the polling.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | ***DENY***   | **DENY**   | ALLOW       | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
+
++ Parameters
+    + token: `37A6259CC0C1DAE299A7866489DFF0BD` (string, optional) - a since-token, pass-in the token previously returned to 'follow' new Dispatch Message objects; pass in a `null` or omit this token to start with a new token set to 'now'.
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token                                 (string) - a since-token, pass-in the token previously returned by GET of `feed` to 'follow' new Dispatch Message objects
+        + feed                                  (array[Dispatch Message], fixed-type) - the 'feed' of Dispatch Message objects
+
++ Response 400 (text/plain)
+
+        Error: token parameters invalid
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 413
+
+        Requested entity is too large
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+
+
 # Group Driver
 
 ## Get Driver Availability Factors                             [GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}]
@@ -2010,9 +2318,9 @@ Clients can request all the factors contributing to driver availability for a gi
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
@@ -2067,9 +2375,9 @@ time period.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | **DENY**   | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
@@ -2122,9 +2430,9 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | ALLOW      | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | ALLOW      | **DENY**   | **DENY**   | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
@@ -2151,13 +2459,16 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
                   "dateTime": {
                     "type": "string",
                     "description": "Date and time for this status change",
-                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$",
-                    "example": "2019-04-05T02:04:16Z"
+                    "example": "2019-04-05T02:04:16Z",
+                    "maxLength": 20,
+                    "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2})\\:(\\d{2})\\:(\\d{2})[+-](\\d{2})\\:(\\d{2})$"
                   },
                   "location": {
                     "type": "string",
                     "description": "An object with the location information for this status change.",
-                    "example": "37.4224764 -122.0842499"
+                    "example": "37.4224764 -122.0842499",
+                    "maxLength": 26,
+                    "pattern": "^([-+]?\\d{1,2}[.]\\d+)\\s+([-+]?\\d{1,3}[.]\\d+)$"
                   },
                   "status": {
                     "enum": [
@@ -2198,14 +2509,14 @@ Clients can send custom-integrated duty status changes to the TSP to trigger dut
 ## Update Driver Info                                        [PATCH /v1.0/drivers/{driverId}]
 <a id="update_driver_info"></a>
 
-Clients can request updates to the TSP's managed user accounts for drivers by sending data to this endpoint.
+Clients can request updates to the user info stored in the TSP's accounts for drivers by sending data to this endpoint.
 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | **DENY**   | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
@@ -2222,37 +2533,49 @@ Clients can request updates to the TSP's managed user accounts for drivers by se
             {
                 "$schema": "http://json-schema.org/draft-04/schema#",
                 "title": "ExternallySourcedDriverInfo",
-                "required": [
-                  "username"
-                ],
                 "type": "object",
                 "properties": {
-                  "username": {
-                    "type": "string",
-                    "description": "a username of this driver"
-                  },
-                  "hoursWorked": {
+                  "timeOnDuty": {
                     "type": "number",
-                    "description": "the hours worked on-duty by this user so far today (on any duty at all)",
+                    "description": "the hours worked on-duty by this user so far today",
+                    "example": 1.5
+                  },
+                  "timeDriving": {
+                    "type": "number",
+                    "description": "the hours worked driving by this user so far today",
+                    "example": 1.5
+                  },
+                  "timePersonalConveyance": {
+                    "type": "number",
+                    "description": "the hours in personal conveyance by this user so far today",
+                    "example": 1.5
+                  },
+                  "timeYardMove": {
+                    "type": "number",
+                    "description": "the hours worked in yard moves by this user so far today",
                     "example": 1.5
                   },
                   "driverLicenseNumber": {
                     "type": "string",
-                    "description": "the driver's license number"
+                    "description": "the driver's license number",
+                    "maxLength": 200
                   },
                   "country": {
                     "type": "string",
                     "description": "short code for the country of the driver's license",
-                    "example": "CA"
+                    "example": "CA",
+                    "maxLength": 8
                   },
                   "region": {
                     "type": "string",
                     "description": "short code for the country's region/state/province/territory of the driver's license",
-                    "example": "ON"
+                    "example": "ON",
+                    "maxLength": 8
                   },
                   "driverHomeTerminal": {
                     "type": "string",
-                    "description": "the home terminal of the driver"
+                    "description": "the home terminal of the driver",
+                    "maxLength": 8
                   }
                 }
             }
@@ -2289,9 +2612,9 @@ Clients can request all driver performance summaries for a specific driver withi
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver for performance summmaries
@@ -2343,9 +2666,9 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | **DENY**   | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      | ALLOW      |
 
 + Parameters
     + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this status change.
@@ -2371,7 +2694,8 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
                   },
                   "password": {
                     "type": "string",
-                    "description": "user password"
+                    "description": "user password",
+                    "maxLength": 200
                   },
                   "enabled": {
                     "type": "boolean",
@@ -2405,6 +2729,46 @@ Clients can request updates to the TSP's portal user accounts for drivers by sen
 
             Retry-After: {implementation-defined}
 
+# Group Data Qualities
+
+## Get Data Qualities Statement                                [GET /v1.0/dataquality]
+<a id="get_data_qualities_statement"></a>
+
+Clients can request details on the expected latencies, sample rate, sampling method, precisions and other data qualities
+of this service. Implementors are free to return difference values for different customer accounts; however, it is
+expected that the response to requests on this endpoint does not vary with time.
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Data Qualities)
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
 # Group State of Health
 
 ## Check Current State of Health                               [GET /v1.0/health/current]
@@ -2418,9 +2782,9 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -2458,9 +2822,9 @@ Clients must treat any response other than code 200, code 401, or code 429 as eq
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -2507,9 +2871,9 @@ the request headers.)
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -2860,14 +3224,59 @@ the request headers.)
                         "msgstr": "This is a SID as defined in SAE J1587"
                     },
                     {
-                        "origin": "Vehicle Locatoin Time History",
+                        "origin": "Vehicle Location Time History",
                         "msgid": "TIMERESOLUTION_MAX",
                         "msgstr": "This is at the highest available time resolution"
                     },
                     {
-                        "origin": "Vehicle Locatoin Time History",
+                        "origin": "Vehicle Location Time History",
                         "msgid": "TIMERESOLUTION_NOT_MAX",
                         "msgstr": "This is not at the highest available time resolution"
+                    },
+                    {
+                        "origin": "Data Qualities, samplingMethod",
+                        "msgid": "SAMPLING_PERIODIC",
+                        "msgstr": "regular/periodic sampling"
+                    },
+                    {
+                        "origin": "Data Qualities, samplingMethod",
+                        "msgid": "SAMPLING_CHANGE",
+                        "msgstr": "change/event based sampling"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_ACCESSORY",
+                        "msgstr": "ignition accessory state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_RUN_CONTACT",
+                        "msgstr": "ignition run contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_CRANK_CONTACT",
+                        "msgstr": "ignition crank contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_AID_CONTACT",
+                        "msgstr": "ignition aid contact state"
+                    },
+                    {
+                        "origin": "Vehicle Flagged Event, ignitionStatus",
+                        "msgid": "IGNITION_STATUS_OFF",
+                        "msgstr": "ignition off state"
+                    },
+                    {
+                        "origin": "Data Qualities, vehicleSpeedSource",
+                        "msgid": "SPEED_SOURCE_ECM",
+                        "msgstr": "the vehicle speed reported in TSP data is from the ECMs of the vehicle"
+                    },
+                    {
+                        "origin": "Data Qualities, vehicleSpeedSource",
+                        "msgid": "SPEED_SOURCE_GPS",
+                        "msgstr": "the vehicle speed reported in TSP data is from GPS"
                     }
                 ]
             }
@@ -2898,6 +3307,83 @@ the request headers.)
 
 # Group Data Export
 
+***On Data Import***
+
+The carriers would also like to be able to use the exported data in an 'import' to a second TSP or new instances of the
+same TSP. This is not an use case which this specification will attempt to support; however, we will aim to design the
+data structures such that any TSP wanting to implement _import_ is enabled to do so (c.f. 'Provider ID').
+
+***PII Separation***
+
+The carriers need to be able to deploy systems which do not touch PII -- as is treated in the Authorization section
+above. OTAPI implementations must provide for export of both [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format)
+and [Complete Telematics Export Format](#complete_telematics_export_format) objects so that systems which must be separated
+from PII can download the [Vehicle-Only Telematics Export Format](#vehicle_only_telematics_export_format) type. As is
+noted in the access controls below, requests for these data types deny access by the *Vehicle X* roles.
+
+***Polling for Daily Files***
+
+The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
+server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
+not yet ready, or respond with a redirect to a location serving the complete file (statically).
+
+Implementors are free to make the files available for download from any service they choose. If the service hosting the
+files for download exposes endpoints under that of the OTAPI endpoints then the same authentication and authorization
+schemes must be enforced. If the files are made available for download elsewhere then they must not be made accessible
+without any authentication or authorization and the client is expected to be configured with the appropriate credentials
+for download independently of responses from the OTAPI server.
+
+***Time-base for Data Export***
+
+Note that the data export files will include both time-varying objects (those that have time associated with them) and
+also those that do not.
+
+* For time-varying objects: the files will only include whose associated time periods have an intesection with the
+requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
+
+* For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
+regardless of the time period requested as defined by `start` and `stop` query parameters (included on the endpoints for
+API consistency under `/export/...`)
+
+Furthermore, the event and object times considered in the time queries for data export use *received times* (as opposed
+the default policy of relying on *creation times*). These are the times when the event or object was received, recorded
+and/or made available by the OTAPI server. This could pose problems for processing exported data for RODS compliance as
+multiple files may need to be processed in high-latency situations; however, the alternative is allow for data loss in
+the daily export files.
+
+***Complete Data Export***
+
+The *Complete* objects will contain sets of all of the following objects embedded.
+
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Status Event](#vehicle_status_event)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [Driver](#driver_object)
+* [Log Event](#log_event_object)
+* [Region Specific Break Rules](#region_specific_break_rules_object)
+* [Region Specific Waivers](#region_specific_waivers_object)
+* [Driver Performance Summary](#driver_performance_summary_object)
+* [Message Receipt](#message_receipts)
+* [Dispatch Message](#dispatch_message)
+* [State of Health](#state_of_health_object)
+
+***Vehicle-Only Data Export***
+
+The *Vehicle-Only* objects will contain sets of all of the following objects embedded.
+
+* [Vehicle](#vehicle_object)
+* [Vehicle Location Time](#vehicle_location_time_object)
+* [Vehicle Flagged Event](#vehicle_flagged_event_object)
+* [Vehicle Performance Event](#vehicle_performance_event_object)
+* [Stop Geographic Details](#stop_geographic_details_object)
+* [Vehicle Status Event](#vehicle_status_event)
+* [Vehicle Fault Code Event](#vehicle_fault_code_event_object)
+* [State of Health](#state_of_health_object)
+
 ## Complete Telematics Export Format                               [/v1.0/export/allrecords/status{?dayOf}]
 <a id="complete_telematics_export_format"></a>
 
@@ -2915,9 +3401,9 @@ ready then a `202` return code will be returned.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | **DENY**    | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -2973,9 +3459,9 @@ ready then a `202` return code will be returned.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | **DENY**     | **DENY**   | **DENY**    | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3034,9 +3520,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3080,9 +3566,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3127,9 +3613,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3165,7 +3651,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 + Parameters
     + id            (string) - ID of a Message Receipt object
 
-+ Attributes (Vehicle)
++ Attributes (Message Receipt)
 
 
 ### Get a Message Receipt by its ID                            [GET]
@@ -3174,9 +3660,9 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | ALLOW         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3185,6 +3671,53 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 
 + Response 200 (application/json)
     + Attributes (Message Receipt)
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Dispatch Message Object                                         [/v1.0/dispatch_message/{id}]
+<a id="dispatch_message_object"></a>
+
++ Parameters
+    + id            (string) - ID of a Dispatch Message object
+
++ Attributes (Dispatch Message)
+
+
+### Get a Message Receipt by its ID                            [GET]
+<a id="get_a_dispatch_message_by_its_id"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | Allow         | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Dispatch Message)
 
 + Response 404 (text/plain)
 
@@ -3225,9 +3758,9 @@ rules.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3274,9 +3807,9 @@ available
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3323,9 +3856,9 @@ indicating the entryway onto a facility (i.e. where the truck should drive on ap
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3369,9 +3902,9 @@ indicating the entryway onto a facility (i.e. where the truck should drive on ap
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3417,9 +3950,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3428,6 +3961,52 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 
 + Response 200 (application/json)
     + Attributes (Vehicle Flagged Event)
+
++ Response 404 (text/plain)
+
+        Error: id Not Found
+
++ Response 401
+    + Body
+
+            Authentication Required
+    + Headers
+
+            WWW-Authenticate: Basic realm="protected"
+
++ Response 429
+    + Body
+
+            Too Many Requests
+    + Headers
+
+            Retry-After: {implementation-defined}
+
+## Vehicle Status Event Object                                 [/v1.0/fleet/statusevents/{id}]
+<a id="vehicle_status_event_object"></a>
+
++ Parameters
+    + id            (string) - ID of the Vehicle Status Event of interest
+
++ Attributes (Vehicle Status Event)
+
+### Get a Vehicle Status Event by its ID                   [GET]
+<a id="get_a_vehicle_status_event_by_its_id"></a>
+
+**Access Controls**
+
+
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
+
++ Request
+    + Headers
+
+            Authorization: Basic YWRtaW46YWRtaW4=
+
++ Response 200 (application/json)
+    + Attributes (Vehicle Status Event)
 
 + Response 404 (text/plain)
 
@@ -3463,9 +4042,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3509,9 +4088,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3555,9 +4134,9 @@ The purpose of the flagged events is to flag potential saftey issues for motor f
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | **DENY**      | **DENY**   | **DENY**   | **DENY**   | ALLOW      |
 
 + Request
     + Headers
@@ -3603,9 +4182,9 @@ Summary statistics on performance of drivers.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| **DENY**    | **DENY**     | ALLOW      | ALLOW       | **DENY**      | **DENY**   | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
@@ -3649,9 +4228,9 @@ Summary statistics on performance of drivers.
 **Access Controls**
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |Admin       |
-|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|
-|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
+|Access:| ALLOW       | ALLOW        | ALLOW      | ALLOW       | ALLOW         | ALLOW      | ALLOW      | ALLOW      | ALLOW      |
 
 + Request
     + Headers
