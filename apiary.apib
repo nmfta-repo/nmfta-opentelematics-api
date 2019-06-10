@@ -1107,6 +1107,29 @@ Telematics Data Model* for object descriptions as well.
 + canIdentifier     :                        `C F004 01` (required, string) - a hex-encoded string (spaces allowed) of the 29-bit J1939 CAN identifier
 + data              :          `FF FF 82 DF 1A FF FF FF` (required, string) - a hex-encoded string (spaces allowed) of the J1939 data payload
 
+### J1708 Fault (object)
+
++ failureModeIdentifier                                  (required, number) - FMI from SAE J1587
++ messageIdentifier                                      (required, number) - MID from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
++ parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID as defined in SAE J1587?
+    + Members
+        + `PIDORSID_PID` - This is a PID
+        + `PIDORSID_SID` - This is a SID
++ faultCodeParameterorSubsystemId                        (required, number) - either the PID or SID, as in SAE J1587
+
+### J1939 Fault (object)
+
++ sourceAddress                                          (required, number) - SA from SAE J1939
++ failureModeIdentifier                                  (required, number) - FMI from SAE J1939
++ suspectParameterNumber                                 (required, number) - SPN from SAE J1939
++ occurences                                             (required, number) - the number of occurences of this fault; OC from J1939
+
+### OBDII Fault (object)
+
++ controllerCode                                         (required, number) - controller code. first 'letter' of standard OBDII code. convert to `char` for printable value
++ diagnosticCode                                         (required, number) - remaining 'letters' of standard OBDII code. convert to hex string for printable value
++ failureType                                            (required, number) - the Failure Type Byte, as in SAE J2012
+
 ### Vehicle Fault Code Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
@@ -1117,16 +1140,14 @@ Telematics Data Model* for object descriptions as well.
 + eventComment      : `event type XXXX, (other details)` (string) - a free-form comment field. Can be used for e.g. identifying the type of event or other unstructured data
 + triggeredDate     :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being triggered
 + clearedDate       :             `2019-04-05T02:04:16Z` (required, string) - Date and time of the fault code being cleared
-+ occurences        :                                  1 (required, number) - the number of occurences of this fault; OC from J1939
-+ messageIdentifier :                 128                (number) - MID from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
-+ parameterOrSubsystemIdType                             (enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID as defined in SAE J1587?
++ faultType                                              (required, enum[string]) - the type of fault: J1708 or J1939 or OBDII
     + Members
-        + `PIDORSID_PID` - This is a PID
-        + `PIDORSID_SID` - This is a SID
-+ faultCodeParameterorSubsystemId                        (number) - either the PID or SID, as in SAE J1587
-+ sourceAddress                                          (required, number) - SA from SAE J1939
-+ suspectParameterNumber                                 (required, number) - SPN from SAE J1939
-+ failureModeIdentifier                                  (required, number) - FMI from SAE J1939
+        + `FAULT_TYPE_J1708` - a fault captured from J1708 vehicle network
+        + `FAULT_TYPE_J1939` - a fault captured from J1939 vehicle network
+        + `FAULT_TYPE_OBDII` - a captured OBDII fault
++ j1708Fault                                             (optional, J1708 Fault) - this Vehicle Fault Code Event is captured from J1708; only non-null if faultType is `FAULT_TYPE_J1708`
++ j1939Fault                                             (optional, J1939 Fault) - this Vehicle Fault Code Event is captured from J1939; only non-null if faultType is `FAULT_TYPE_J1939`
++ obdIIFault                                             (optional, OBDII Fault) - this Vehicle Fault Code Event is captured from OBDII; only non-null if faultType is `FAULT_TYPE_OBDII`
 + urgentFlag        :                              false (required, boolean) - is the fault urgent?
 + odometer                                               (required, number) - Odometer reading at time of event, in m based on SAE J1939 SPN 245, Total Vehicle Distance
 + engineRpm                                              (required, number) - engine RPMs at time of event, in revolutions per minute (based on SAE J1939 SPN 190)
@@ -3222,6 +3243,21 @@ the request headers.)
                         "origin": "Vehicle Fault Code Event, parameterOrSubsystemIdType",
                         "msgid": "PIDORSID_SID",
                         "msgstr": "This is a SID as defined in SAE J1587"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, faultType",
+                        "msgid": "FAULT_TYPE_J1708",
+                        "msgstr": "a fault captured from J1708 vehicle network"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, faultType",
+                        "msgid": "FAULT_TYPE_J1939",
+                        "msgstr": "a fault captured from J1939 vehicle network"
+                    },
+                    {
+                        "origin": "Vehicle Fault Code Event, faultType",
+                        "msgid": "FAULT_TYPE_OBDII",
+                        "msgstr": "a captured OBDII fault"
                     },
                     {
                         "origin": "Vehicle Location Time History",
