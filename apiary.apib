@@ -837,10 +837,8 @@ Telematics Data Model* for object descriptions as well.
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
-+ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + userId                                                 (required, User Identifier) - The id of the driver or support personnel who created this log.
 + distanceSinceLastValidCoordinates :               17.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
@@ -850,7 +848,10 @@ Telematics Data Model* for object descriptions as well.
         + `DISTANCEUNITS_MILES`      - distance measured in miles (mi)
         + `DISTANCEUNITS_KILOMETRES` - distance measured in kilometres (km)
 
-+ editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
++ deviceDateTime    :             `2019-04-05T02:04:16Z` (string) - Date and time from the telematics device ; will be omitted for objects not originating on a telematics device
++ serverDateTime    :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
++ eventDateTime     :             `2019-04-05T02:04:16Z` (required, string) - the date and time of this log event; e.g. the time when a duty status change occurs
++ editDateTime      :             `2019-04-05T02:04:16Z` (string) - The date and time this log event was edited. If the log has not been edited, this will not be set.
 
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
 + reducedLocationAccuracy :                        false (required, boolean) - A flag (True or False) indicating if there was reduced location accuracy at the time of this event.
