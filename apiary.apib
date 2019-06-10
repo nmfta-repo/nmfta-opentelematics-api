@@ -805,10 +805,22 @@ Note 2: And this object definition exists just to tell you about that limitation
 Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open
 Telematics Data Model* for object descriptions as well.
 
+### User Identifier (object)
+
++ userType  :                          `USERTYPE_DRIVER` (required, enum[string]) - is this user a driver or other type of user
+
+    + Members
+        + `USERTYPE_DRIVER`          - this user is a driver; the `userId` field is a `driverId`
+        + `USERTYPE_SUPPORT`         - this user is support personnel; the `userId` field is an opaque identifier which is proprietary to the TSP
+
++ userId    :         `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
++ firstName :                                     `John` (string) - user first name
++ lastName  :                                      `Doe` (string) - user last name
+
 ### Annotation Log (object)
 
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
++ userId                                                 (required, User Identifier) - The id of the driver or support personnel that created this log.
 + comment           : `note: something noteworthy`       (required, string) - The annotation text associated with the log.
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time for this annotation log
 
@@ -830,7 +842,7 @@ Telematics Data Model* for object descriptions as well.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
-+ driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
++ userId                                                 (required, User Identifier) - The id of the driver or support personnel who created this log.
 + distanceSinceLastValidCoordinates :               17.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
 + distanceUnits     :              `DISTANCEUNITS_MILES` (required, enum[string]) - The units of distance used to record the `distanceSinceLastValidCoordinates` field and all other distances in the Log Event object. Units are specified in the Log Events so that the `eventDataChecksum` field can be unchangde from the value reported by a telematics device.
 
@@ -2890,6 +2902,16 @@ the request headers.)
 
             {
                 "data": [{
+                        "origin": "User Identifier",
+                        "msgid":  "USERTYPE_DRIVER",
+                        "msgstr": "this user is a driver; the `userId` field is a `driverId`"
+                    },
+                    {
+                        "origin": "User Identifier",
+                        "msgid":  "USERTYPE_SUPPORT",
+                        "msgstr": "this user is support personnel; the `userId` field is an opaque identifier which is proprietary to the TSP"
+                    },
+                    {
                         "origin": "Log Event, distanceUnits",
                         "msgid":  "DISTANCEUNITS_MILES",
                         "msgstr": "distance measured in miles (mi)"
