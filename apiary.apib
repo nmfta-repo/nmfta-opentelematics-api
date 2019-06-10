@@ -818,7 +818,7 @@ Telematics Data Model* for object descriptions as well.
 + longitude         :                     `-122.0842499` (required, number) - the longitude of this location
 + identifiedPlace   :                         `New York` (string) - place name of the identified geo-location
 + identifiedState   :                               `NY` (string) - state/province abbreviate of identified geo-location
-+ distanceFrom      :                             `5000` (number) - distance from the identified geo-location, in m
++ distanceFrom      :                             `5000` (number) - distance from the identified geo-location, in units given by the `distanceUnits` field
 + directionFrom     :                              `NNE` (string) - cardinal direction from the identified geo-location
 
 ### Log Event (object)
@@ -831,8 +831,8 @@ Telematics Data Model* for object descriptions as well.
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
 + driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
-+ distanceSinceLastValidCoordinates :              117.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
-+ distanceUnits     :              `DISTANCEUNITS_MILES` (required, enum[string]) - The units of distance used to record the `distanceSinceLastValid` field. Units are specified in the Log Events so that the `eventDataChecksum` field can be unchangde from the value reported by a telematics device.
++ distanceSinceLastValidCoordinates :               17.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
++ distanceUnits     :              `DISTANCEUNITS_MILES` (required, enum[string]) - The units of distance used to record the `distanceSinceLastValidCoordinates` field and all other distances in the Log Event object. Units are specified in the Log Events so that the `eventDataChecksum` field can be unchangde from the value reported by a telematics device.
 
     + Members
         + `DISTANCEUNITS_MILES`      - distance measured in miles (mi)
