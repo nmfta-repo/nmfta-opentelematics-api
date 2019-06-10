@@ -899,7 +899,7 @@ Telematics Data Model* for object descriptions as well.
 
 + certificationCount                                     (number) - a certification count asssociated with driver certification (`EVENTTYPE_CERTIFICATION`) events -- serialized into ELD Event Code, see ELD 7.20
 + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
-+ multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
++ multidayBasis     :                                  0 (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
 + comment :                 `fake Log Event for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
 + eventDataChecksum                                      (required, string) - The hexidecimal value result of a bitwise exclusive OR(XOR) operation using Table 3 of the ELD mandate
 
