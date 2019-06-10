@@ -841,6 +841,7 @@ Telematics Data Model* for object descriptions as well.
 + editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
 
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
++ reducedLocationAccuracy :                        false (required, boolean) - A flag (True or False) indicating if there was reduced location accuracy at the time of this event.
 + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
 
     + Members
@@ -859,7 +860,7 @@ Telematics Data Model* for object descriptions as well.
         + `STATE_REJECTED`  - The log is a rejected edit request from another user.
         + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
-+ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states
++ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states. When combined with the `reducedLocationAccuracy` field can be used to create event codes and subcodes for compliance.
 
     + Members
         + `EVENTTYPE_DUTY_OFF`                                              - Off-duty status.
