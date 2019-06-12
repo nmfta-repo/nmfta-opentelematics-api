@@ -865,6 +865,9 @@ Telematics Data Model* for object descriptions as well.
         + `ORIGIN_OTHERUSER`  - Other authenticated user.
         + `ORIGIN_UNASSIGNED` - Unassigned driver.
 
++ shipments         :                   `AB123`, `ZY789` (array[string], fixed-type) - The list of IDs or document numbers for shipments being transported at the time of the log. Required, if available, for engine powerup or engine shutdown logs.
++ trailers          :                  `Trailer 1`, `T2` (array[string], fixed-type) - The list of trailer IDs attached to the vehicle at the time of the log. Required, if available, for engine powerup or engine shutdown logs.
+
 + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent Log Event. Used when a Log Event is edited. When returning history, this field will be populated.
 + sequenceId        :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
 + eventRecordStatus :                     `STATE_ACTIVE` (required, enum[string]) - The State of the Log Event record.
