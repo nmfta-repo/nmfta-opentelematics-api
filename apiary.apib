@@ -853,6 +853,8 @@ Telematics Data Model* for object descriptions as well.
 + eventDateTime     :             `2019-04-05T02:04:16Z` (required, string) - the date and time of this log event; e.g. the time when a duty status change occurs
 + editDateTime      :             `2019-04-05T02:04:16Z` (string) - The date and time this log event was edited. If the log has not been edited, this will not be set.
 
++ odometer          :                          283940.23 (number) - The odometer reading of the vehicle at the time of the log, in m.
++ engineHours       :                             2323.4 (number) - The total operational hours of the vehicle's engine since its inception at the time of the log.
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
 + reducedLocationAccuracy :                        false (required, boolean) - A flag (True or False) indicating if there was reduced location accuracy at the time of this event.
 + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
