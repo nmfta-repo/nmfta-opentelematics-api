@@ -805,10 +805,22 @@ Note 2: And this object definition exists just to tell you about that limitation
 Note 3: Also, any descriptions put on these data structures will not get rendered properly, so consult the *Open
 Telematics Data Model* for object descriptions as well.
 
+### User Identifier (object)
+
++ userType  :                          `USERTYPE_DRIVER` (required, enum[string]) - is this user a driver or other type of user
+
+    + Members
+        + `USERTYPE_DRIVER`          - this user is a driver; the `userId` field is a `driverId`
+        + `USERTYPE_SUPPORT`         - this user is support personnel; the `userId` field is an opaque identifier which is proprietary to the TSP
+
++ userId    :         `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
++ firstName :                                     `John` (string) - user first name
++ lastName  :                                      `Doe` (string) - user last name
+
 ### Annotation Log (object)
 
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
++ userId                                                 (required, User Identifier) - The id of the driver or support personnel that created this log.
 + comment           : `note: something noteworthy`       (required, string) - The annotation text associated with the log.
 + dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time for this annotation log
 
@@ -818,29 +830,31 @@ Telematics Data Model* for object descriptions as well.
 + longitude         :                     `-122.0842499` (required, number) - the longitude of this location
 + identifiedPlace   :                         `New York` (string) - place name of the identified geo-location
 + identifiedState   :                               `NY` (string) - state/province abbreviate of identified geo-location
-+ distanceFrom      :                             `5000` (number) - distance from the identified geo-location, in m
-+ directionFrom     :                              `NNE` (string) - cardinal direction from the identified geo-location
++ distanceFromIdentifiedPlace :                   `5000` (number) - distance from the identified geo-location, in units given by the `distanceUnits` field
++ directionFromIdentifiedPlace :                   `NNE` (string) - cardinal direction from the identified geo-location
 
 ### Log Event (object)
 
 + id                : `C4CA4238A0B923820DCC509A6F75849B` (required, string) - The unique identifier for the specific Entity object in the system.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP.
-+ serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + annotations                                            (array[Annotation Log], fixed-type) - The list of AnnotationLog(s) which are associated with this log.
 + coDrivers         : `A87FF679A2F3E71D9181A67B7542122C`, `E4DA3B7FBBCE2345D7772B0674A318D5` (array[string], fixed-type) - The list of the co-driver User(s) for this log; may only be populated in day end log events
-+ dateTime          :             `2019-04-05T02:04:16Z` (required, string) - Date and time from the telematics device
 + vehicleId         : `21232F297A57A5A743894A0E4A801FC3` (required, string) - The vehicle id associated with this log.
-+ driverId          : `63A9F0EA7BB98050796B649E85481845` (required, string) - The id of the driver who created this log.
-+ distanceLastValid :                              117.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
-+ distanceUnits     :              `DISTANCEUNITS_MILES` (required, enum[string]) - The units of distance used to record the `distanceSinceLastValid` field. Units are specified in the Log Events so that the `eventDataChecksum` field can be unchangde from the value reported by a telematics device.
++ userId                                                 (required, User Identifier) - The id of the driver or support personnel who created this log.
++ distanceSinceLastValidCoordinates :               17.0 (required, number) - The distance traveled since the last valid latitude, longitude pair the ELD measured with required accuracy in the ELD mandate, in units given by the `distanceUnits` field. TSPs may provide distance in miles or in kilometres but are not required to provide both.
++ distanceUnits     :              `DISTANCEUNITS_MILES` (required, enum[string]) - The units of distance used to record the `distanceSinceLastValidCoordinates` field and all other distances in the Log Event object. Units are specified in the Log Events so that the `eventDataChecksum` field can be unchangde from the value reported by a telematics device.
 
     + Members
         + `DISTANCEUNITS_MILES`      - distance measured in miles (mi)
         + `DISTANCEUNITS_KILOMETRES` - distance measured in kilometres (km)
 
-+ editDateTime                                           (string) - The date and time the log was edited. If the log has not been edited, this will not be set.
++ deviceDateTime    :             `2019-04-05T02:04:16Z` (string) - Date and time from the telematics device ; will be omitted for objects not originating on a telematics device
++ serverDateTime    :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
++ eventDateTime     :             `2019-04-05T02:04:16Z` (required, string) - the date and time of this log event; e.g. the time when a duty status change occurs
++ editDateTime      :             `2019-04-05T02:04:16Z` (string) - The date and time this log event was edited. If the log has not been edited, this will not be set.
 
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
++ reducedLocationAccuracy :                        false (required, boolean) - A flag (True or False) indicating if there was reduced location accuracy at the time of this event.
 + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
 
     + Members
@@ -850,8 +864,8 @@ Telematics Data Model* for object descriptions as well.
         + `ORIGIN_UNASSIGNED` - Unassigned driver.
 
 + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent Log Event. Used when a Log Event is edited. When returning history, this field will be populated.
-+ sequence          :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
-+ state             :                     `STATE_ACTIVE` (required, enum[string]) - The State of the Log Event record.
++ sequenceId        :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
++ eventRecordStatus :                     `STATE_ACTIVE` (required, enum[string]) - The State of the Log Event record.
 
     + Members
         + `STATE_ACTIVE`    - The log is active and has been accepted by the driver.
@@ -859,7 +873,7 @@ Telematics Data Model* for object descriptions as well.
         + `STATE_REJECTED`  - The log is a rejected edit request from another user.
         + `STATE_REQUESTED` - The log is a pending edit request from another user.
 
-+ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states
++ eventType         :               `EVENTTYPE_DUTY_OFF` (required, enum[string]) - The type of the Log Event, representing the driver's duty status and other states. When combined with the `reducedLocationAccuracy` field can be used to create event codes and subcodes for compliance.
 
     + Members
         + `EVENTTYPE_DUTY_OFF`                                              - Off-duty status.
@@ -899,8 +913,8 @@ Telematics Data Model* for object descriptions as well.
 
 + certificationCount                                     (number) - a certification count asssociated with driver certification (`EVENTTYPE_CERTIFICATION`) events -- serialized into ELD Event Code, see ELD 7.20
 + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
-+ multidayBasis     :                                  0 (required, number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
-+ comment :                 `fake Log Event for testing` (required, string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
++ multidayBasis     :                                  0 (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
++ comment :                 `fake Log Event for testing` (string) - A textual field that may be populated with information pertaining to the creation of an ELD output file
 + eventDataChecksum                                      (required, string) - The hexidecimal value result of a bitwise exclusive OR(XOR) operation using Table 3 of the ELD mandate
 
 ### Stop Geographic Details (object)
@@ -2910,6 +2924,16 @@ the request headers.)
 
             {
                 "data": [{
+                        "origin": "User Identifier",
+                        "msgid":  "USERTYPE_DRIVER",
+                        "msgstr": "this user is a driver; the `userId` field is a `driverId`"
+                    },
+                    {
+                        "origin": "User Identifier",
+                        "msgid":  "USERTYPE_SUPPORT",
+                        "msgstr": "this user is support personnel; the `userId` field is an opaque identifier which is proprietary to the TSP"
+                    },
+                    {
                         "origin": "Log Event, distanceUnits",
                         "msgid":  "DISTANCEUNITS_MILES",
                         "msgstr": "distance measured in miles (mi)"
@@ -3737,7 +3761,7 @@ it is expected that the 'use case based' API endpoints defined above will be of 
 + Attributes (Dispatch Message)
 
 
-### Get a Message Receipt by its ID                            [GET]
+### Get a Dispatch Message by its ID                            [GET]
 <a id="get_a_dispatch_message_by_its_id"></a>
 
 **Access Controls**
