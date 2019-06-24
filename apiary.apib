@@ -853,6 +853,8 @@ Telematics Data Model* for object descriptions as well.
 + eventDateTime     :             `2019-04-05T02:04:16Z` (required, string) - the date and time of this log event; e.g. the time when a duty status change occurs
 + editDateTime      :             `2019-04-05T02:04:16Z` (string) - The date and time this log event was edited. If the log has not been edited, this will not be set.
 
++ odometer          :                          283940.23 (number) - The odometer reading of the vehicle at the time of the log, in m.
++ engineHours       :                             2323.4 (number) - The total operational hours of the vehicle's engine since its inception at the time of the log.
 + location                                               (required, Compliance Location) - An object with the location information for the log data, more details than lat/long for compliance purposes
 + reducedLocationAccuracy :                        false (required, boolean) - A flag (True or False) indicating if there was reduced location accuracy at the time of this event.
 + origin            :                 `ORIGIN_AUTOMATIC` (required, enum[string]) - The Origin from where this log originated.
@@ -862,6 +864,9 @@ Telematics Data Model* for object descriptions as well.
         + `ORIGIN_MANUAL`     - Manual entry by driver.
         + `ORIGIN_OTHERUSER`  - Other authenticated user.
         + `ORIGIN_UNASSIGNED` - Unassigned driver.
+
++ shipments         :                   `AB123`, `ZY789` (array[string], fixed-type) - The list of IDs or document numbers for shipments being transported at the time of the log. Required, if available, for engine powerup or engine shutdown logs.
++ trailers          :                  `Trailer 1`, `T2` (array[string], fixed-type) - The list of trailer IDs attached to the vehicle at the time of the log. Required, if available, for engine powerup or engine shutdown logs.
 
 + parentId          : `D6AB4B1A2E51C28CB32BFE8982D42259` (string) - The Id of the parent Log Event. Used when a Log Event is edited. When returning history, this field will be populated.
 + sequenceId        :                                 23 (required, number) - The sequence number, which is used to generate the sequence ID.
@@ -911,6 +916,7 @@ Telematics Data Model* for object descriptions as well.
         + `EVENTTYPE_EXEMPTION_ADVERSEWEATHER`                              - Adverse weather and driving conditions exemption.
         + `EVENTTYPE_EXEMPTION_16H`                                         - Exemption 16 hour.
 
++ requestedEditUser :                                    (User Identifier) - The ID of the non-driver, authenticated user that requested an edit to this log (i.e. has USERTYPE_SUPPORT  set).
 + certificationCount                                     (number) - a certification count asssociated with driver certification (`EVENTTYPE_CERTIFICATION`) events -- serialized into ELD Event Code, see ELD 7.20
 + verifyDateTime                                         (string) - The date and time the log was verified. If the log is unverified, this will not be set. This is the same as log certification. This will be the last certification date.
 + multidayBasis     :                                  0 (number) - Multiday basis (7 or 8) used by the motor carrier to compute cumulative duty hours
