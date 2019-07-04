@@ -10,7 +10,7 @@ The draft specification is pubished in various forms:
 
 * here, in
 	* [`apiary.apib`](https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/apiary.apib) -- API Blueprint specification
-	* [`otapi.html`](https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/otapi.html) -- standalone documentation rendering of the above
+	* [`otapi.html`](http://htmlpreview.github.io/?https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/otapi.html) -- standalone documentation rendering of the above
 * at [opentelematicsapi.docs.apiary.io](https://opentelematicsapi.docs.apiary.io) as:
 	* Interactive documentation
 	* A mock server
