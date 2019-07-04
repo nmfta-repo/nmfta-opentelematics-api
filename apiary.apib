@@ -8,7 +8,7 @@ A project to enable business resiliency for motor freight carriers with tight in
 
 This document is written in [API Blueprint format 1A](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
 
-The draft specification is pubished in various forms:
+The specification is pubished in various forms:
 
 * at [github.com/nmfta-repo/nmfta-opentelematics-api](https://github.com/nmfta-repo/nmfta-opentelematics-api)
     * [`apiary.apib`](https://github.com/nmfta-repo/nmfta-opentelematics-api/blob/master/apiary.apib) -- API Blueprint specification
@@ -283,7 +283,7 @@ Latitude, indicates North (N) and East (E) in the second component, Longitude.
 
 Note that all locations assigned to objects by the TSP in the OTAPI are done so on a best-effort basis. Different TSPs
 have different rates of location update, different accuracies and different means of mapping a previously known location
-into events after the known location (e.g. prediction vs. interpolation). This Open Telematics API draft does not make
+into events after the known location (e.g. prediction vs. interpolation). This Open Telematics API specification does not make
 any specifications about how often, how accurate or any other statements about how geographic locations must be assigned
 to objects by the TSP.
 
@@ -348,7 +348,7 @@ TSPs can configure different limits for the various endpoints and on a per-custo
 service).
 
 Client software must be prepare to receive error `413` and to react by reducing the size of the query or ceasing the
-query; client may not retry a request when receiving a `413` error. This draft lists the endpoints where clients must be
+query; client may not retry a request when receiving a `413` error. This specification lists the endpoints where clients must be
 prepared for `413` responses.
 
 # Unknown Drivers
