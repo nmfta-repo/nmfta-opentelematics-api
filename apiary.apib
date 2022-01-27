@@ -93,7 +93,7 @@ this API specification. The tables will look like the following example:
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
 |Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
-Each column of the **Acess Controls** tables are the user *roles* to which users in the TSP's implementation will be assigned. It must be possible for clients to use usernames for Authentication (see above); these usernames will be assigned to **one role and no more than one role** each.
+Each column of the **Access Controls** tables are the user *roles* to which users in the TSP's implementation will be assigned. It must be possible for clients to use usernames for Authentication (see above); these usernames will be assigned to **one role and no more than one role** each.
 
 The definition of each role is most accurately captured by the total of all the `DENY/ALLOW` assignments to the role in the **Access Controls** tables throughout this API specification. The intent of these access controls is to separate privileges so that carriers can limit which clients have access to:
 
