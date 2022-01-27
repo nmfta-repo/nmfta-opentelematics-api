@@ -17,8 +17,8 @@ The specification is pubished in various forms:
     * Interactive documentation
     * A mock server
 * at [apimatic/.../nmfta-opentelematics-api](https://www.apimatic.io/apidocs/nmfta-opentelematics-api) as:
-    * Exportable API specifications in multiple formats including: Open API 3.0, RAML 1.0, and Swagger 2.0
-    * Downloadable (client) SDKs in .NET and Python
+    * Exportable API specifications in multiple formats including: Open API 3.0, RESTful API Modeling Language (RAML) 1.0, and Swagger 2.0
+    * Downloadable (client) Software Development Kits (SDKs) in .NET and Python
 
 There is also a prototype implementation of version [0.1rc4](https://github.com/nmfta-repo/nmfta-opentelematics-api/releases/tag/proto-0.1rc4) of this specificiation available at [github.com/nmfta-repo/nmfta-opentelematics-prototype](https://github.com/nmfta-repo/nmfta-opentelematics-prototype).
 
@@ -34,7 +34,7 @@ commercial fleet relying on their service will need to find a new provider. Due 
 data format and methods for retrieving telematics logs & data, a commercial fleet manager will have to reintegrate an
 alternate telematics provider's data format into their existing system reporting.
 
-![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/overview.png)
+![OTAPI Overview](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/overview.png)
 
 This is a standardized API for retrieving telematics logs & data.
 Each participating TSP would be individually responsible for the necessary
@@ -68,13 +68,13 @@ their time and energy to make this a reality.
 
 **All requests** to Open Telematics API endpoints **require authentication**.
 
-For this version of the API, `v1`, all authentication must be performed using HTTP Basic. e.g.
+For this version of the API, `v1`, all authentication must be performed using Hyper Text Transfer Protocol (HTTP) Basic. e.g.
 
 ```http
 Authorization: Basic YWRtaW46YWRtaW4=
 ```
 
-This authentication method relies entirely on the security protections provided by the TLS layer; therefore HTTPS is
+This authentication method relies entirely on the security protections provided by the Transport Layer Security (TLS) layer; therefore HTTPS is
 mandatory on all connections and implementors must follow adhere to the security requirements detailed in the
 [Security Requirements for Implementors](#security_requirements_for_implementors) section below.
 
@@ -89,7 +89,7 @@ restrict authorization of requests to only those roles that are assigned in the 
 this API specification. The tables will look like the following example:
 
 
-|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
+|Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |Human Resources (HR)          |Safety & Compliance (S&C)         |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
 |Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
@@ -118,20 +118,20 @@ are assigned `DENY/ALLOW` such that:
 
 # Security Manifest
 
-The Open Telematics has been designed with security up-front. Here we capture some NIST 800-53 controls which are satisfied
+The Open Telematics has been designed with security up-front. Here we capture some National Institute of Standards and Technology (NIST) 800-53 controls which are satisfied
 by the present design of OTAPI, along with rationale of how each is satisfied. The intent of this section is to give some
 assurance of security-by-design in the OTAPI.
 
 ***NIST 800-53 SC-6: Resource Availability / URL size should not exceed 2000 characters***
 
-None of the URLs in any of the endpoints of OTAPI will exceed a maximum of 220 characters. The longest resource path is
+None of the Universal Resource Locators (URLs) in any of the endpoints of OTAPI will exceed a maximum of 220 characters. The longest resource path is
 `/v1.0/drivers/{driverId}/availability_factors/` which would be 104 characters long if a 68 character `driverId` were
-used. The endpoints have between 1 and 3 query string parameters, most are dates which are expressed in ISO 8601 format,
-24 characters long the others are opaque IDs which could be up to 68 characters long. Worst case URL length is 104 + 24 + 24 + 68 (220) characters.
+used. The endpoints have between 1 and 3 query string parameters, most are dates which are expressed in International Standards Organization (ISO) 8601 format,
+24 characters long the others are opaque IDentifiers (IDs) which could be up to 68 characters long. Worst case URL length is 104 + 24 + 24 + 68 (220) characters.
 
 ***NIST 800-53 SC-6: Resource Availability / HTTP request size should not exceed 1MB limit***
 
-All `POST`, `PUT` and `PATCH` methods in the OTAPI are specific with JSON Schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
+All `POST`, `PUT` and `PATCH` methods in the OTAPI are specific with JavaScript Object Notation (JSON) Schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
 4K.
 
 ***NIST 800-53 SI-10: Information Input Validation / All file references should be indirect***
@@ -204,7 +204,7 @@ response must be implemented using response 429 and headers as detailed in this 
 Authentication (for this version of the API) is tied exclusively to HTTP Basic in each request. This means that each and
 every API endpoint is an opportunity to brute force any of the user credentials. Open Telematics server implementors
 must enforce a global rate-limit on authentication attempts for each user. Implementors may also want to consider other
-mitigations against brute-force attacks on credentials; c.f. [the OWA page on Blocking Brute Force
+mitigations against brute-force attacks on credentials; c.f. [the Open Web Application Security Project® (OWASP) page on Blocking Brute Force
 Attacks](https://www.owasp.org/index.php/Blocking_Brute_Force_Attacks).
 
 **Prevent Server-Error Stacktraces**
@@ -237,7 +237,7 @@ any TLS certificates results in a failure to establish any connections
 to the Open Telematics API server.
 
 All clients must implement certificate pinning. i.e. All client implementations will pass the tests, 5.4-5.6, for
-certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
+certificate pinning in the [OWASP Mobile Application Security Verification Standard (MASVS)](https://www.owasp.org/index.php/OWASP_Mobile_Security_Testing_Guide).
 
 # Working With Dates
 <a id="working_with_dates"></a>
@@ -245,7 +245,7 @@ certificate pinning in the [OWASP MASVS](https://www.owasp.org/index.php/OWASP_M
 When exchanging dates as parameters to API methods or in responses from the API, you must ensure that
 they are formatted properly as an ISO 8601 string (format
 `yyyy-MM-ddTHH:mm:ss.fffZ`). In addition, all dates will have to first be
-converted to UTC in order to ensure time zone information and daylight
+converted to Coordinated Universal Time (UTC) in order to ensure time zone information and daylight
 savings times are accounted for correctly.
 
 # Working with Time-Based Queries
@@ -348,7 +348,7 @@ prepared for `413` responses.
 # Unknown Drivers
 
 For the elements of Open Telematics API which are concerned with Driver log events, or other driver-associated data,
-there needs to be a concept of an 'unknown driver'. Indeed this concept is part of the ELD mandate. In Open Telematics
+there needs to be a concept of an 'unknown driver'. Indeed this concept is part of the Electronic Logging Devices (ELD) mandate. In Open Telematics
 API objects: `driverID` references to the unknown driver is represented by `null`.
 
 # Provider Identifiers
@@ -399,10 +399,10 @@ suggesting the useful fields for inclusion and review leading to a new field wit
 # Localization
 
 The Open Telematics API is ready to be used in locales other than the United States (English-speakers). To enable
-display and interpretation of data in languages other English (US, `en_US`) implementors may provide translations of the
+display and interpretation of data in languages other English (`US`, `en_US`) implementors may provide translations of the
 descriptions of the enumerated constants in the API.
 
-The localization does not apply to units of measure. Open Telematics API will use SI units with the following exceptions:
+The localization does not apply to units of measure. Open Telematics API will use International System of Units (SI) with the following exceptions:
 
 * velocities where units of `km/h` are used
 * [Log Event objects](#log_event_object) where units of either miles or kilometres are used (but not both)
@@ -472,7 +472,7 @@ the creation of line and files in the process of creating RODS files for complia
 values. Also note that preparing compliance reports is a value added by TSPs; e.g. in at least one case, the ordering
 used by regulators used truncated timestamps and the higher-resolution available in the TSP RODS information led to
 events being out-of-order in the view of the regulators without special handling by the TSP. This is an example of the
-kinds of nuances that are handled by TPSs in their service offering and OTAPI is not meant to replace that service.
+kinds of nuances that are handled by TSPs in their service offering and OTAPI is not meant to replace that service.
 
 Personnel responsible for compliance need to be able to create RODS based on information exported from OTAPI in the
 event a TSP is no longer available.
@@ -780,7 +780,7 @@ Alternatively, the motor freight carriers may follow a feed using
 
 * [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) for all fleet vehicles.
 
-However, the latter may require special configuration for allowing the appropriate raw CAN frames to be sent via the
+However, the latter may require special configuration for allowing the appropriate raw Controller Area Network (CAN) frames to be sent via the
 [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events) endpoint. Furthermore, the [Follow Fleet Status Events `GET /v1.0/fleet/statusevents/feed{?token}`](#follow_fleet_status_events)
 endpoint may not produce data in as many ignition states as [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events)
 and the [Follow Fleet Performance Events `GET /v1.0/fleet/performanceevents/feed{?token}`](#follow_fleet_performance_events) may offer higher resolution on battery
@@ -883,7 +883,7 @@ Telematics Data Model* for object descriptions as well.
         + `EVENTTYPE_DUTY_ON`                                               - On-duty status.
         + `EVENTTYPE_INDICATION_PC`                                         - Personal conveyance driver status.
         + `EVENTTYPE_INDICATION_YM`                                         - Yard move driver status.
-        + `EVENTTYPE_INDICATION_NONE`                                       - Cleared indication (e.g. no YM or PC or any other indication)
+        + `EVENTTYPE_INDICATION_NONE`                                       - Cleared indication (e.g. no Yard Move (YM) or Personal Conveyance (PC) or any other indication)
         + `EVENTTYPE_ENGINE_POWERUP`                                        - Engine power up record.
         + `EVENTTYPE_ENGINE_SHUTDOWN`                                       - Engine shutdown record.
         + `EVENTTYPE_INTERMEDIATE`                                          - Intermediate Log Event.
@@ -955,8 +955,8 @@ Telematics Data Model* for object descriptions as well.
 
 ### GPS Quality (enum[string])
 
-+ `GPSQUALITY_FINELOCK` - gps receiver had fine lock
-+ `GPSQUALITY_OTHER` - gps receiver had fix other than fine lock
++ `GPSQUALITY_FINELOCK` - Global Positioning System (GPS) receiver had fine lock
++ `GPSQUALITY_OTHER` - GPS receiver had fix other than fine lock
 
 ### Cruise Status (object)
 
@@ -972,7 +972,7 @@ Telematics Data Model* for object descriptions as well.
 
 ### Flagged Event Thresholds (object)
 
-+ suddenThreshold:                           `3.13` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
++ suddenThreshold:                           `3.13` (number) - the Electronic Control Unit (ECU) speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_SUDDEN_STOP` or `FLAGGEDTYPE_SUDDEN_START` is created, in m/s/s
 + collisionThreshold:                        `12.2` (number) - the ECU speed change threshold, above which a Vehicle Flagged Event of type `FLAGGEDTYPE_COLLISION` is created, in m/s/s
 
 ### Ignition Status (enum[string])
@@ -1004,7 +1004,7 @@ Telematics Data Model* for object descriptions as well.
 + gpsSpeed                                               (number) - speed of vehicle at time of event, in km/h
 + gpsHeading                                             (number) - heading of vehicle according to GPS at time of event, in degrees
 + gpsQuality                                             (GPS Quality) - the GPS fix quality at the time of this event
-+ ecmSpeed                                               (number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on SAE J1939 SPN 84)
++ ecmSpeed                                               (number) - wheel-based vehicle speed of vehicle at time of event, in km/h (based on Society of Automotive Engineers (SAE) J1939 Suspect Parameter Number (SPN) 84)
 + engineRPM                                              (number) - engine speed at time of event, in revolutions per minute (RPM)
 + accelerationPercent:                                0  (required, number) - vehicle commanded acceleration, in percent
 + seatBelts         :                               true (boolean) -  Were seat belts engaged at time of event
@@ -1097,7 +1097,7 @@ Telematics Data Model* for object descriptions as well.
         + `FILTERSTATUS_PASSIVE_REGEN_START' - Filter passive regen started
         + `FILTERSTATUS_ACTIVE_REGEN_END' - Filter active regen ended
         + `FILTERSTATUS_PASSIVE_REGEN_END' - Filter passive regen ended
-+ exhaustFluidLevel                                      (number)           - DEF additive levels at the end of this event, in litres
++ exhaustFluidLevel                                      (number)           - Diesel Exhaust Fluid (DEF) additive levels at the end of this event, in litres
 + overspeedLowThrottle                                   (number)           - the total amount of time spent over the speed threshold and simultaneously below the throttle threshold, in seconds
 + overspeedHiThrottle                                    (number)           - the total amount of time spent over the speed thresshold and simultaneously above the throttle threshold, in seconds
 + overrpmLowThrottle                                     (number)           - the total amount of time the vehicle spent moving while over the rpm threshold and simultaneously below the throttle threshold, in seconds
@@ -1124,24 +1124,24 @@ Telematics Data Model* for object descriptions as well.
 
 ### J1708 Fault (object)
 
-+ failureModeIdentifier                                  (required, number) - FMI from SAE J1587
-+ messageIdentifier                                      (required, number) - MID from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
++ failureModeIdentifier                                  (required, number) - Fault Mode Indicator (FMI) from SAE J1587
++ messageIdentifier                                      (required, number) - Message InDicator (MID) from SAE J1587 (Not all trucks have J1587 encoded networks, so this is not required.)
 + parameterOrSubsystemIdType                             (required, enum[string]) - does *faultCodeParameterorSubsystemId* encode a PID or SID as defined in SAE J1587?
     + Members
         + `PIDORSID_PID` - This is a PID
         + `PIDORSID_SID` - This is a SID
-+ faultCodeParameterorSubsystemId                        (required, number) - either the PID or SID, as in SAE J1587
++ faultCodeParameterorSubsystemId                        (required, number) - either the Parameter IDentifier (PID) or System IDentifier (SID), as in SAE J1587
 
 ### J1939 Fault (object)
 
-+ sourceAddress                                          (required, number) - SA from SAE J1939
++ sourceAddress                                          (required, number) - Source Address (SA) from SAE J1939
 + failureModeIdentifier                                  (required, number) - FMI from SAE J1939
 + suspectParameterNumber                                 (required, number) - SPN from SAE J1939
-+ occurences                                             (required, number) - the number of occurences of this fault; OC from J1939
++ occurences                                             (required, number) - the number of occurences of this fault; `OC` from J1939
 
 ### OBDII Fault (object)
 
-+ controllerCode                                         (required, number) - controller code. first 'letter' of standard OBDII code. convert to `char` for printable value
++ controllerCode                                         (required, number) - controller code. first 'letter' of standard On Board Diagnostics (OBDII) code. convert to `char` for printable value
 + diagnosticCode                                         (required, number) - remaining 'letters' of standard OBDII code. convert to hex string for printable value
 + failureType                                            (required, number) - the Failure Type Byte, as in SAE J2012
 
@@ -1209,7 +1209,7 @@ Telematics Data Model* for object descriptions as well.
 + providerId        :                 `api.provider.com` (required, string) - The unique 'Provider ID' of the TSP
 + serverTime        :             `2019-04-05T02:04:16Z` (required, string) - Date and time when this object was received at the TSP
 + name                                                   (string) - Vehicle name
-+ cmvVIN                                                 (required, string) - the CMV VIN
++ cmvVIN                                                 (required, string) - the Commercial Motor Vehicle (CMV) Vehicle Identifiaction Number (VIN)
 + licensePlate                                           (required, string) - the vehicle license plate
 
 ### Message Receipt (object)
@@ -1253,7 +1253,7 @@ Telematics Data Model* for object descriptions as well.
 + latency           :                              0.010 (required, number) - the expected latency of delivery of an event/object from the telematics device to the motor freight carrier via OTAPI, in seconds
 + vehicleSpeedSource:                 `SPEED_SOURCE_ECM` (required, enum[string]) - the source of vehicle speed in this TSP
     + Members
-        + `SPEED_SOURCE_ECM` - the vehicle speed reported in TSP data is from the ECMs of the vehicle
+        + `SPEED_SOURCE_ECM` - the vehicle speed reported in TSP data is from the Engine Control Modules (ECMs) of the vehicle
         + `SPEED_SOURCE_GPS` - the vehicle speed reported in TSP data is from GPS
 
 ### State of Health (object)
@@ -1311,7 +1311,7 @@ Telematics Data Model* section for object descriptions as well.
 
 Note 4 (who's counting these anyways?): as these are inbound objects we want lock-down the space of all possible
 serializations to make the input processing of the server more robust. e.g. specifying content restrictions for strings
-that should only contain timestamps. APIBlueprint doesn't provide a way to do this in MSON; but it is possible to add a
+that should only contain timestamps. APIBlueprint doesn't provide a way to do this in Markdown Syntax Object Notation (MSON); but it is possible to add a
 JSON Schema to an action which overrides the JSON schema generated from the MSON. So, whereas these data structures
 define the data types used for inbound objects, there is also corresponding JSON Schemas for endpoints accepting these
 data type defined below. If you change one you should probably also change the other.
