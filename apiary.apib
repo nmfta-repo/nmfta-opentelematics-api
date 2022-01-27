@@ -83,49 +83,42 @@ must be associated with roles (see section [Authorization](#authorization) below
 # Authorization
 <a id="authorization"></a>
 
-TSPs implementing the Open Telematics API must include access controls for requests against the following roles.
-
-* *Vehicle Query*
-* *Vehicle Follow*
-* *Driver Query*
-* *Driver Follow*
-* *Driver Dispatch*
-* *Driver Duty*
-* *HR*
-* *Admin*
-
-It must be possible for clients to usernames for Authentication (see above) which are assigned to **one role and no more
-than one role**.
-
-TSPs implementing the Open Telematics API must restrict authorization of requests to only those roles that are assigned
-in the **Access Controls** tables throughout this API specification. The tables will look like the following example:
+TSPs implementing the Open Telematics API must include access controls for all requests. The access controls must restrict authorization of requests to only those roles that are assigned in the **Access Controls** tables throughout
+this API specification. The tables will look like the following example:
 
 
 |Role:  |Vehicle Query|Vehicle Follow|Driver Query|Driver Follow|Driver Dispatch|Driver Duty |HR          |S&C         |Admin       |
 |-------|-------------|--------------|------------|-------------|---------------|------------|------------|------------|------------|
 |Access:|`DENY/ALLOW` |`DENY/ALLOW`  |`DENY/ALLOW`|`DENY/ALLOW` |`DENY/ALLOW`   |`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|`DENY/ALLOW`|
 
-The intent of these access controls is so that carriers can limit which clients they deploy have access to:
-* streaming *feeds* of objects as they are added to the TSP
-* any Personally Identifiable Information (PII)
+Each column of the **Acess Controls** tables are the user *roles* to which users in the TSP's implementation will be assigned. It must be possible for clients to use usernames for Authentication (see above); these usernames will be assigned to **one role and no more than one role** each.
+
+The definition of each role is most accurately captured by the total of all the `DENY/ALLOW` assignments to the role in the **Access Controls** tables throughout this API specification. The intent of these access controls is to separate privileges so that carriers can limit which clients have access to:
+
+1. streaming *feeds* of objects as they are added to the TSP
+2. any Personally Identifiable Information (PII)
 
 As can be seen in the **Access Controls** tables in the requests subsections of *References* that follow, the roles
 are assigned `DENY/ALLOW` such that:
 
-* the *X Query* roles have access only to collections queries
-* the *X Follow* roles have access to streaming feeds and queries
-* the *Vehicle X* roles cannot access any PII
-* the *Driver X* roles can access both vehicle info and PII
-* the *Driver Dispatch* role is allowed to update route info and send messages to drivers
-* the *Driver Duty* role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)
-* the *HR* role is allowed to perform HR use cases and update Driver information
-* the *S&C* roles is allowed to perform Safety and Compliance use cases and to update TSP portal user account username, password and enable/disable
+| Role               | Intent of assignments in the **Access Controls** tables                                                                                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| *Vehicle Query*    | role has access only to vehicle collections queries and cannot access any PII                                                           |
+| *Vehicle Follow*   | role has access to vehicle streaming feeds and queries and cannot access any PII                                                        |
+| *Driver Query*     | role has access only to driver and vehicle collections queries (can access PII)                                                         |
+| *Driver Follow*    | role has access to driver and vehicle streaming feeds and queries (can access PII)                                                      |
+| *Driver Dispatch*  | role is allowed to update route info and send messages to drivers                                                                       |
+| *Driver Duty*      | role is allowed to externaly trigger driver duty status (e.g. *Send Duty Status Changes to the TSP*)                                    |
+| *HR*               | role is allowed to perform HR use cases and update Driver information                                                                   |
+| *S&C*              | role is allowed to perform Safety and Compliance use cases and to update TSP portal user account username, password and enable/disable  |
+| *Admin*            | role has all privileges. Intended for testing and development; should not be used in production.                                        |
+
 
 # Security Manifest
 
-The Open Telematics has been design with security up-front. Here we capture some NIST 800-53 controls which are satisfied
-by the present design of OTAPI and how. The intent of this section is to give some assurance of security-by-design in the
-OTAPI.
+The Open Telematics has been designed with security up-front. Here we capture some NIST 800-53 controls which are satisfied
+by the present design of OTAPI, along with rationale of how each is satisfied. The intent of this section is to give some
+assurance of security-by-design in the OTAPI.
 
 ***NIST 800-53 SC-6: Resource Availability / URL size should not exceed 2000 characters***
 
