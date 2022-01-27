@@ -75,7 +75,8 @@ Authorization: Basic YWRtaW46YWRtaW4=
 ```
 
 This authentication method relies entirely on the security protections provided by the TLS layer; therefore HTTPS is
-mandatory on all connections and implementors must follow adhere to the security requirements detailed in the [Security Requirements for Implementors](#security_requirements_for_implementors) section below.
+mandatory on all connections and implementors must follow adhere to the security requirements detailed in the
+Security Requirements for Implementors](#security_requirements_for_implementors) section below.
 
 TSPs implementing the Open Telematics API must provide a means to create username-password pair credentials and these
 must be associated with roles (see section [Authorization](#authorization) below).
@@ -83,7 +84,8 @@ must be associated with roles (see section [Authorization](#authorization) below
 # Authorization
 <a id="authorization"></a>
 
-TSPs implementing the Open Telematics API must include access controls for all requests. The access controls must restrict authorization of requests to only those roles that are assigned in the **Access Controls** tables throughout
+TSPs implementing the Open Telematics API **must include access controls for all requests**. The access controls must
+restrict authorization of requests to only those roles that are assigned in the **Access Controls** tables throughout
 this API specification. The tables will look like the following example:
 
 
@@ -353,12 +355,12 @@ API objects: `driverID` references to the unknown driver is represented by `null
 <a id="provider_identifiers"></a>
 
 An important use case of the Open Telematics API by motor freight carriers is to run 'mixed fleets' where there are more
-than one TSP's service integrated concurrently. In such a seployment we can imagine possible issues with duplicated data
+than one TSP's service integrated concurrently. In such a deployment we can imagine possible issues with duplicated data
 or conflicts.
 
 To prepare a solution to these problems, this specification includes provisions to identify the source of all data by a
 'Provider ID'. Implementors are required to choose a unique identifier and assign it to all 'Provider ID' fields in all
-data structures where it is included in this specification. We reccommend that TSPs use their domain (e.g.
+data structures where it is included in this specification. We recommend that TSPs use their domain (e.g.
 `api.provider.com`) which should be sufficiently unique; however, TSPs can elect to use whatever identifier they like
 but it should be 1) recognizable as associated with that TSP and 2) remain constant throughout the lifetime of the TSP's
 service.
@@ -385,7 +387,7 @@ other extensions or with future versions of the API; therefore, all fields added
 `x_providerid_` where `providerid` is the provider ID (see [Provider Identifiers](#provider_identifiers) for more
 details).
 
-* Adding addional field/members to the data objects, when the data is needed by a motor freight carrier IS a valid extension to the OTAPI
+* Adding additional field/members to the data objects, when the data is needed by a motor freight carrier IS a valid extension to the OTAPI
 * Adding additional possible values to enumerations IS NOT a valid extension to the OTAPI
 * Adding additional endpoints/methods IS NOT a valid extension to the OTAPI
 
@@ -488,7 +490,7 @@ availability of a Driver. They have
 
 * a [Driver object id](#driver_object) for a given driver
 
-To calculate the current driver availablity they retrieve 'driver availability factors' from which the current driver
+To calculate the current driver availability they retrieve 'driver availability factors' from which the current driver
 availability can be calculated using
 
 * [Get Driver Availability Factors `GET /v1.0/drivers/{driverId}/availability_factors/{?startTime,stopTime}`](#get_driver_availability_factors) for a given [Driver object id](#driver_object) over a given period of time
@@ -590,8 +592,8 @@ Motor freight carriers need to enable their drivers to 'call-back' to the dispat
 they often rely on two-way messaging provided by the TSP. The drivers can create and send messages to dispatch at the
 motor freight carrier by using an interface on their in-cab displays.
 
-Both personel and semi-automated systems responsible for drivers in the field, "Dispatch", need to be notified of new
-messages. To process the invoming messages for Dispatch in 'real time' they follow a feed using
+Both personnel and semi-automated systems responsible for drivers in the field, "Dispatch", need to be notified of new
+messages. To process the incoming messages for Dispatch in 'real time' they follow a feed using
 
 * [Follow Dispatch Messages `GET /v1.0/fleet/dispatchmessages/feed{?token}`](#follow_dispatch_messages)
 
@@ -724,7 +726,7 @@ To determine which events require maintenance in 'real-time' they follow a feed 
 
 * [Follow Fleet Fault Code Events `GET /v1.0/fleet/faults/feed{?token}`](#follow_fleet_fault_code_events) for all fleet vehicles
 
-To dispatch assitance to the location of a given [Vehicle object id](#vehicle_object) -- in the event that an issue
+To dispatch assistance to the location of a given [Vehicle object id](#vehicle_object) -- in the event that an issue
 requiring maintenance must be resolved in the field -- they obtain the most recent vehicle location using
 
 * [Get Vehicle Location History `GET /v1.0/vehicles/{vehicleId}/locations/{?startTime,stopTime}`](#get_vehicle_location_history) for a given [Vehicle object id](#vehicle_object) over the most recent time period
@@ -732,7 +734,7 @@ requiring maintenance must be resolved in the field -- they obtain the most rece
 ## Machine-Readable Data Quality
 
 Motor freight carriers rely on data quality properties of the service provided by TSPs and need to be able to adapt
-their back-end systems depending on the various data quality propoerties of a given TSP's service.
+their back-end systems depending on the various data quality properties of a given TSP's service.
 
 To determine what the expected data qualities of the service are, they use
 
@@ -1310,7 +1312,7 @@ Telematics Data Model* section for object descriptions as well.
 Note 4 (who's counting these anyways?): as these are inbound objects we want lock-down the space of all possible
 serializations to make the input processing of the server more robust. e.g. specifying content restrictions for strings
 that should only contain timestamps. APIBlueprint doesn't provide a way to do this in MSON; but it is possible to add a
-JSON Schema to an action which overides the JSON schema generated from the MSON. So, whereas these data structures
+JSON Schema to an action which overrides the JSON schema generated from the MSON. So, whereas these data structures
 define the data types used for inbound objects, there is also corresponding JSON Schemas for endpoints accepting these
 data type defined below. If you change one you should probably also change the other.
 
@@ -1480,7 +1482,7 @@ additional instructions.
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route created, to be used for later updates to the route
-        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geographic Details
 
 + Response 204
 
@@ -1583,7 +1585,7 @@ change the destination of the route, hence also changing the stopId associated w
 
     + Attributes (object)
         + routeId       : `c6d2ff2e69c212d4eb9d64b629a46689` (required, string) - the id of the route updated, to be used for later updates to the route
-        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geograhic Details
+        + stopIds       : `b4655ce13cb3e137013d852bd7d687ae`, `ccddb6244c28fdb9bfa726cc3e34a0eb` (required, array[string], fixed-type) - the id of the stop in the created route (most likely a re-used location), to be use for later updates to Stop Geographic Details
 
 + Response 204
 
@@ -1614,7 +1616,7 @@ Clients can update the _geographic details_ of a stop; the *Stop Geographic Deta
 truck and trailer to park and a polygon of geographic points indicating the entryway onto a facility (i.e. where the
 truck should drive on approach).
 
-Sending data to this endpoint, using a previously returned `stopId` will update the geograhic details of the stop and
+Sending data to this endpoint, using a previously returned `stopId` will update the Geographic details of the stop and
 any other routes using this stop will also be updated.
 
 **Access Controls**
@@ -1673,7 +1675,7 @@ any other routes using this stop will also be updated.
 + Response 200 (application/json)
 
     + Attributes (object)
-        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geograhic Details
+        + stopId        : `b4655ce13cb3e137013d852bd7d687ae` (required, string) - the id of the stop that was updated, to be used for later updates to Stop Geographic Details
 
 + Response 204
 
@@ -3382,7 +3384,7 @@ noted in the access controls below, requests for these data types deny access by
 
 ***Polling for Daily Files***
 
-The IT staff and automated systems that want to retreive the data exports on a daily basis will do so by polling the
+The IT staff and automated systems that want to retrieve the data exports on a daily basis will do so by polling the
 server for the status of the given's days complete record. The polling endpoint will either indicate that the file is
 not yet ready, or respond with a redirect to a location serving the complete file (statically).
 
@@ -3397,7 +3399,7 @@ for download independently of responses from the OTAPI server.
 Note that the data export files will include both time-varying objects (those that have time associated with them) and
 also those that do not.
 
-* For time-varying objects: the files will only include whose associated time periods have an intesection with the
+* For time-varying objects: the files will only include whose associated time periods have an intersection with the
 requested time period (as per the details of the [Working With Dates](#working_with_dates) section above);
 
 * For non time-varying objects: the files will include all objects known to the TSP at the time of the request,
