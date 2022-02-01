@@ -2,9 +2,57 @@ FORMAT: 1A
 
 # Open Telematics API
 
-A project to enable business resiliency for motor freight carriers with tight integrations into Telematics Service Providers (TSPs).
+## Acronyms
+
+|       |                                                         |
+|-------|---------------------------------------------------------|
+| TSPs  | Telematics Service Providers                            |
+| RAML  | RESTful API Modeling Language                           |
+| SDKs  | Software Development Kits                               |
+| OTAPI | Open Telematics API                                     |
+| IVHM  | Integrated Vehicle Health Maintenance                   |
+| CBM   | Condition Based Maintenance                             |
+| HTTP  | Hyper Text Transfer Protocol                            |
+| TLS   | Transport Layer Security                                |
+| HR    | Human Resources                                         |
+| PII   | Personally Identifiable Information                     |
+| NIST  | National Institute of Standards and Technology          |
+| URLs  | Universal Resource Locators                             |
+| ISO   | International Standards Organization                    |
+| IDs   | IDentifiers                                             |
+| JSON  | JavaScript Object Notation                              |
+| IEC   | International Electrotechnical Commission               |
+| OWASP | Open Web Application Security Project®                  |
+| MASVS | OWASP Mobile Application Security Verification Standard |
+| UTC   | Coordinated Universal Time                              |
+| ELD   | Electronic Logging Devices                              |
+| SI    | International System of Units                           |
+| RODS  | Record of Duty Status                                   |
+| CAN   | Controller Area Network                                 |
+| YM    | Yard Move                                               |
+| PC    | Personal Conveyance                                     |
+| GPS   | Global Positioning System                               |
+| ECU   | Electronic Control Unit                                 |
+| SAE   | Society of Automotive Engineers                         |
+| SPN   | Suspect Parameter Number                                |
+| RPM   | revolutions per minute                                  |
+| DEF   | Diesel Exhaust Fluid                                    |
+| FMI   | Fault Mode Indicator                                    |
+| MID   | Message InDicator                                       |
+| PID   | Parameter IDentifier                                    |
+| SID   | System IDentifier                                       |
+| SA    | Source Address                                          |
+| OBDII | On Board Diagnostics                                    |
+| CMV   | Commercial Motor Vehicle                                |
+| VIN   | Vehicle Identifiaction Number                           |
+| ECMs  | Engine Control Modules                                  |
+| MSON  | Markdown Syntax Object Notation                         |
+
+# Open Telematics API
 
 ![NMFTA Logo](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/image1.png)
+
+A project to enable business resiliency for motor freight carriers with tight integrations into Telematics Service Providers (TSPs).
 
 This document is written in [API Blueprint format 1A](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
 
@@ -36,15 +84,19 @@ alternate telematics provider's data format into their existing system reporting
 
 ![OTAPI Overview](https://raw.githubusercontent.com/nmfta-repo/nmfta-opentelematics-api/master/media/overview.png)
 
-This is a standardized API for retrieving telematics logs & data.
-Each participating TSP would be individually responsible for the necessary
-translations from their existing formats to this Open Telematics
-API. Each TSP would continue to be responsible for managing their
-own cloud infrastructure housing customer data. The Open Telematics API, as an additional interface,
-will be made available by TSPs to allow their customers ready
-access to pull data in the standardized format, especially in examples
-of mixed TSP fleets. The API could grow into Integrated Vehicle Health Maintenance (IVHM) and Conditioned
-Based Maintenance (CBM) in the future via TSPs [Extending this API](#extending_this_api).
+This is a standardized API for retrieving telematics logs & data. The API
+specification exclusively uses JSON for request and response bodies in this
+version; therefore, relies on serializations of Javacript types in JSON. e.g.
+lists `[]`, dictionaries `{}` and the null value `null.` Each participating
+TSP would be individually responsible for the necessary translations from
+their existing formats to this Open Telematics API. Each TSP would continue
+to be responsible for managing their own cloud infrastructure housing
+customer data. The Open Telematics API, as an additional interface, will be
+made available by TSPs to allow their customers ready access to pull data in
+the standardized format, especially in examples of mixed TSP fleets. The API
+could grow into Integrated Vehicle Health Maintenance (IVHM) and Conditioned
+Based Maintenance (CBM) in the future via TSPs
+[Extending this API](#extending_this_api).
 
 # Contributors
 
@@ -131,7 +183,7 @@ used. The endpoints have between 1 and 3 query string parameters, most are dates
 
 ***NIST 800-53 SC-6: Resource Availability / HTTP request size should not exceed 1MB limit***
 
-All `POST`, `PUT` and `PATCH` methods in the OTAPI are specific with JavaScript Object Notation (JSON) Schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
+All `POST`, `PUT` and `PATCH` methods in the OTAPI are specified with JSON schema blocks over-and-above API Blueprint specifications which include maximum field lengths. The maximum requests size for any of the endpoints in OTAPI is under
 4K.
 
 ***NIST 800-53 SI-10: Information Input Validation / All file references should be indirect***
